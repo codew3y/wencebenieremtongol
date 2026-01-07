@@ -15,6 +15,8 @@ const Contact = () => {
       </motion.h2>
 
       <motion.form
+        action = "https://formspree.io/f/xvzgeavj"
+        method="POST"
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
@@ -22,22 +24,22 @@ const Contact = () => {
       >
         <label className="text-gray-300 font-medium">
           Name
-          <input type="text" placeholder="Your Name" className="w-full mt-2 px-4 py-2 rounded-md bg-gray-700 text-gray-200 border border-gray-600 focus:border-cyan-400 focus:outline-none"/>
+          <input type="text" name="name" placeholder="Your Name" className="w-full mt-2 px-4 py-2 rounded-md bg-gray-700 text-gray-200 border border-gray-600 focus:border-cyan-400 focus:outline-none"/>
         </label>
 
         <label className="text-gray-300 font-medium">
           Email
-          <input type="email" placeholder="youremail@example.com" className="w-full mt-2 px-4 py-2 rounded-md bg-gray-700 text-gray-200 border border-gray-600 focus:border-cyan-400 focus:outline-none"/>
+          <input type="email" name="email" placeholder="youremail@example.com" className="w-full mt-2 px-4 py-2 rounded-md bg-gray-700 text-gray-200 border border-gray-600 focus:border-cyan-400 focus:outline-none"/>
         </label>
 
         <label className="text-gray-300 font-medium">
           Subject
-          <input type="text" placeholder="Subject" className="w-full mt-2 px-4 py-2 rounded-md bg-gray-700 text-gray-200 border border-gray-600 focus:border-cyan-400 focus:outline-none"/>
+          <input type="text" name="subject" placeholder="Subject" className="w-full mt-2 px-4 py-2 rounded-md bg-gray-700 text-gray-200 border border-gray-600 focus:border-cyan-400 focus:outline-none"/>
         </label>
 
         <label className="text-gray-300 font-medium">
           Message
-          <textarea rows="5" placeholder="Your Message" className="w-full mt-2 px-4 py-2 rounded-md bg-gray-700 text-gray-200 border border-gray-600 focus:border-cyan-400 focus:outline-none resize-none"/>
+          <textarea name="message" rows="5" placeholder="Your Message" className="w-full mt-2 px-4 py-2 rounded-md bg-gray-700 text-gray-200 border border-gray-600 focus:border-cyan-400 focus:outline-none resize-none"/>
         </label>
 
         <button type="submit" className="mt-4 px-6 py-3 bg-cyan-500 text-black font-semibold rounded-lg hover:bg-cyan-400 transition">
