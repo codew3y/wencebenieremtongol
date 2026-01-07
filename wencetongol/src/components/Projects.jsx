@@ -8,7 +8,7 @@ const projects = [
     name: "Portfolio Website",
     link: "https://github.com/codew3y/portfolio",
     tech: ["React", "Tailwind CSS"],
-    github: "https://github.com/codew3y/portfolio",
+    github: "https://github.com/codew3y/wencebenieremtongol",
     desc: "A personal portfolio website built with React and Tailwind CSS.",
     image: "/portfolio-bg.png",
   },
@@ -16,7 +16,7 @@ const projects = [
     name: "Task Manager",
     link: "https://github.com/codew3y/task-manager",
     tech: ["React", "Tailwind CSS", "Node.js"],
-    github: "https://github.com/codew3y/task-manager",
+    github: "https://github.com/codew3y/wencebenieremtongol",
     desc: "Full-stack task manager app using React, Tailwind CSS, and Node.js.",
     image: "/portfolio-bg.png",
   },
@@ -52,7 +52,7 @@ const Projects = () => {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: idx * 0.15 }}
-            className="border border-white/20 rounded-md overflow-hidden bg-white/5 backdrop-blur-sm hover:border-cyan-400/60 hover:text-cyan-400 hover:shadow-[0_0_15px_rgba(34,211,238,0.15)] transition-all"
+            className="border border-white/20 rounded-md overflow-hidden bg-white/5 backdrop-blur-sm hover:border-cyan-400/60 hover:text-cyan-400 hover:shadow-[0_0_15px_rgba(34,211,238,0.15)] transition-all flex flex-col h-full"
           >
             {/* Project Image */}
             <img
@@ -62,7 +62,7 @@ const Projects = () => {
             />
 
             {/* Card Content */}
-            <div className="p-4 flex flex-col gap-3">
+            <div className="p-4 flex flex-col gap-3 flex-1 bg-white/5">
               <h3 className="text-2xl font-bold text-white">{project.name}</h3>
               <p className="text-gray-200 text-sm">{project.desc}</p>
 
@@ -83,7 +83,7 @@ const Projects = () => {
                 href={project.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2 border border-white/20 rounded-md bg-white/10 backdrop-blur-sm hover:bg-cyan-500 hover:text-black hover:border-cyan-500 transition-all font-semibold justify-center mt-2"
+                className="inline-flex items-center gap-2 px-4 py-2 border border-white/20 rounded-md bg-white/10 backdrop-blur-sm hover:bg-cyan-500 hover:text-black hover:border-cyan-500 transition-all font-semibold justify-center mt-auto"
               >
                 <FaGithub /> View Project
               </a>
