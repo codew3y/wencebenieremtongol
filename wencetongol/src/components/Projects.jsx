@@ -2,6 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { SiReact, SiTailwindcss, SiNodedotjs } from "react-icons/si";
 import { FaGithub } from "react-icons/fa";
+import Project1 from "../assets/img/projectsimg/portfolio-bg.png";
 
 const projects = [
   {
@@ -10,7 +11,7 @@ const projects = [
     tech: ["React", "Tailwind CSS"],
     github: "https://github.com/codew3y/wencebenieremtongol",
     desc: "A personal portfolio website built with React and Tailwind CSS.",
-    image: "/portfolio-bg.png",
+    image: Project1,
   },
   {
     name: "Task Manager",
@@ -18,7 +19,7 @@ const projects = [
     tech: ["React", "Tailwind CSS", "Node.js"],
     github: "https://github.com/codew3y/wencebenieremtongol",
     desc: "Full-stack task manager app using React, Tailwind CSS, and Node.js.",
-    image: "/portfolio-bg.png",
+    image: Project1,
   },
 ];
 
