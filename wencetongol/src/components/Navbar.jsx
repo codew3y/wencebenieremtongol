@@ -1,55 +1,54 @@
 import React, { useState } from "react";
 import { FiMenu, FiX } from "react-icons/fi";
 
+const links = [
+  { name: "About", href: "#about" },
+  { name: "Skills", href: "#skills" },
+  { name: "Experience", href: "#experience" },
+  { name: "Projects", href: "#projects" },
+  { name: "Contact", href: "#contact" },
+];
+
 const Navbar = () => {
   const [open, setOpen] = useState(false);
 
-  const links = [
-    { name: "About", href: "#about" },
-    { name: "Skills", href: "#skills" },
-    { name: "Projects", href: "#projects" },
-    { name: "Contact", href: "#contact" },
-  ];
-
   return (
-    <nav className="fixed top-0 left-0 w-full bg-gray-900 shadow z-50">
-      <div className="max-w-6xl mx-auto flex justify-between items-center p-4">
-        <div
-          className="text-2xl font-bold cursor-pointer text-white"
-          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+    <header className="fixed top-0 left-0 w-full z-50 bg-gray-950/80 backdrop-blur border-b border-white/5">
+      <nav className="max-w-5xl mx-auto flex justify-between items-center px-6 h-16">
+        <a
+          href="#home"
+          className="text-lg font-semibold tracking-tight text-white"
         >
-          WENCE
-        </div>
+          Wence<span className="text-cyan-400">.</span>
+        </a>
 
-        <ul className="hidden md:flex space-x-6 text-gray-200">
+        <ul className="hidden md:flex items-center gap-8 text-sm text-gray-300">
           {links.map((link) => (
             <li key={link.name}>
-              <a
-                href={link.href}
-                className="hover:text-cyan-400 transition"
-              >
+              <a href={link.href} className="hover:text-cyan-400 transition-colors">
                 {link.name}
               </a>
             </li>
           ))}
         </ul>
 
-        {/* Mobile menu */}
-        <div className="md:hidden">
-          <button onClick={() => setOpen(!open)}>
-            {open ? <FiX size={28} className="text-white" /> : <FiMenu size={28} className="text-white" />}
-          </button>
-        </div>
-      </div>
+        <button
+          className="md:hidden text-white text-2xl"
+          onClick={() => setOpen(!open)}
+          aria-label="Toggle menu"
+        >
+          {open ? <FiX /> : <FiMenu />}
+        </button>
+      </nav>
 
       {open && (
-        <ul className="flex flex-col items-center bg-gray-800 md:hidden">
+        <ul className="md:hidden flex flex-col px-6 pb-4 text-sm text-gray-300 bg-gray-950/95 border-b border-white/5">
           {links.map((link) => (
-            <li key={link.name} className="py-4">
+            <li key={link.name}>
               <a
                 href={link.href}
-                className="hover:text-cyan-400 transition"
                 onClick={() => setOpen(false)}
+                className="block py-2 hover:text-cyan-400 transition-colors"
               >
                 {link.name}
               </a>
@@ -57,7 +56,7 @@ const Navbar = () => {
           ))}
         </ul>
       )}
-    </nav>
+    </header>
   );
 };
 
