@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 const facts = [
   { label: "Role", value: "CRM Developer Associate" },
   { label: "Focus", value: "Automation & API integration" },
+  { label: "AI Tooling", value: "Claude, Claude Code, Cowork" },
   { label: "Education", value: "BS Information Technology" },
   { label: "Languages", value: "Filipino, English" },
 ];
@@ -32,7 +33,10 @@ const About = () => {
           integrate Microsoft Graph and Microsoft Purview eDiscovery through
           RESTful APIs secured with OAuth 2.0. I test and validate APIs with
           Postman, EcoHub, and PowerShell, and take care to produce clear
-          technical documentation. I also help out with IT Helpdesk support.
+          technical documentation. I'm also proficient in using Claude as an AI
+          tool — leveraging Claude, Claude Code, and Claude Cowork to speed up
+          development, automation, and documentation. I also help out with IT
+          Helpdesk support.
         </p>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-10">

@@ -20,6 +20,11 @@ const certifications = [
   "Palo Alto Networks — Cloud Security Fundamentals",
   "Palo Alto Networks — Security Operations Fundamentals",
   "Cisco — Intro to IoT and Digital Transformation",
+  "Anthropic — Claude 101",
+  "Anthropic — Claude Code 101",
+  "Anthropic — Introduction to Claude Cowork",
+  "Anthropic — AI Fluency: Frameworks & Foundation",
+  "Anthropic — AI Capabilities and Limitations",
 ];
 
 const Education = () => {

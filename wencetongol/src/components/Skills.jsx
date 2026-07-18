@@ -13,6 +13,7 @@ const groups = {
     "PowerShell",
     "EcoHub",
   ],
+  "AI Tools": ["Claude", "Claude Code", "Claude Cowork"],
   "Core Strengths": [
     "Problem Solving",
     "Troubleshooting",

@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { FiMapPin, FiArrowUpRight } from "react-icons/fi";
+import { FiArrowUpRight } from "react-icons/fi";
 import { FaGithub, FaLinkedinIn } from "react-icons/fa";
 import { HiOutlineMail } from "react-icons/hi";
 import profilePhoto from "../assets/img/profile-photo.JPG";
@@ -25,10 +25,6 @@ const Hero = () => {
         />
 
         <div>
-          <div className="inline-flex items-center gap-2 text-sm text-gray-400 mb-4">
-            <FiMapPin className="text-cyan-400" /> Minalin, Pampanga
-          </div>
-
           <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-white">
             Wence Benierem Tongol
           </h1>
@@ -38,7 +34,8 @@ const Hero = () => {
           <p className="mt-4 max-w-xl text-gray-400 leading-relaxed">
             I build and maintain Zoho CRM automations, custom MCP connectors, and
             API integrations — focused on business-process automation, workflows,
-            and clean technical documentation.
+            and clean technical documentation. I work proficiently with Claude as
+            an AI tool to accelerate development, automation, and documentation.
           </p>
 
           <div className="mt-7 flex flex-wrap items-center gap-3">
