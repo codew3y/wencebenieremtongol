@@ -1,71 +1,63 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { 
-  SiHtml5, SiCss3, SiJavascript, SiReact, SiTailwindcss, SiBootstrap,
-  SiPhp, SiMysql, SiMongodb, SiNodedotjs,
-  SiGit, SiGithub, SiDiscord, SiTrello
-} from "react-icons/si";
 
-const skillIcons = {
-  HTML: <SiHtml5 className="inline-block mr-2" />,
-  CSS: <SiCss3 className="inline-block mr-2" />,
-  JavaScript: <SiJavascript className="inline-block mr-2" />,
-  React: <SiReact className="inline-block mr-2" />,
-  "Tailwind CSS": <SiTailwindcss className="inline-block mr-2" />,
-  Bootstrap: <SiBootstrap className="inline-block mr-2" />,
-  PHP: <SiPhp className="inline-block mr-2" />,
-  MySQL: <SiMysql className="inline-block mr-2" />,
-  MongoDB: <SiMongodb className="inline-block mr-2" />,
-  "Node.js": <SiNodedotjs className="inline-block mr-2" />,
-  Git: <SiGit className="inline-block mr-2" />,
-  GitHub: <SiGithub className="inline-block mr-2" />,
-  Discord: <SiDiscord className="inline-block mr-2" />,
-  Trello: <SiTrello className="inline-block mr-2" />,
-};
-
-const skills = {
-  "Frontend Development": ["HTML", "CSS", "JavaScript", "React", "Tailwind CSS", "Bootstrap"],
-  "Backend Development": ["PHP", "MySQL", "MongoDB", "Node.js"],
-  Others: ["Git", "GitHub", "Discord", "Trello"],
+const groups = {
+  "Frontend": ["HTML", "CSS", "JavaScript", "ReactJS", "Tailwind CSS"],
+  "Backend & Automation": ["PHP", "NodeJS", "Zoho Deluge", "C#"],
+  "Databases & Tools": [
+    "MySQL",
+    "MongoDB",
+    "Zoho CRM",
+    "Zoho Writer",
+    "Postman",
+    "PowerShell",
+    "EcoHub",
+  ],
+  "Core Strengths": [
+    "Problem Solving",
+    "Troubleshooting",
+    "Leadership",
+    "Documentation",
+    "Team Collaboration",
+  ],
 };
 
 const Skills = () => {
   return (
-    <section id="skills" className="py-24 px-6 bg-gray-900 text-gray-200">
+    <section id="skills" className="py-20 max-w-5xl mx-auto px-6">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        className="max-w-6xl mx-auto text-center mb-20"
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
       >
-        <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">Tech Stack</h2>
-        <p className="max-w-3xl mx-auto text-gray-400 leading-relaxed">
-          These are the technologies I’ve worked with throughout my journey as a web developer.
+        <p className="text-sm font-semibold text-cyan-400 uppercase tracking-widest mb-2">
+          Skills
         </p>
+        <h2 className="text-3xl md:text-4xl font-bold text-white mb-10">
+          Technical stack
+        </h2>
       </motion.div>
 
-      <div className="max-w-6xl mx-auto space-y-16">
-        {Object.entries(skills).map(([category, items], idx) => (
+      <div className="space-y-8">
+        {Object.entries(groups).map(([title, items], idx) => (
           <motion.div
-            key={category}
-            initial={{ opacity: 0, y: 30 }}
+            key={title}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: idx * 0.15 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: idx * 0.1 }}
+            className="grid md:grid-cols-[220px_1fr] gap-4 md:gap-8"
           >
-            <h3 className="text-xl font-semibold mb-4 text-white">{category}</h3>
-            <div className="h-px w-full bg-white/10 mb-8" />
-
-            <div className="flex flex-wrap gap-4">
-              {items.map((skill, i) => (
-                <motion.div
-                  key={skill}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.4, delay: i * 0.05 }}
-                  className="px-6 py-3 border border-white/20 rounded-md text-sm text-gray-200 bg-white/5 backdrop-blur-sm hover:border-cyan-400/60 hover:text-cyan-400 hover:shadow-[0_0_15px_rgba(34,211,238,0.15)] transition-all flex items-center"
+            <h3 className="text-base font-semibold text-gray-200">{title}</h3>
+            <div className="flex flex-wrap gap-2.5">
+              {items.map((item) => (
+                <span
+                  key={item}
+                  className="px-3.5 py-1.5 text-sm rounded-lg border border-white/10 bg-white/5 text-gray-300 hover:border-cyan-400/50 hover:text-cyan-400 transition-colors"
                 >
-                  {skillIcons[skill]} {skill}
-                </motion.div>
+                  {item}
+                </span>
               ))}
             </div>
           </motion.div>
