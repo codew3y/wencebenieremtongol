@@ -1,70 +1,116 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { FaFacebookF, FaLinkedinIn, FaGithub } from "react-icons/fa";
+import { FaGithub, FaLinkedinIn, FaFacebookF } from "react-icons/fa";
+import { HiOutlineMail, HiOutlinePhone } from "react-icons/hi";
+import { FiMapPin } from "react-icons/fi";
+
+const details = [
+  { icon: <HiOutlineMail />, label: "tongolwey@gmail.com", href: "mailto:tongolwey@gmail.com" },
+  { icon: <HiOutlinePhone />, label: "0930 751 9702", href: "tel:+639307519702" },
+  { icon: <FiMapPin />, label: "Minalin, Pampanga", href: null },
+];
+
+const socials = [
+  { icon: <FaGithub />, href: "https://github.com/codew3y/" },
+  { icon: <FaLinkedinIn />, href: "https://www.linkedin.com/in/wey-tongol-32a968393/" },
+  { icon: <FaFacebookF />, href: "https://www.facebook.com/share/1AKQEk1AEq/?mibextid=wwXIfr/" },
+];
 
 const Contact = () => {
   return (
-    <section id="contact" className="py-20 bg-gray-800 text-center px-4">
-      <motion.h2
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
-        className="text-4xl font-bold mb-12 text-white"
-      >
-        Get in Touch
-      </motion.h2>
-
-      <motion.form
-        action = "https://formspree.io/f/xvzgeavj"
-        method="POST"
-        initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        className="max-w-3xl mx-auto flex flex-col gap-4 text-left"
-      >
-        <label className="text-gray-300 font-medium">
-          Name
-          <input type="text" name="name" placeholder="Your Name" className="w-full mt-2 px-4 py-2 rounded-md bg-gray-700 text-gray-200 border border-gray-600 focus:border-cyan-400 focus:outline-none"/>
-        </label>
-
-        <label className="text-gray-300 font-medium">
-          Email
-          <input type="email" name="email" placeholder="youremail@example.com" className="w-full mt-2 px-4 py-2 rounded-md bg-gray-700 text-gray-200 border border-gray-600 focus:border-cyan-400 focus:outline-none"/>
-        </label>
-
-        <label className="text-gray-300 font-medium">
-          Subject
-          <input type="text" name="subject" placeholder="Subject" className="w-full mt-2 px-4 py-2 rounded-md bg-gray-700 text-gray-200 border border-gray-600 focus:border-cyan-400 focus:outline-none"/>
-        </label>
-
-        <label className="text-gray-300 font-medium">
-          Message
-          <textarea name="message" rows="5" placeholder="Your Message" className="w-full mt-2 px-4 py-2 rounded-md bg-gray-700 text-gray-200 border border-gray-600 focus:border-cyan-400 focus:outline-none resize-none"/>
-        </label>
-
-        <button type="submit" className="mt-4 px-6 py-3 bg-cyan-500 text-black font-semibold rounded-lg hover:bg-cyan-400 transition">
-          Send a Message
-        </button>
-      </motion.form>
-
+    <section id="contact" className="py-20 max-w-5xl mx-auto px-6">
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
+        initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.3 }}
-        className="flex justify-center mt-12 gap-6"
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
       >
-        <a href="https://www.facebook.com/share/1AKQEk1AEq/?mibextid=wwXIfr/" target="_blank" rel="noopener noreferrer" className="p-5 bg-gray-700 rounded-lg hover:bg-cyan-500 text-white text-3xl transition flex items-center justify-center">
-          <FaFacebookF />
-        </a>
-
-        <a href="https://www.linkedin.com/in/wey-tongol-32a968393/" target="_blank" rel="noopener noreferrer" className="p-5 bg-gray-700 rounded-lg hover:bg-cyan-500 text-white text-3xl transition flex items-center justify-center">
-          <FaLinkedinIn />
-        </a>
-
-        <a href="https://github.com/codew3y/" target="_blank" rel="noopener noreferrer" className="p-5 bg-gray-700 rounded-lg hover:bg-cyan-500 text-white text-3xl transition flex items-center justify-center">
-          <FaGithub />
-        </a>
+        <p className="text-sm font-semibold text-cyan-400 uppercase tracking-widest mb-2">
+          Contact
+        </p>
+        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+          Get in touch
+        </h2>
+        <p className="text-gray-400 max-w-2xl mb-10">
+          Have a question or an opportunity? Send a message and I'll get back to you.
+        </p>
       </motion.div>
+
+      <div className="grid md:grid-cols-[1fr_1.4fr] gap-10">
+        <div className="space-y-4">
+          {details.map((d) => {
+            const content = (
+              <div className="flex items-center gap-3 text-gray-300">
+                <span className="text-cyan-400 text-lg">{d.icon}</span>
+                <span className="text-sm">{d.label}</span>
+              </div>
+            );
+            return d.href ? (
+              <a key={d.label} href={d.href} className="block hover:text-cyan-400 transition-colors">
+                {content}
+              </a>
+            ) : (
+              <div key={d.label}>{content}</div>
+            );
+          })}
+
+          <div className="flex gap-3 pt-2">
+            {socials.map((s, i) => (
+              <a
+                key={i}
+                href={s.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-3 rounded-lg border border-white/10 text-gray-300 hover:text-cyan-400 hover:border-cyan-400/50 transition-colors"
+              >
+                {s.icon}
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <form
+          action="https://formspree.io/f/xvzgeavj"
+          method="POST"
+          className="flex flex-col gap-4"
+        >
+          <div className="grid sm:grid-cols-2 gap-4">
+            <input
+              type="text"
+              name="name"
+              placeholder="Your name"
+              required
+              className="px-4 py-2.5 rounded-lg bg-white/5 text-gray-200 border border-white/10 focus:border-cyan-400 focus:outline-none placeholder-gray-500"
+            />
+            <input
+              type="email"
+              name="email"
+              placeholder="Your email"
+              required
+              className="px-4 py-2.5 rounded-lg bg-white/5 text-gray-200 border border-white/10 focus:border-cyan-400 focus:outline-none placeholder-gray-500"
+            />
+          </div>
+          <input
+            type="text"
+            name="subject"
+            placeholder="Subject"
+            className="px-4 py-2.5 rounded-lg bg-white/5 text-gray-200 border border-white/10 focus:border-cyan-400 focus:outline-none placeholder-gray-500"
+          />
+          <textarea
+            name="message"
+            rows="5"
+            placeholder="Your message"
+            required
+            className="px-4 py-2.5 rounded-lg bg-white/5 text-gray-200 border border-white/10 focus:border-cyan-400 focus:outline-none placeholder-gray-500 resize-none"
+          />
+          <button
+            type="submit"
+            className="self-start px-6 py-2.5 bg-cyan-500 text-black font-semibold rounded-lg hover:bg-cyan-400 transition-colors"
+          >
+            Send message
+          </button>
+        </form>
+      </div>
     </section>
   );
 };
