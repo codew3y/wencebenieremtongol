@@ -1,6 +1,7 @@
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useRef } from "react";
+import { motion, useReducedMotion, useScroll, useSpring } from "framer-motion";
 import Section from "./Section";
+import { fadeUp, stagger, viewportOnce } from "../lib/motion";
 
 const roles = [
   {
@@ -33,6 +34,17 @@ const roles = [
 ];
 
 const Experience = () => {
+  const timelineRef = useRef(null);
+  const reduceMotion = useReducedMotion();
+  // Named edges: 0 when the timeline's top reaches the viewport centre, 1 when
+  // its bottom does. Percentage offsets ("start 75%") do not parse into a usable
+  // range here -- the value pins at 1 and the line never draws.
+  const { scrollYProgress } = useScroll({
+    target: timelineRef,
+    offset: ["start center", "end center"],
+  });
+  const drawn = useSpring(scrollYProgress, { stiffness: 120, damping: 30 });
+
   return (
     <Section
       id="experience"
@@ -40,24 +52,43 @@ const Experience = () => {
       label="experience"
       title="Where I've worked"
     >
-      <div className="relative border-l border-line pl-8 md:pl-10">
+      <motion.div
+        ref={timelineRef}
+        variants={stagger(0.12)}
+        initial="hidden"
+        whileInView="show"
+        viewport={viewportOnce}
+        className="relative pl-8 md:pl-10"
+      >
+        {/* Track, then an accent rule drawn over it as the section scrolls by. */}
+        <span
+          aria-hidden="true"
+          className="absolute top-0 left-0 h-full w-px bg-line"
+        />
+        <motion.span
+          aria-hidden="true"
+          style={{ scaleY: reduceMotion ? 1 : drawn }}
+          className="absolute top-0 left-0 h-full w-px origin-top bg-accent"
+        />
+
         {roles.map((role, idx) => (
           <motion.article
             key={role.title}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-60px" }}
-            transition={{ duration: 0.5, delay: idx * 0.1 }}
+            variants={fadeUp}
             className={idx === roles.length - 1 ? "" : "mb-10"}
           >
-            <span
+            <motion.span
+              initial={{ scale: 0 }}
+              whileInView={{ scale: 1 }}
+              viewport={viewportOnce}
+              transition={{ type: "spring", stiffness: 420, damping: 20 }}
               className={`absolute -left-[6.5px] mt-2 h-3 w-3 rounded-full border-2 border-canvas ${
                 role.current ? "bg-accent" : "bg-line-strong"
               }`}
               aria-hidden="true"
             />
 
-            <div className="rounded-xl border border-line bg-surface p-6 transition-colors hover:border-accent/40">
+            <div className="rounded-xl border border-line bg-surface p-6 transition-[transform,border-color] duration-200 hover:border-accent/40 motion-safe:hover:-translate-y-0.5">
               <div className="flex flex-col gap-1 md:flex-row md:items-baseline md:justify-between">
                 <div>
                   <h3 className="text-lg font-semibold text-fg">{role.title}</h3>
@@ -82,7 +113,7 @@ const Experience = () => {
             </div>
           </motion.article>
         ))}
-      </div>
+      </motion.div>
     </Section>
   );
 };

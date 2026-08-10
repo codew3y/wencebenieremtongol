@@ -5,6 +5,15 @@ import { FaGithub, FaLinkedinIn } from "react-icons/fa";
 import { HiOutlineMail } from "react-icons/hi";
 import profilePhoto from "../assets/img/profile-photo.JPG";
 import CVResume from "../assets/CV/WenceTongol_Resume.pdf";
+import useTypewriter from "../hooks/useTypewriter";
+import { fadeIn, stagger } from "../lib/motion";
+
+// The card fades in first, then its rows print, then the prompt types. Kept
+// tight on purpose: this is decoration, and nobody should wait on it to read.
+const ROWS_START = 0.45;
+const ROW_STAGGER = 0.075;
+const PROMPT = "automation · integration · cloud";
+const PROMPT_DELAY = 850;
 
 const meta = [
   // Kept short so each value fits the narrowed card on one line.
@@ -26,6 +35,11 @@ const socials = [
 ];
 
 const Hero = () => {
+  const { typed, done } = useTypewriter(PROMPT, {
+    speed: 18,
+    startDelay: PROMPT_DELAY,
+  });
+
   return (
     <section
       id="home"
@@ -114,20 +128,29 @@ const Hero = () => {
               style={{ aspectRatio: "397 / 595" }}
             />
 
-            <dl className="mt-6 space-y-2.5 font-mono text-xs">
+            {/* Printed line by line, the way command output actually arrives. */}
+            <motion.dl
+              variants={stagger(ROW_STAGGER, ROWS_START)}
+              initial="hidden"
+              animate="show"
+              className="mt-6 space-y-2.5 font-mono text-xs"
+            >
               {meta.map((item) => (
-                <div key={item.key} className="flex gap-2">
+                <motion.div key={item.key} variants={fadeIn} className="flex gap-2">
                   {/* Wide enough for "location" (8 chars) so every value aligns. */}
                   <dt className="w-16 shrink-0 text-accent">{item.key}</dt>
                   <dd className="text-muted">{item.value}</dd>
-                </div>
+                </motion.div>
               ))}
-            </dl>
+            </motion.dl>
 
-            <p className="mt-6 font-mono text-[11px] text-faint">
-              <span className="text-accent">$</span> automation · integration ·
-              cloud
-              <span className="ml-1 inline-block h-3.5 w-2 translate-y-0.5 animate-pulse bg-accent" />
+            <p className="mt-6 min-h-[1.5em] font-mono text-[11px] text-faint">
+              <span className="text-accent">$</span> {typed}
+              <span
+                className={`ml-0.5 inline-block h-3.5 w-2 translate-y-0.5 bg-accent ${
+                  done ? "animate-pulse" : ""
+                }`}
+              />
             </p>
           </div>
         </motion.div>
