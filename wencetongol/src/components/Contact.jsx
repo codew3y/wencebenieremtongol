@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { FaFacebookF, FaGithub, FaLinkedinIn } from "react-icons/fa";
-import { HiOutlineMail, HiOutlinePhone } from "react-icons/hi";
+import { HiOutlineMail } from "react-icons/hi";
 import { FiMapPin } from "react-icons/fi";
 import Section from "./Section";
 
@@ -11,7 +11,6 @@ const details = [
     label: "tongolwey@gmail.com",
     href: "mailto:tongolwey@gmail.com",
   },
-  { icon: <HiOutlinePhone />, label: "0930 751 9702", href: "tel:+639307519702" },
   { icon: <FiMapPin />, label: "Pampanga, Philippines", href: null },
 ];
 
