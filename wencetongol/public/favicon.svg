@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- Self-contained tile so the mark reads on both light and dark tab bars. -->
+  <rect width="32" height="32" rx="7" fill="#05070c" />
+  <!-- W drawn as a stroked path rather than text: no font dependency, and it
+       stays legible at 16px where a "</>" glyph would turn to mush. -->
+  <path
+    d="M6.5 9 L11.25 23 L16 14.5 L20.75 23 L25.5 9"
+    fill="none"
+    stroke="#22d3ee"
+    stroke-width="3"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+</svg>
