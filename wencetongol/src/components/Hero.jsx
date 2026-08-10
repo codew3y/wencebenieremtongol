@@ -91,7 +91,7 @@ const Hero = () => {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.15 }}
-          className="w-full max-w-[288px] overflow-hidden rounded-2xl border border-line bg-surface shadow-xl shadow-black/5 lg:ml-auto"
+          className="w-full max-w-[320px] overflow-hidden rounded-2xl border border-line bg-surface shadow-xl shadow-black/5 lg:ml-auto"
         >
           <div className="flex items-center gap-2 border-b border-line bg-surface-2 px-4 py-3">
             <span className="h-2.5 w-2.5 rounded-full bg-red-400/70" />
@@ -101,16 +101,16 @@ const Hero = () => {
           </div>
 
           <div className="p-5">
-            {/* Centred because it now sits alone in the card. Source is 397x595,
-                so 224px is a ~13% upscale at 2x DPR — the widest that still
-                balances the card without visible softening. The aspect ratio
-                matches the file, so nothing is cropped. */}
+            {/* Centred because it sits alone in the card. Source is 397x595, so
+                248px is a ~25% upscale at 2x DPR — a higher-resolution original
+                would let this grow further. The aspect ratio matches the file,
+                so nothing is cropped. */}
             <img
               src={profilePhoto}
               alt="Wence Benierem Tongol"
               width="397"
               height="595"
-              className="mx-auto w-full max-w-[224px] rounded-xl border border-line object-cover"
+              className="mx-auto w-full max-w-[248px] rounded-xl border border-line object-cover"
               style={{ aspectRatio: "397 / 595" }}
             />
 
