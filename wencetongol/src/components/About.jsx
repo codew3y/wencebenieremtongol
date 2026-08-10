@@ -6,7 +6,7 @@ const facts = [
   { label: "Role", value: "CRM Developer Associate" },
   { label: "Current company", value: "Manentia Enterprise Support PH Inc." },
   { label: "Focus", value: "Automation & API integration" },
-  { label: "Based in", value: "Minalin, Pampanga, PH" },
+  { label: "Based in", value: "Pampanga, Philippines" },
   { label: "Education", value: "BS Information Technology" },
   { label: "Languages", value: "Filipino (native), English (professional)" },
 ];
