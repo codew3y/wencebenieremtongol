@@ -1,61 +1,102 @@
 import React from "react";
 import { motion } from "framer-motion";
+import Section from "./Section";
 
-const groups = {
-  "Frontend": ["HTML", "CSS", "JavaScript", "ReactJS", "Tailwind CSS"],
-  "Backend & Automation": ["PHP", "NodeJS", "Zoho Deluge", "C#"],
-  "Databases & Tools": [
-    "MySQL",
-    "MongoDB",
-    "Zoho CRM",
-    "Zoho Writer",
-    "Postman",
-    "PowerShell",
-    "EcoHub",
-  ],
-  "AI Tools": ["Claude", "Claude Code", "Claude Cowork"],
-  "Core Strengths": [
-    "Problem Solving",
-    "Troubleshooting",
-    "Leadership",
-    "Documentation",
-    "Team Collaboration",
-  ],
-};
+const groups = [
+  {
+    title: "Languages",
+    items: [
+      "JavaScript",
+      "Node.js",
+      "Python",
+      "PHP",
+      "C#",
+      "Zoho Deluge",
+      "HTML",
+      "CSS",
+      "SQL",
+    ],
+  },
+  { title: "Frontend", items: ["ReactJS", "Tailwind CSS"] },
+  {
+    title: "Cloud & Identity",
+    items: ["Microsoft Azure", "OAuth 2.0", "JSON Web Tokens (JWT)"],
+  },
+  {
+    title: "Platforms & APIs",
+    items: [
+      "Zoho CRM",
+      "Zoho Writer",
+      "Zoho Flow",
+      "Microsoft Graph",
+      "Microsoft Purview eDiscovery",
+      "Model Context Protocol",
+    ],
+  },
+  { title: "Databases", items: ["MySQL", "MongoDB"] },
+  {
+    title: "Testing & Tooling",
+    items: [
+      "Postman",
+      "PowerShell",
+      "EcoHub",
+      "Git",
+      "GitHub Actions",
+      "Node.js test runner",
+      "pytest",
+    ],
+  },
+  {
+    title: "Practices",
+    items: [
+      "REST integration",
+      "Automated testing",
+      "CI/CD",
+      "Audit logging",
+      "Technical writing",
+      "Incident troubleshooting",
+    ],
+  },
+  {
+    title: "AI Tooling",
+    items: ["Claude", "Claude Code", "Claude Cowork"],
+  },
+  {
+    title: "Strengths",
+    items: [
+      "Analytical problem solving",
+      "Ownership",
+      "Collaboration",
+      "Clear written communication",
+    ],
+  },
+];
 
 const Skills = () => {
   return (
-    <section id="skills" className="py-20 max-w-5xl mx-auto px-6">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-      >
-        <p className="text-sm font-semibold text-cyan-400 uppercase tracking-widest mb-2">
-          Skills
-        </p>
-        <h2 className="text-3xl md:text-4xl font-bold text-white mb-10">
-          Technical stack
-        </h2>
-      </motion.div>
-
-      <div className="space-y-8">
-        {Object.entries(groups).map(([title, items], idx) => (
+    <Section
+      id="skills"
+      index="02"
+      label="skills"
+      title="Technical stack"
+      intro="The languages, platforms, and practices I work with day to day."
+    >
+      <div className="divide-y divide-line border-y border-line">
+        {groups.map((group, idx) => (
           <motion.div
-            key={title}
-            initial={{ opacity: 0, y: 20 }}
+            key={group.title}
+            initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: idx * 0.1 }}
-            className="grid md:grid-cols-[220px_1fr] gap-4 md:gap-8"
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.45, delay: Math.min(idx, 5) * 0.06 }}
+            className="grid gap-3 py-5 md:grid-cols-[200px_1fr] md:gap-8"
           >
-            <h3 className="text-base font-semibold text-gray-200">{title}</h3>
-            <div className="flex flex-wrap gap-2.5">
-              {items.map((item) => (
+            <h3 className="font-mono text-sm text-accent">{group.title}</h3>
+            <div className="flex flex-wrap gap-2">
+              {group.items.map((item) => (
                 <span
                   key={item}
-                  className="px-3.5 py-1.5 text-sm rounded-lg border border-white/10 bg-white/5 text-gray-300 hover:border-cyan-400/50 hover:text-cyan-400 transition-colors"
+                  className="rounded-md border border-line bg-surface px-3 py-1.5 font-mono text-[13px] text-muted transition-colors hover:border-accent/50 hover:text-accent"
                 >
                   {item}
                 </span>
@@ -64,7 +105,7 @@ const Skills = () => {
           </motion.div>
         ))}
       </div>
-    </section>
+    </Section>
   );
 };
 
