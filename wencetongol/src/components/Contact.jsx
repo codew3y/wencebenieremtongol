@@ -12,7 +12,7 @@ const details = [
     href: "mailto:tongolwey@gmail.com",
   },
   { icon: <HiOutlinePhone />, label: "0930 751 9702", href: "tel:+639307519702" },
-  { icon: <FiMapPin />, label: "Minalin, Pampanga, PH", href: null },
+  { icon: <FiMapPin />, label: "Pampanga, Philippines", href: null },
 ];
 
 const socials = [

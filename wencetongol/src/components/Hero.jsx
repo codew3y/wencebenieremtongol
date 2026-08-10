@@ -21,7 +21,7 @@ const meta = [
   { key: "focus", value: "Integrations & Automation" },
   { key: "stack", value: "Deluge · Node.js · Azure" },
   { key: "school", value: "Pampanga State University" },
-  { key: "location", value: "Minalin, Pampanga, PH" },
+  { key: "location", value: "Pampanga, Philippines" },
 ];
 
 const socials = [
