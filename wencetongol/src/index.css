@@ -1,11 +1,111 @@
 @import "tailwindcss";
 
-body {
-  @apply bg-gray-950 text-white font-sans antialiased;
+/* Class-based dark mode (Tailwind v4 defaults to prefers-color-scheme). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, "Cascadia Code", Menlo,
+    monospace;
+}
+
+/* Light theme — the default. */
+:root {
+  --canvas: #f6f8fb;
+  --canvas-2: #ffffff;
+  --surface: #ffffff;
+  --surface-2: #eef1f6;
+  --line: #dde2ea;
+  --line-strong: #c3cad6;
+  --fg: #0b1220;
+  --muted: #4b5566;
+  --faint: #7a8496;
+  --accent: #0e7490;
+  --accent-fg: #ffffff;
+  --accent-soft: rgb(14 116 144 / 0.1);
+  --grid: rgb(11 18 32 / 0.06);
+  --glow: rgb(14 116 144 / 0.16);
+}
+
+.dark {
+  --canvas: #05070c;
+  --canvas-2: #080b12;
+  --surface: rgb(255 255 255 / 0.035);
+  --surface-2: rgb(255 255 255 / 0.07);
+  --line: rgb(255 255 255 / 0.1);
+  --line-strong: rgb(255 255 255 / 0.2);
+  --fg: #e9eef6;
+  --muted: #9aa6b8;
+  --faint: #69748a;
+  --accent: #22d3ee;
+  --accent-fg: #04141a;
+  --accent-soft: rgb(34 211 238 / 0.12);
+  --grid: rgb(255 255 255 / 0.045);
+  --glow: rgb(34 211 238 / 0.18);
+}
+
+/* `inline` keeps the var reference live, so the palette swaps with the theme. */
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-canvas-2: var(--canvas-2);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-accent: var(--accent);
+  --color-accent-fg: var(--accent-fg);
+  --color-accent-soft: var(--accent-soft);
 }
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
 }
 
+body {
+  background-color: var(--canvas);
+  color: var(--fg);
+  @apply font-sans antialiased;
+}
 
+@media (prefers-reduced-motion: no-preference) {
+  body {
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-fg);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Blueprint grid used behind the page. */
+.tech-grid {
+  background-image: linear-gradient(to right, var(--grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 90% 60% at 50% 0%, #000 35%, transparent 100%);
+  -webkit-mask-image: radial-gradient(
+    ellipse 90% 60% at 50% 0%,
+    #000 35%,
+    transparent 100%
+  );
+}
+
+.tech-glow {
+  background: radial-gradient(ellipse 60% 50% at 50% -10%, var(--glow), transparent 70%);
+}

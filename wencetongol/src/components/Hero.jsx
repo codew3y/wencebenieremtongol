@@ -1,88 +1,136 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { FiArrowUpRight } from "react-icons/fi";
+import { FiDownload } from "react-icons/fi";
 import { FaGithub, FaLinkedinIn } from "react-icons/fa";
 import { HiOutlineMail } from "react-icons/hi";
 import profilePhoto from "../assets/img/profile-photo.JPG";
-import CVResume from "../assets/CV/Wence_Tongol_Resume_ATS_v2.pdf";
+import CVResume from "../assets/CV/WenceTongol_Resume.pdf";
+
+const meta = [
+  // Kept short so each value fits the narrowed card on one line.
+  { key: "role", value: "CRM Developer" },
+  { key: "focus", value: "Integrations & Automation" },
+  { key: "stack", value: "Deluge · Node.js · Azure" },
+  { key: "school", value: "Pampanga State University" },
+  { key: "location", value: "Minalin, Pampanga, PH" },
+];
+
+const socials = [
+  { icon: <FaGithub />, href: "https://github.com/codew3y/", label: "GitHub" },
+  {
+    icon: <FaLinkedinIn />,
+    href: "https://www.linkedin.com/in/wey-tongol-32a968393/",
+    label: "LinkedIn",
+  },
+  { icon: <HiOutlineMail />, href: "mailto:tongolwey@gmail.com", label: "Email" },
+];
 
 const Hero = () => {
   return (
     <section
       id="home"
-      className="min-h-screen flex flex-col justify-center max-w-5xl mx-auto px-6 pt-24 pb-16"
+      className="mx-auto flex min-h-screen max-w-6xl flex-col justify-center px-6 pt-28 pb-20"
     >
-      <motion.div
-        initial={{ opacity: 0, y: 24 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7 }}
-        className="flex flex-col md:flex-row md:items-center gap-10"
-      >
-        <img
-          src={profilePhoto}
-          alt="Wence Tongol"
-          className="w-32 h-32 md:w-40 md:h-40 rounded-2xl object-cover border border-white/10 shadow-lg"
-        />
+      <div className="grid items-center gap-12 lg:grid-cols-[1.15fr_1fr] lg:gap-16">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7 }}
+        >
+          <p className="font-mono text-xs tracking-[0.2em] text-accent">
+            // crm developer &amp; integrations specialist
+          </p>
 
-        <div>
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-white">
-            Wence Benierem Tongol
+          <h1 className="mt-5 text-4xl font-extrabold tracking-tight text-fg sm:text-5xl md:text-6xl">
+            Wence Benierem
+            <br />
+            Tongol
           </h1>
-          <p className="mt-3 text-lg md:text-xl text-cyan-400 font-medium">
-            CRM Developer
-          </p>
-          <p className="mt-4 max-w-xl text-gray-400 leading-relaxed">
-            I build and maintain Zoho CRM automations, custom MCP connectors, and
-            API integrations — focused on business-process automation, workflows,
-            and clean technical documentation. I work proficiently with Claude as
-            an AI tool to accelerate development, automation, and documentation.
+
+          <p className="mt-6 max-w-xl leading-relaxed text-muted">
+            I automate business processes and connect enterprise systems — Zoho CRM
+            automation in Deluge, MCP connectors on Microsoft Azure, and REST
+            integrations secured with OAuth 2.0. I use Claude throughout the
+            development workflow, from drafting and debugging code to documentation
+            and integration troubleshooting.
           </p>
 
-          <div className="mt-7 flex flex-wrap items-center gap-3">
+          <div className="mt-9 flex flex-wrap items-center gap-3">
             <a
               href="#contact"
-              className="px-5 py-2.5 bg-cyan-500 text-black rounded-lg font-semibold hover:bg-cyan-400 transition-colors"
+              className="rounded-lg bg-accent px-5 py-2.5 font-semibold text-accent-fg transition-opacity hover:opacity-90"
             >
               Get in touch
             </a>
             <a
               href={CVResume}
-              download
-              className="px-5 py-2.5 border border-white/15 text-gray-200 rounded-lg font-semibold hover:border-cyan-400 hover:text-cyan-400 transition-colors inline-flex items-center gap-1.5"
+              download="WenceTongol_Resume.pdf"
+              className="inline-flex items-center gap-2 rounded-lg border border-line bg-surface px-5 py-2.5 font-semibold text-fg transition-colors hover:border-accent/60 hover:text-accent"
             >
-              Résumé <FiArrowUpRight />
+              Résumé <FiDownload size={16} />
             </a>
 
-            <div className="flex items-center gap-2 ml-1">
-              <a
-                href="https://github.com/codew3y/"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="GitHub"
-                className="p-2.5 rounded-lg border border-white/10 text-gray-300 hover:text-cyan-400 hover:border-cyan-400/50 transition-colors"
-              >
-                <FaGithub />
-              </a>
-              <a
-                href="https://www.linkedin.com/in/wey-tongol-32a968393/"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="LinkedIn"
-                className="p-2.5 rounded-lg border border-white/10 text-gray-300 hover:text-cyan-400 hover:border-cyan-400/50 transition-colors"
-              >
-                <FaLinkedinIn />
-              </a>
-              <a
-                href="mailto:tongolwey@gmail.com"
-                aria-label="Email"
-                className="p-2.5 rounded-lg border border-white/10 text-gray-300 hover:text-cyan-400 hover:border-cyan-400/50 transition-colors"
-              >
-                <HiOutlineMail />
-              </a>
+            <div className="ml-1 flex items-center gap-2">
+              {socials.map((social) => (
+                <a
+                  key={social.label}
+                  href={social.href}
+                  target={social.href.startsWith("mailto:") ? undefined : "_blank"}
+                  rel="noopener noreferrer"
+                  aria-label={social.label}
+                  className="grid h-10 w-10 place-items-center rounded-lg border border-line bg-surface text-muted transition-colors hover:border-accent/50 hover:text-accent"
+                >
+                  {social.icon}
+                </a>
+              ))}
             </div>
           </div>
-        </div>
-      </motion.div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.15 }}
+          className="w-full max-w-[288px] overflow-hidden rounded-2xl border border-line bg-surface shadow-xl shadow-black/5 lg:ml-auto"
+        >
+          <div className="flex items-center gap-2 border-b border-line bg-surface-2 px-4 py-3">
+            <span className="h-2.5 w-2.5 rounded-full bg-red-400/70" />
+            <span className="h-2.5 w-2.5 rounded-full bg-yellow-400/70" />
+            <span className="h-2.5 w-2.5 rounded-full bg-green-400/70" />
+            <span className="ml-2 font-mono text-xs text-faint">~/whoami</span>
+          </div>
+
+          <div className="p-5">
+            {/* Centred because it now sits alone in the card. Source is 397x595,
+                so 224px is a ~13% upscale at 2x DPR — the widest that still
+                balances the card without visible softening. The aspect ratio
+                matches the file, so nothing is cropped. */}
+            <img
+              src={profilePhoto}
+              alt="Wence Benierem Tongol"
+              width="397"
+              height="595"
+              className="mx-auto w-full max-w-[224px] rounded-xl border border-line object-cover"
+              style={{ aspectRatio: "397 / 595" }}
+            />
+
+            <dl className="mt-6 space-y-2.5 font-mono text-xs">
+              {meta.map((item) => (
+                <div key={item.key} className="flex gap-2">
+                  <dt className="w-14 shrink-0 text-accent">{item.key}</dt>
+                  <dd className="text-muted">{item.value}</dd>
+                </div>
+              ))}
+            </dl>
+
+            <p className="mt-6 font-mono text-[11px] text-faint">
+              <span className="text-accent">$</span> automation · integration ·
+              cloud
+              <span className="ml-1 inline-block h-3.5 w-2 translate-y-0.5 animate-pulse bg-accent" />
+            </p>
+          </div>
+        </motion.div>
+      </div>
     </section>
   );
 };
