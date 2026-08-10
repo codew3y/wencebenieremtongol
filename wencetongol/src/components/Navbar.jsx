@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { FiMenu, FiX } from "react-icons/fi";
 import ThemeToggle from "./ThemeToggle";
 
@@ -67,7 +68,7 @@ const Navbar = () => {
               <a
                 href={link.href}
                 aria-current={active === link.href ? "true" : undefined}
-                className={`transition-colors hover:text-accent ${
+                className={`relative block pb-1 transition-colors hover:text-accent ${
                   active === link.href ? "text-accent" : ""
                 }`}
               >
@@ -75,6 +76,15 @@ const Navbar = () => {
                   {String(idx + 1).padStart(2, "0")}.
                 </span>{" "}
                 {link.name}
+                {/* Shared layoutId lets the underline glide between links
+                    instead of disappearing and reappearing. */}
+                {active === link.href && (
+                  <motion.span
+                    layoutId="nav-active"
+                    className="absolute bottom-0 left-0 h-px w-full bg-accent"
+                    transition={{ type: "spring", stiffness: 380, damping: 32 }}
+                  />
+                )}
               </a>
             </li>
           ))}

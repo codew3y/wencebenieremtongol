@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import Section from "./Section";
+import { fadeUp, stagger, viewportOnce } from "../lib/motion";
 
 const education = [
   {
@@ -49,18 +50,19 @@ const Education = () => {
       label="education + certifications"
       title="Background"
     >
-      <div className="grid gap-6 lg:grid-cols-2">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.5 }}
-          className="space-y-4"
-        >
+      <motion.div
+        variants={stagger(0.1)}
+        initial="hidden"
+        whileInView="show"
+        viewport={viewportOnce}
+        className="grid gap-6 lg:grid-cols-2"
+      >
+        <motion.div variants={stagger(0.08)} className="space-y-4">
           {education.map((entry) => (
-            <div
+            <motion.div
               key={entry.school}
-              className="rounded-xl border border-line bg-surface p-5 transition-colors hover:border-accent/40"
+              variants={fadeUp}
+              className="rounded-xl border border-line bg-surface p-5 transition-[transform,border-color] duration-200 hover:border-accent/40 motion-safe:hover:-translate-y-0.5"
             >
               <div className="flex items-baseline justify-between gap-3">
                 <h3 className="font-semibold text-fg">{entry.school}</h3>
@@ -69,19 +71,16 @@ const Education = () => {
                 </span>
               </div>
               <p className="mt-1 text-sm text-muted">{entry.detail}</p>
-            </div>
+            </motion.div>
           ))}
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.5, delay: 0.1 }}
+          variants={stagger(0.08)}
           className="divide-y divide-line rounded-xl border border-line bg-surface"
         >
           {certifications.map((group) => (
-            <div key={group.issuer} className="p-5">
+            <motion.div key={group.issuer} variants={fadeUp} className="p-5">
               <h3 className="font-mono text-sm text-accent">{group.issuer}</h3>
               <ul className="mt-3 space-y-2">
                 {group.items.map((item) => (
@@ -91,10 +90,10 @@ const Education = () => {
                   </li>
                 ))}
               </ul>
-            </div>
+            </motion.div>
           ))}
         </motion.div>
-      </div>
+      </motion.div>
     </Section>
   );
 };

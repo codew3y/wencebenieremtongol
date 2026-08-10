@@ -2,6 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { FiArrowUpRight } from "react-icons/fi";
 import Section from "./Section";
+import { fadeUp, stagger, viewportOnce } from "../lib/motion";
 
 const professional = [
   {
@@ -114,15 +115,18 @@ const Projects = () => {
         // MWC Group projects
       </h3>
 
-      <div className="mt-5 space-y-6">
-        {professional.map((project, idx) => (
+      <motion.div
+        variants={stagger(0.1)}
+        initial="hidden"
+        whileInView="show"
+        viewport={viewportOnce}
+        className="mt-5 space-y-6"
+      >
+        {professional.map((project) => (
           <motion.article
             key={project.name}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-60px" }}
-            transition={{ duration: 0.5, delay: idx * 0.1 }}
-            className="rounded-xl border border-line bg-surface p-6 transition-colors hover:border-accent/40 md:p-7"
+            variants={fadeUp}
+            className="rounded-xl border border-line bg-surface p-6 transition-[transform,border-color] duration-200 hover:border-accent/40 motion-safe:hover:-translate-y-0.5 md:p-7"
           >
             <div className="flex flex-col gap-1 md:flex-row md:items-baseline md:justify-between">
               <div>
@@ -167,21 +171,24 @@ const Projects = () => {
             )}
           </motion.article>
         ))}
-      </div>
+      </motion.div>
 
       <h3 className="mt-14 font-mono text-xs tracking-[0.2em] text-accent">
         // personal projects
       </h3>
 
-      <div className="mt-5 grid gap-6 md:grid-cols-2">
-        {personal.map((project, idx) => (
+      <motion.div
+        variants={stagger(0.1)}
+        initial="hidden"
+        whileInView="show"
+        viewport={viewportOnce}
+        className="mt-5 grid gap-6 md:grid-cols-2"
+      >
+        {personal.map((project) => (
           <motion.article
             key={project.name}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-60px" }}
-            transition={{ duration: 0.5, delay: idx * 0.1 }}
-            className="group flex flex-col rounded-xl border border-line bg-surface p-6 transition-colors hover:border-accent/40"
+            variants={fadeUp}
+            className="group flex flex-col rounded-xl border border-line bg-surface p-6 transition-[transform,border-color] duration-200 hover:border-accent/40 motion-safe:hover:-translate-y-0.5"
           >
             <div className="flex items-start justify-between gap-4">
               <div>
@@ -220,7 +227,7 @@ const Projects = () => {
             </div>
           </motion.article>
         ))}
-      </div>
+      </motion.div>
     </Section>
   );
 };
