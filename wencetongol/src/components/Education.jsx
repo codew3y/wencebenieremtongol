@@ -1,5 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
+import Section from "./Section";
 
 const education = [
   {
@@ -15,64 +16,86 @@ const education = [
 ];
 
 const certifications = [
-  "Palo Alto Networks — Cybersecurity Fundamentals",
-  "Palo Alto Networks — Network Security Fundamentals",
-  "Palo Alto Networks — Cloud Security Fundamentals",
-  "Palo Alto Networks — Security Operations Fundamentals",
-  "Cisco — Intro to IoT and Digital Transformation",
-  "Anthropic — Claude 101",
-  "Anthropic — Claude Code 101",
-  "Anthropic — Introduction to Claude Cowork",
-  "Anthropic — AI Fluency: Frameworks & Foundation",
-  "Anthropic — AI Capabilities and Limitations",
+  {
+    issuer: "Palo Alto Networks",
+    items: [
+      "Cybersecurity Fundamentals",
+      "Network Security Fundamentals",
+      "Cloud Security Fundamentals",
+      "Security Operations Fundamentals",
+    ],
+  },
+  {
+    issuer: "Cisco Networking Academy",
+    items: ["Introduction to Internet of Things (IoT) and Digital Transformation"],
+  },
+  {
+    issuer: "Anthropic",
+    items: [
+      "Claude 101",
+      "Claude Code 101",
+      "Introduction to Claude Cowork",
+      "AI Fluency: Frameworks & Foundation",
+      "AI Capabilities and Limitations",
+    ],
+  },
 ];
 
 const Education = () => {
   return (
-    <section id="education" className="py-20 max-w-5xl mx-auto px-6">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-      >
-        <p className="text-sm font-semibold text-cyan-400 uppercase tracking-widest mb-2">
-          Education & Certifications
-        </p>
-        <h2 className="text-3xl md:text-4xl font-bold text-white mb-10">
-          Background
-        </h2>
-      </motion.div>
-
-      <div className="grid md:grid-cols-2 gap-6">
-        <div className="space-y-4">
-          {education.map((e) => (
+    <Section
+      id="education"
+      index="05"
+      label="education + certifications"
+      title="Background"
+    >
+      <div className="grid gap-6 lg:grid-cols-2">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.5 }}
+          className="space-y-4"
+        >
+          {education.map((entry) => (
             <div
-              key={e.school}
-              className="rounded-xl border border-white/10 bg-white/5 p-5"
+              key={entry.school}
+              className="rounded-xl border border-line bg-surface p-5 transition-colors hover:border-accent/40"
             >
-              <div className="flex items-center justify-between gap-2">
-                <h3 className="text-white font-semibold">{e.school}</h3>
-                <span className="text-xs text-gray-500 shrink-0">{e.period}</span>
+              <div className="flex items-baseline justify-between gap-3">
+                <h3 className="font-semibold text-fg">{entry.school}</h3>
+                <span className="font-mono text-xs whitespace-nowrap text-faint">
+                  {entry.period}
+                </span>
               </div>
-              <p className="text-sm text-gray-400 mt-1">{e.detail}</p>
+              <p className="mt-1 text-sm text-muted">{entry.detail}</p>
             </div>
           ))}
-        </div>
+        </motion.div>
 
-        <div className="rounded-xl border border-white/10 bg-white/5 p-5">
-          <h3 className="text-white font-semibold mb-3">Certifications</h3>
-          <ul className="space-y-2">
-            {certifications.map((c) => (
-              <li key={c} className="flex gap-3 text-sm text-gray-400">
-                <span className="text-cyan-400 mt-1.5 shrink-0 w-1.5 h-1.5 rounded-full bg-cyan-400" />
-                <span>{c}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="divide-y divide-line rounded-xl border border-line bg-surface"
+        >
+          {certifications.map((group) => (
+            <div key={group.issuer} className="p-5">
+              <h3 className="font-mono text-sm text-accent">{group.issuer}</h3>
+              <ul className="mt-3 space-y-2">
+                {group.items.map((item) => (
+                  <li key={item} className="flex gap-3 text-sm text-muted">
+                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </motion.div>
       </div>
-    </section>
+    </Section>
   );
 };
 

@@ -4,7 +4,44 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Wence Tongol — CRM Developer</title>
+    <title>Wence Tongol — CRM Developer | Integrations &amp; Automation</title>
+    <meta
+      name="description"
+      content="CRM developer and integrations specialist working on business-process automation, API integration, and cloud deployment — Zoho CRM automation in Deluge, MCP connectors on Microsoft Azure, and enterprise systems integrated over REST with OAuth 2.0."
+    />
+    <meta name="theme-color" content="#05070c" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f6f8fb" media="(prefers-color-scheme: light)" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Wence Benierem Tongol — CRM Developer" />
+    <meta
+      property="og:description"
+      content="CRM automation, MCP connectors on Azure, and REST integrations secured with OAuth 2.0."
+    />
+    <meta property="og:url" content="https://wencebenieremtongol.vercel.app/" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Applies the stored/system theme before first paint so there is no flash. -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem("theme");
+          var dark =
+            stored === "dark" ||
+            stored === "light"
+              ? stored === "dark"
+              : window.matchMedia("(prefers-color-scheme: dark)").matches;
+          document.documentElement.classList.toggle("dark", dark);
+          document.documentElement.style.colorScheme = dark ? "dark" : "light";
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

@@ -1,117 +1,167 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { FaGithub, FaLinkedinIn, FaFacebookF } from "react-icons/fa";
+import { FaFacebookF, FaGithub, FaLinkedinIn } from "react-icons/fa";
 import { HiOutlineMail, HiOutlinePhone } from "react-icons/hi";
 import { FiMapPin } from "react-icons/fi";
+import Section from "./Section";
 
 const details = [
-  { icon: <HiOutlineMail />, label: "tongolwey@gmail.com", href: "mailto:tongolwey@gmail.com" },
+  {
+    icon: <HiOutlineMail />,
+    label: "tongolwey@gmail.com",
+    href: "mailto:tongolwey@gmail.com",
+  },
   { icon: <HiOutlinePhone />, label: "0930 751 9702", href: "tel:+639307519702" },
-  { icon: <FiMapPin />, label: "Minalin, Pampanga", href: null },
+  { icon: <FiMapPin />, label: "Minalin, Pampanga, PH", href: null },
 ];
 
 const socials = [
-  { icon: <FaGithub />, href: "https://github.com/codew3y/" },
-  { icon: <FaLinkedinIn />, href: "https://www.linkedin.com/in/wey-tongol-32a968393/" },
-  { icon: <FaFacebookF />, href: "https://www.facebook.com/share/1AKQEk1AEq/?mibextid=wwXIfr/" },
+  { icon: <FaGithub />, href: "https://github.com/codew3y/", label: "GitHub" },
+  {
+    icon: <FaLinkedinIn />,
+    href: "https://www.linkedin.com/in/wey-tongol-32a968393/",
+    label: "LinkedIn",
+  },
+  {
+    icon: <FaFacebookF />,
+    href: "https://www.facebook.com/share/1AKQEk1AEq/?mibextid=wwXIfr/",
+    label: "Facebook",
+  },
 ];
+
+const fieldClass =
+  "w-full rounded-lg border border-line bg-canvas-2 px-4 py-2.5 text-sm text-fg placeholder-faint transition-colors focus:border-accent focus:outline-none";
 
 const Contact = () => {
   return (
-    <section id="contact" className="py-20 max-w-5xl mx-auto px-6">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-      >
-        <p className="text-sm font-semibold text-cyan-400 uppercase tracking-widest mb-2">
-          Contact
-        </p>
-        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-          Get in touch
-        </h2>
-        <p className="text-gray-400 max-w-2xl mb-10">
-          Have a question or an opportunity? Send a message and I'll get back to you.
-        </p>
-      </motion.div>
-
-      <div className="grid md:grid-cols-[1fr_1.4fr] gap-10">
-        <div className="space-y-4">
-          {details.map((d) => {
+    <Section
+      id="contact"
+      index="06"
+      label="contact"
+      title="Get in touch"
+      intro="Have a question or an opportunity? Send a message and I'll get back to you."
+    >
+      <div className="grid gap-10 lg:grid-cols-[1fr_1.4fr]">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.5 }}
+          className="space-y-4"
+        >
+          {details.map((detail) => {
             const content = (
-              <div className="flex items-center gap-3 text-gray-300">
-                <span className="text-cyan-400 text-lg">{d.icon}</span>
-                <span className="text-sm">{d.label}</span>
-              </div>
+              <span className="flex items-center gap-3">
+                <span className="text-lg text-accent">{detail.icon}</span>
+                <span className="font-mono text-sm">{detail.label}</span>
+              </span>
             );
-            return d.href ? (
-              <a key={d.label} href={d.href} className="block hover:text-cyan-400 transition-colors">
+
+            return detail.href ? (
+              <a
+                key={detail.label}
+                href={detail.href}
+                className="block text-muted transition-colors hover:text-accent"
+              >
                 {content}
               </a>
             ) : (
-              <div key={d.label}>{content}</div>
+              <div key={detail.label} className="text-muted">
+                {content}
+              </div>
             );
           })}
 
           <div className="flex gap-3 pt-2">
-            {socials.map((s, i) => (
+            {socials.map((social) => (
               <a
-                key={i}
-                href={s.href}
+                key={social.label}
+                href={social.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-3 rounded-lg border border-white/10 text-gray-300 hover:text-cyan-400 hover:border-cyan-400/50 transition-colors"
+                aria-label={social.label}
+                className="grid h-11 w-11 place-items-center rounded-lg border border-line bg-surface text-muted transition-colors hover:border-accent/50 hover:text-accent"
               >
-                {s.icon}
+                {social.icon}
               </a>
             ))}
           </div>
-        </div>
+        </motion.div>
 
-        <form
+        <motion.form
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.5, delay: 0.1 }}
           action="https://formspree.io/f/xvzgeavj"
           method="POST"
-          className="flex flex-col gap-4"
+          className="flex flex-col gap-4 rounded-xl border border-line bg-surface p-6"
         >
-          <div className="grid sm:grid-cols-2 gap-4">
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label htmlFor="name" className="sr-only">
+                Your name
+              </label>
+              <input
+                id="name"
+                type="text"
+                name="name"
+                placeholder="Your name"
+                required
+                className={fieldClass}
+              />
+            </div>
+            <div>
+              <label htmlFor="email" className="sr-only">
+                Your email
+              </label>
+              <input
+                id="email"
+                type="email"
+                name="email"
+                placeholder="Your email"
+                required
+                className={fieldClass}
+              />
+            </div>
+          </div>
+
+          <div>
+            <label htmlFor="subject" className="sr-only">
+              Subject
+            </label>
             <input
+              id="subject"
               type="text"
-              name="name"
-              placeholder="Your name"
-              required
-              className="px-4 py-2.5 rounded-lg bg-white/5 text-gray-200 border border-white/10 focus:border-cyan-400 focus:outline-none placeholder-gray-500"
-            />
-            <input
-              type="email"
-              name="email"
-              placeholder="Your email"
-              required
-              className="px-4 py-2.5 rounded-lg bg-white/5 text-gray-200 border border-white/10 focus:border-cyan-400 focus:outline-none placeholder-gray-500"
+              name="subject"
+              placeholder="Subject"
+              className={fieldClass}
             />
           </div>
-          <input
-            type="text"
-            name="subject"
-            placeholder="Subject"
-            className="px-4 py-2.5 rounded-lg bg-white/5 text-gray-200 border border-white/10 focus:border-cyan-400 focus:outline-none placeholder-gray-500"
-          />
-          <textarea
-            name="message"
-            rows="5"
-            placeholder="Your message"
-            required
-            className="px-4 py-2.5 rounded-lg bg-white/5 text-gray-200 border border-white/10 focus:border-cyan-400 focus:outline-none placeholder-gray-500 resize-none"
-          />
+
+          <div>
+            <label htmlFor="message" className="sr-only">
+              Your message
+            </label>
+            <textarea
+              id="message"
+              name="message"
+              rows="5"
+              placeholder="Your message"
+              required
+              className={`${fieldClass} resize-none`}
+            />
+          </div>
+
           <button
             type="submit"
-            className="self-start px-6 py-2.5 bg-cyan-500 text-black font-semibold rounded-lg hover:bg-cyan-400 transition-colors"
+            className="self-start rounded-lg bg-accent px-6 py-2.5 font-semibold text-accent-fg transition-opacity hover:opacity-90"
           >
             Send message
           </button>
-        </form>
+        </motion.form>
       </div>
-    </section>
+    </Section>
   );
 };
 

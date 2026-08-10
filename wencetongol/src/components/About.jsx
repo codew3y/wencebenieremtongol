@@ -1,59 +1,69 @@
 import React from "react";
 import { motion } from "framer-motion";
+import Section from "./Section";
 
 const facts = [
   { label: "Role", value: "CRM Developer Associate" },
+  { label: "Current company", value: "Manentia Enterprise Support PH Inc." },
   { label: "Focus", value: "Automation & API integration" },
-  { label: "AI Tooling", value: "Claude, Claude Code, Cowork" },
+  { label: "Based in", value: "Minalin, Pampanga, PH" },
   { label: "Education", value: "BS Information Technology" },
-  { label: "Languages", value: "Filipino, English" },
+  { label: "Languages", value: "Filipino (native), English (professional)" },
 ];
 
 const About = () => {
   return (
-    <section id="about" className="py-20 max-w-5xl mx-auto px-6">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-      >
-        <p className="text-sm font-semibold text-cyan-400 uppercase tracking-widest mb-2">
-          About
-        </p>
-        <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-          Who I am
-        </h2>
+    <Section id="about" index="01" label="about" title="Who I am">
+      <div className="grid gap-10 lg:grid-cols-[1.3fr_1fr]">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.6 }}
+          className="space-y-5 leading-relaxed text-muted"
+        >
+          <p>
+            I'm a CRM developer and integrations specialist with experience in
+            business-process automation, API integration, and cloud deployment. Day
+            to day I work with Zoho CRM automation in Deluge, build Model Context
+            Protocol (MCP) connectors on Microsoft Azure, and integrate enterprise
+            systems over REST with OAuth 2.0.
+          </p>
+          <p>
+            That work spans Microsoft Graph email search and Microsoft Purview
+            eDiscovery under app-only authentication, Zoho Writer templates that
+            generate client reports and investment proposals, and a FIX 4.4
+            order-routing service built against a private bank's Rules of
+            Engagement. I verify integrations with Postman, PowerShell, and EcoHub,
+            and I care about least-privilege scopes, audit logging, and
+            documentation that someone else can actually follow.
+          </p>
+          <p>
+            I use Claude as an AI assistant throughout the development workflow —
+            from drafting and debugging code to writing documentation and
+            troubleshooting integrations. Alongside development, I resolve assigned
+            IT helpdesk tickets.
+          </p>
+        </motion.div>
 
-        <p className="text-gray-400 leading-relaxed max-w-3xl">
-          I'm a CRM Developer focused on business-process automation, workflow
-          maintenance, and API integration testing. I build and maintain Zoho CRM
-          automations using Deluge scripting and Zoho Writer templates, develop
-          custom Model Context Protocol (MCP) connectors on Microsoft Azure, and
-          integrate Microsoft Graph and Microsoft Purview eDiscovery through
-          RESTful APIs secured with OAuth 2.0. I test and validate APIs with
-          Postman, EcoHub, and PowerShell, and take care to produce clear
-          technical documentation. I'm also proficient in using Claude as an AI
-          tool — leveraging Claude, Claude Code, and Claude Cowork to speed up
-          development, automation, and documentation. I also help out with IT
-          Helpdesk support.
-        </p>
-
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-10">
-          {facts.map((f) => (
-            <div
-              key={f.label}
-              className="rounded-xl border border-white/10 bg-white/5 p-4"
-            >
-              <p className="text-xs uppercase tracking-wider text-gray-500 mb-1">
-                {f.label}
-              </p>
-              <p className="text-sm text-gray-200 font-medium">{f.value}</p>
+        <motion.dl
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="divide-y divide-line overflow-hidden rounded-xl border border-line bg-surface"
+        >
+          {facts.map((fact) => (
+            <div key={fact.label} className="px-5 py-4">
+              <dt className="font-mono text-[11px] tracking-widest text-faint uppercase">
+                {fact.label}
+              </dt>
+              <dd className="mt-1 text-sm font-medium text-fg">{fact.value}</dd>
             </div>
           ))}
-        </div>
-      </motion.div>
-    </section>
+        </motion.dl>
+      </div>
+    </Section>
   );
 };
 
