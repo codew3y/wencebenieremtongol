@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import Section from "./Section";
+import { fadeUp, stagger, viewportOnce } from "../lib/motion";
 
 const groups = [
   {
@@ -81,30 +82,38 @@ const Skills = () => {
       title="Technical stack"
       intro="The languages, platforms, and practices I work with day to day."
     >
-      <div className="divide-y divide-line border-y border-line">
-        {groups.map((group, idx) => (
+      <motion.div
+        variants={stagger(0.07)}
+        initial="hidden"
+        whileInView="show"
+        viewport={viewportOnce}
+        className="divide-y divide-line border-y border-line"
+      >
+        {groups.map((group) => (
           <motion.div
             key={group.title}
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-60px" }}
-            transition={{ duration: 0.45, delay: Math.min(idx, 5) * 0.06 }}
+            variants={fadeUp}
             className="grid gap-3 py-5 md:grid-cols-[200px_1fr] md:gap-8"
           >
             <h3 className="font-mono text-sm text-accent">{group.title}</h3>
-            <div className="flex flex-wrap gap-2">
+            {/* Chips cascade within their row once the row itself arrives. */}
+            <motion.div
+              variants={stagger(0.02)}
+              className="flex flex-wrap gap-2"
+            >
               {group.items.map((item) => (
-                <span
+                <motion.span
                   key={item}
+                  variants={fadeUp}
                   className="rounded-md border border-line bg-surface px-3 py-1.5 font-mono text-[13px] text-muted transition-colors hover:border-accent/50 hover:text-accent"
                 >
                   {item}
-                </span>
+                </motion.span>
               ))}
-            </div>
+            </motion.div>
           </motion.div>
         ))}
-      </div>
+      </motion.div>
     </Section>
   );
 };
