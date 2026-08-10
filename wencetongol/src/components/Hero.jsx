@@ -117,7 +117,8 @@ const Hero = () => {
             <dl className="mt-6 space-y-2.5 font-mono text-xs">
               {meta.map((item) => (
                 <div key={item.key} className="flex gap-2">
-                  <dt className="w-14 shrink-0 text-accent">{item.key}</dt>
+                  {/* Wide enough for "location" (8 chars) so every value aligns. */}
+                  <dt className="w-16 shrink-0 text-accent">{item.key}</dt>
                   <dd className="text-muted">{item.value}</dd>
                 </div>
               ))}
