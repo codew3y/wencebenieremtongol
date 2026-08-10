@@ -28,7 +28,7 @@ const socials = [
   { icon: <FaGithub />, href: "https://github.com/codew3y/", label: "GitHub" },
   {
     icon: <FaLinkedinIn />,
-    href: "https://www.linkedin.com/in/wey-tongol-32a968393/",
+    href: "https://www.linkedin.com/in/wence-tongol-32a968393/",
     label: "LinkedIn",
   },
   { icon: <HiOutlineMail />, href: "mailto:tongolwey@gmail.com", label: "Email" },
