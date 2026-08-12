@@ -41,9 +41,30 @@ The site ships a light and a dark theme.
 To adjust colours, edit the custom properties in `src/index.css` — nothing else needs
 to change.
 
+## View counter
+
+The footer shows a total page-view count. Every page load POSTs to `/api/views`,
+a Vercel serverless function that increments one Redis key (`pageviews:site`) on
+Upstash and returns the new total. The count is total views, so refreshes and
+repeat visits each add one.
+
+Setup is one step in the Vercel dashboard: **Storage → Create Database → Upstash
+Redis**, connected to this project. That injects the credentials as environment
+variables — `api/views.js` reads either `KV_REST_API_URL` / `KV_REST_API_TOKEN`
+or `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN`, whichever the
+integration provides.
+
+Until the store exists the endpoint returns 503, and `ViewCounter.jsx` renders
+nothing on any failure — so the footer degrades to just the copyright line
+instead of showing a wrong number. The same applies to `npm run dev`, which
+serves no serverless functions; use `vercel dev` to exercise the endpoint
+locally.
+
 ## Structure
 
 ```
+api/
+  views.js             serverless view counter (Upstash Redis)
 src/
   App.jsx              page shell, section order, background layers
   index.css            theme tokens, fonts, grid/glow backdrop
@@ -54,6 +75,7 @@ src/
     Hero.jsx           intro + terminal-style profile card
     About.jsx  Skills.jsx  Experience.jsx
     Projects.jsx  Education.jsx  Contact.jsx  Footer.jsx
+    ViewCounter.jsx    footer view count, fed by /api/views
   assets/
     CV/                résumé PDF served by the download button
     img/               profile photo and project imagery
