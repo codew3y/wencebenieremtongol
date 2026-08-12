@@ -31,4 +31,9 @@ export default defineConfig([
       'react/jsx-uses-react': 'error',
     },
   },
+  {
+    // Serverless functions run on Node, not in the browser.
+    files: ['api/**/*.js'],
+    languageOptions: { globals: globals.node },
+  },
 ])
