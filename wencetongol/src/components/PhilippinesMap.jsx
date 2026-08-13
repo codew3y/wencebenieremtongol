@@ -36,11 +36,10 @@ const islands = [
   "M317 373 L347 413 L345 427 L341 468 L340 491 L320 464 L311 475 L307 505 L306 497 L297 497 L283 492 L268 478 L275 459 L267 453 L268 447 L244 447 L202 470 L198 470 L203 457 L245 413 L259 417 L275 425 L288 418 L303 405 L318 402 Z",
 ];
 
-// Batanes through the Sulu chain: too small to outline, but the archipelago
-// reads wrong without them.
+// Marinduque through the Sulu chain: too small to outline, but the archipelago
+// reads wrong without them. Batanes is left off — it sits so far north of Luzon
+// that including it would shrink everything else inside the frame.
 const specks = [
-  { cx: 198, cy: 18, r: 2.5 },
-  { cx: 202, cy: 30, r: 2 },
   { cx: 200, cy: 253, r: 5 },
   { cx: 200, cy: 288, r: 4 },
   { cx: 222, cy: 346, r: 3 },
@@ -51,10 +50,12 @@ const specks = [
   { cx: 132, cy: 527, r: 2.5 },
 ];
 
+// The viewBox is trimmed to the drawn coastline (x 33-353, y 78-527) so the
+// archipelago fills its frame instead of floating inside projection margins.
 const PhilippinesMap = ({ className = "" }) => {
   return (
     <svg
-      viewBox="20 0 350 560"
+      viewBox="28 68 334 472"
       role="presentation"
       aria-hidden="true"
       focusable="false"
