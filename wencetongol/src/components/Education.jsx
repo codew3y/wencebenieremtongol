@@ -16,6 +16,8 @@ const education = [
   },
 ];
 
+const interests = ["Gaming", "Movies", "Family", "Friends"];
+
 const certifications = [
   {
     issuer: "Palo Alto Networks",
@@ -73,6 +75,32 @@ const Education = () => {
               <p className="mt-1 text-sm text-muted">{entry.detail}</p>
             </motion.div>
           ))}
+
+          {/* Fills the height the two school cards leave against the taller
+              certifications column, and says something the resume does not. */}
+          <motion.div
+            variants={fadeUp}
+            className="rounded-xl border border-line bg-surface p-5 transition-[transform,border-color] duration-200 hover:border-accent/40 motion-safe:hover:-translate-y-0.5"
+          >
+            <h3 className="font-mono text-sm text-accent">Outside the code</h3>
+            <p className="mt-3 text-sm leading-relaxed text-muted">
+              Away from the editor I'm a gamer and a movie person — a good match
+              or a long watchlist is how I reset after a day of debugging. The
+              rest of my time goes to family and friends, which keeps the
+              balance honest: I like shipping work I'm proud of, and I like
+              closing the laptop for the people around me.
+            </p>
+            <ul className="mt-4 flex flex-wrap gap-2">
+              {interests.map((interest) => (
+                <li
+                  key={interest}
+                  className="rounded-md border border-line bg-canvas-2 px-2.5 py-1 font-mono text-[12px] text-muted"
+                >
+                  {interest}
+                </li>
+              ))}
+            </ul>
+          </motion.div>
         </motion.div>
 
         <motion.div

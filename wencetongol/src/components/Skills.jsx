@@ -1,74 +1,134 @@
 import React from "react";
 import { motion } from "framer-motion";
+import {
+  SiAnthropic,
+  SiClaude,
+  SiCss3,
+  SiGit,
+  SiGithubactions,
+  SiHtml5,
+  SiJavascript,
+  SiJsonwebtokens,
+  SiMongodb,
+  SiMysql,
+  SiNodedotjs,
+  SiPostman,
+  SiPython,
+  SiReact,
+  SiTailwindcss,
+  SiZoho,
+} from "react-icons/si";
+import {
+  TbApi,
+  TbBook2,
+  TbBrandAzure,
+  TbBrandOauth,
+  TbBrandPowershell,
+  TbBug,
+  TbChartDots3,
+  TbClipboardText,
+  TbInfinity,
+  TbMessageDots,
+  TbPlugConnected,
+  TbPuzzle,
+  TbShieldSearch,
+  TbSql,
+  TbTargetArrow,
+  TbTerminal2,
+  TbTestPipe,
+  TbTopologyStar3,
+  TbUsersGroup,
+  TbWebhook,
+} from "react-icons/tb";
 import Section from "./Section";
 import { fadeUp, stagger, viewportOnce } from "../lib/motion";
 
+// Brand marks where one exists; otherwise a Tabler glyph that reads as the
+// thing itself (a plug for MCP, a shield-and-magnifier for eDiscovery).
 const groups = [
   {
     title: "Languages",
     items: [
-      "JavaScript",
-      "Node.js",
-      "Python",
-      "PHP",
-      "C#",
-      "Zoho Deluge",
-      "HTML",
-      "CSS",
-      "SQL",
+      { name: "JavaScript", Icon: SiJavascript },
+      { name: "Node.js", Icon: SiNodedotjs },
+      { name: "Python", Icon: SiPython },
+      { name: "Zoho Deluge", Icon: SiZoho },
+      { name: "HTML", Icon: SiHtml5 },
+      { name: "CSS", Icon: SiCss3 },
+      { name: "SQL", Icon: TbSql },
     ],
   },
-  { title: "Frontend", items: ["ReactJS", "Tailwind CSS"] },
+  {
+    title: "Frontend",
+    items: [
+      { name: "ReactJS", Icon: SiReact },
+      { name: "Tailwind CSS", Icon: SiTailwindcss },
+    ],
+  },
   {
     title: "Cloud & Identity",
-    items: ["Microsoft Azure", "OAuth 2.0", "JSON Web Tokens (JWT)"],
+    items: [
+      { name: "Microsoft Azure", Icon: TbBrandAzure },
+      { name: "OAuth 2.0", Icon: TbBrandOauth },
+      { name: "JSON Web Tokens (JWT)", Icon: SiJsonwebtokens },
+    ],
   },
   {
     title: "Platforms & APIs",
     items: [
-      "Zoho CRM",
-      "Zoho Writer",
-      "Zoho Flow",
-      "Microsoft Graph",
-      "Microsoft Purview eDiscovery",
-      "Model Context Protocol",
+      { name: "Zoho CRM", Icon: SiZoho },
+      { name: "Zoho Writer", Icon: SiZoho },
+      { name: "Zoho Flow", Icon: SiZoho },
+      { name: "Microsoft Graph", Icon: TbChartDots3 },
+      { name: "Microsoft Purview eDiscovery", Icon: TbShieldSearch },
+      { name: "Model Context Protocol", Icon: TbPlugConnected },
+      { name: "Webhooks", Icon: TbWebhook },
     ],
   },
-  { title: "Databases", items: ["MySQL", "MongoDB"] },
+  {
+    title: "Databases",
+    items: [
+      { name: "MySQL", Icon: SiMysql },
+      { name: "MongoDB", Icon: SiMongodb },
+    ],
+  },
   {
     title: "Testing & Tooling",
     items: [
-      "Postman",
-      "PowerShell",
-      "EcoHub",
-      "Git",
-      "GitHub Actions",
-      "Node.js test runner",
-      "pytest",
+      { name: "Postman", Icon: SiPostman },
+      { name: "PowerShell", Icon: TbBrandPowershell },
+      { name: "EcoHub", Icon: TbTopologyStar3 },
+      { name: "Git", Icon: SiGit },
+      { name: "GitHub Actions", Icon: SiGithubactions },
+      { name: "Node.js test runner", Icon: SiNodedotjs },
     ],
   },
   {
     title: "Practices",
     items: [
-      "REST integration",
-      "Automated testing",
-      "CI/CD",
-      "Audit logging",
-      "Technical writing",
-      "Incident troubleshooting",
+      { name: "REST integration", Icon: TbApi },
+      { name: "Automated testing", Icon: TbTestPipe },
+      { name: "CI/CD", Icon: TbInfinity },
+      { name: "Audit logging", Icon: TbClipboardText },
+      { name: "Documentation", Icon: TbBook2 },
+      { name: "Incident troubleshooting", Icon: TbBug },
     ],
   },
   {
     title: "AI Tooling",
-    items: ["Claude", "Claude Code", "Claude Cowork"],
+    items: [
+      { name: "Claude", Icon: SiClaude },
+      { name: "Claude Code", Icon: TbTerminal2 },
+      { name: "Claude Cowork", Icon: SiAnthropic },
+    ],
   },
   {
     title: "Strengths",
     items: [
-      "Analytical problem solving",
-      "Ownership",
-      "Collaboration",
-      "Clear written communication",
+      { name: "Analytical problem solving", Icon: TbPuzzle },
+      { name: "Ownership", Icon: TbTargetArrow },
+      { name: "Collaboration", Icon: TbUsersGroup },
+      { name: "Clear written communication", Icon: TbMessageDots },
     ],
   },
 ];
@@ -103,11 +163,15 @@ const Skills = () => {
             >
               {group.items.map((item) => (
                 <motion.span
-                  key={item}
+                  key={item.name}
                   variants={fadeUp}
-                  className="rounded-md border border-line bg-surface px-3 py-1.5 font-mono text-[13px] text-muted transition-colors hover:border-accent/50 hover:text-accent"
+                  className="inline-flex items-center gap-2 rounded-md border border-line bg-surface px-3 py-1.5 font-mono text-[13px] text-muted transition-colors hover:border-accent/50 hover:text-accent"
                 >
-                  {item}
+                  <item.Icon
+                    aria-hidden="true"
+                    className="shrink-0 text-[15px] text-accent"
+                  />
+                  {item.name}
                 </motion.span>
               ))}
             </motion.div>
