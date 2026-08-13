@@ -8,7 +8,6 @@ const roles = [
     title: "CRM Developer Associate",
     company: "Manentia Enterprise Support PH Inc.",
     period: "Jun 2026 – Present",
-    current: true,
     points: [
       "Automate Zoho CRM processes using Deluge scripting and Zoho Writer templates that generate client reports and investment proposals.",
       "Deliver custom MCP connectors on Azure App Service, exposing enterprise systems to AI assistants under per-user identity and audit control.",
@@ -22,7 +21,6 @@ const roles = [
     title: "Information Technology Intern (On-the-Job Training)",
     company: "Manentia Enterprise Support PH Inc.",
     period: "Feb 2026 – May 2026",
-    current: false,
     points: [
       "Produced and revised Zoho Writer templates driving Financial Planning Report (FPR) and investment proposal generation.",
       "Wrote Deluge functions that mapped CRM records into finished report and proposal documents.",
@@ -77,17 +75,6 @@ const Experience = () => {
             variants={fadeUp}
             className={idx === roles.length - 1 ? "" : "mb-10"}
           >
-            <motion.span
-              initial={{ scale: 0 }}
-              whileInView={{ scale: 1 }}
-              viewport={viewportOnce}
-              transition={{ type: "spring", stiffness: 420, damping: 20 }}
-              className={`absolute -left-[6.5px] mt-2 h-3 w-3 rounded-full border-2 border-canvas ${
-                role.current ? "bg-accent" : "bg-line-strong"
-              }`}
-              aria-hidden="true"
-            />
-
             <div className="rounded-xl border border-line bg-surface p-6 transition-[transform,border-color] duration-200 hover:border-accent/40 motion-safe:hover:-translate-y-0.5">
               <div className="flex flex-col gap-1 md:flex-row md:items-baseline md:justify-between">
                 <div>

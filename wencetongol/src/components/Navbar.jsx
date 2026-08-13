@@ -25,23 +25,49 @@ const Navbar = () => {
   }, []);
 
   // Highlight whichever section is currently under the header.
+  //
+  // An IntersectionObserver only reports sections whose visibility *changed*,
+  // so scrolling back up fired a callback containing just the section that left
+  // the band -- nothing was marked intersecting, no update happened, and the
+  // underline stayed stuck on the section below. Measuring positions on scroll
+  // resolves to exactly one section every frame instead.
   useEffect(() => {
     const sections = links
-      .map((link) => document.querySelector(link.href))
-      .filter(Boolean);
+      .map((link) => ({ href: link.href, el: document.querySelector(link.href) }))
+      .filter((section) => section.el);
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
-        if (visible) setActive(`#${visible.target.id}`);
-      },
-      { rootMargin: "-72px 0px -60% 0px", threshold: 0 }
-    );
+    let frame = null;
 
-    sections.forEach((section) => observer.observe(section));
-    return () => observer.disconnect();
+    const measure = () => {
+      frame = null;
+      // The line sits just below the 64px header.
+      const line = 96;
+      const last = sections[sections.length - 1];
+      const atBottom =
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - 2;
+
+      let current = "";
+      for (const section of sections) {
+        if (section.el.getBoundingClientRect().top <= line) current = section.href;
+      }
+
+      // A short final section may never reach the line; the footer counts as it.
+      setActive(atBottom && last ? last.href : current);
+    };
+
+    const onScroll = () => {
+      if (frame === null) frame = requestAnimationFrame(measure);
+    };
+
+    measure();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (frame !== null) cancelAnimationFrame(frame);
+    };
   }, []);
 
   return (

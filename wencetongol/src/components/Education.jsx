@@ -65,7 +65,9 @@ const Education = () => {
               className="rounded-xl border border-line bg-surface p-5 transition-[transform,border-color] duration-200 hover:border-accent/40 motion-safe:hover:-translate-y-0.5"
             >
               <div className="flex items-baseline justify-between gap-3">
-                <h3 className="font-semibold text-fg">{entry.school}</h3>
+                {/* Accent, matching the "Outside the code" and certification
+                    headings so every card in the section leads the same way. */}
+                <h3 className="font-semibold text-accent">{entry.school}</h3>
                 <span className="font-mono text-xs whitespace-nowrap text-faint">
                   {entry.period}
                 </span>
@@ -73,6 +75,22 @@ const Education = () => {
               <p className="mt-1 text-sm text-muted">{entry.detail}</p>
             </motion.div>
           ))}
+
+          {/* Fills the height the two school cards leave against the taller
+              certifications column, and says something the resume does not. */}
+          <motion.div
+            variants={fadeUp}
+            className="rounded-xl border border-line bg-surface p-5 transition-[transform,border-color] duration-200 hover:border-accent/40 motion-safe:hover:-translate-y-0.5"
+          >
+            <h3 className="font-mono text-sm text-accent">Outside the code</h3>
+            <p className="mt-3 text-sm leading-relaxed text-muted">
+              When I'm not in the editor, I'm usually deep in a game or working
+              through my watchlist — that's how I switch off after a day of
+              chasing bugs. Whatever's left of my time belongs to family and
+              friends. I care about shipping work I can stand behind, and just
+              as much about knowing when to close the laptop.
+            </p>
+          </motion.div>
         </motion.div>
 
         <motion.div
