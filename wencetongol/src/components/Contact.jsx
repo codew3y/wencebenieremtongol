@@ -49,13 +49,14 @@ const Contact = () => {
           transition={{ duration: 0.5 }}
           className="relative min-h-[420px]"
         >
-          {/* Archipelago filling the column behind the details and social
-              links — the same accent the rest of the page uses, dialled down to
-              a watermark. The map keeps its aspect ratio, so it scales to the
-              column height and centres on the remaining width. */}
+          {/* Archipelago behind the details and social links, in the same
+              accent as the rest of the page but dialled down to a watermark.
+              -top-10 reaches back over the section's mt-10 gap so the map
+              starts right under the intro line; the column stretches with the
+              grid row, so bottom-0 lands on the form's bottom edge. */}
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-0 text-accent opacity-[0.22]"
+            className="pointer-events-none absolute -top-10 right-0 bottom-0 left-0 text-accent opacity-[0.22]"
           >
             <PhilippinesMap className="h-full w-full" />
           </div>
