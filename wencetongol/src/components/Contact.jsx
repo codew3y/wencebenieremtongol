@@ -4,6 +4,7 @@ import { FaFacebookF, FaGithub, FaLinkedinIn } from "react-icons/fa";
 import { HiOutlineMail } from "react-icons/hi";
 import { FiMapPin } from "react-icons/fi";
 import Section from "./Section";
+import PhilippinesMap from "./PhilippinesMap";
 
 const details = [
   {
@@ -46,44 +47,55 @@ const Contact = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.5 }}
-          className="space-y-4"
+          className="relative min-h-[300px] overflow-hidden"
         >
-          {details.map((detail) => {
-            const content = (
-              <span className="flex items-center gap-3">
-                <span className="text-lg text-accent">{detail.icon}</span>
-                <span className="font-mono text-sm">{detail.label}</span>
-              </span>
-            );
+          {/* Archipelago behind the details and social links — the same accent
+              the rest of the page uses, dialled down to a watermark. */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-y-0 -right-6 flex items-center text-accent opacity-[0.22] sm:right-4 lg:-right-4"
+          >
+            <PhilippinesMap className="h-full max-h-[380px] w-auto" />
+          </div>
 
-            return detail.href ? (
-              <a
-                key={detail.label}
-                href={detail.href}
-                className="block text-muted transition-colors hover:text-accent"
-              >
-                {content}
-              </a>
-            ) : (
-              <div key={detail.label} className="text-muted">
-                {content}
-              </div>
-            );
-          })}
+          <div className="relative space-y-4">
+            {details.map((detail) => {
+              const content = (
+                <span className="flex items-center gap-3">
+                  <span className="text-lg text-accent">{detail.icon}</span>
+                  <span className="font-mono text-sm">{detail.label}</span>
+                </span>
+              );
 
-          <div className="flex gap-3 pt-2">
-            {socials.map((social) => (
-              <a
-                key={social.label}
-                href={social.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={social.label}
-                className="grid h-11 w-11 place-items-center rounded-lg border border-line bg-surface text-muted transition-colors hover:border-accent/50 hover:text-accent"
-              >
-                {social.icon}
-              </a>
-            ))}
+              return detail.href ? (
+                <a
+                  key={detail.label}
+                  href={detail.href}
+                  className="block text-muted transition-colors hover:text-accent"
+                >
+                  {content}
+                </a>
+              ) : (
+                <div key={detail.label} className="text-muted">
+                  {content}
+                </div>
+              );
+            })}
+
+            <div className="flex gap-3 pt-2">
+              {socials.map((social) => (
+                <a
+                  key={social.label}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={social.label}
+                  className="grid h-11 w-11 place-items-center rounded-lg border border-line bg-surface text-muted transition-colors hover:border-accent/50 hover:text-accent"
+                >
+                  {social.icon}
+                </a>
+              ))}
+            </div>
           </div>
         </motion.div>
 
