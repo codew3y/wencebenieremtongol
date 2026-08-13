@@ -53,10 +53,13 @@ const Contact = () => {
               accent as the rest of the page but dialled down to a watermark.
               -top-10 reaches back over the section's mt-10 gap so the map
               starts right under the intro line; the column stretches with the
-              grid row, so bottom-0 lands on the form's bottom edge. */}
+              grid row, so bottom-0 lands on the form's bottom edge.
+
+              Light mode needs about twice the opacity: dark teal on a near-white
+              canvas carries far less contrast than bright cyan does on black. */}
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute -top-10 right-0 bottom-0 left-0 text-accent opacity-[0.22]"
+            className="pointer-events-none absolute -top-10 right-0 bottom-0 left-0 text-accent opacity-50 dark:opacity-[0.22]"
           >
             <PhilippinesMap className="h-full w-full" />
           </div>
