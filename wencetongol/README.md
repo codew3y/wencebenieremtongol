@@ -2,7 +2,7 @@
 
 Single-page portfolio site presenting my technical skills, project work, and
 professional background. Live at
-[wencebenieremtongol.vercel.app](https://wencebenieremtongol.vercel.app/).
+[wencetongol.vercel.app](https://wencetongol.vercel.app/).
 
 ## Stack
 
