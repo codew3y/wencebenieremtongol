@@ -16,8 +16,6 @@ const education = [
   },
 ];
 
-const interests = ["Gaming", "Movies", "Family", "Friends"];
-
 const certifications = [
   {
     issuer: "Palo Alto Networks",
@@ -84,22 +82,12 @@ const Education = () => {
           >
             <h3 className="font-mono text-sm text-accent">Outside the code</h3>
             <p className="mt-3 text-sm leading-relaxed text-muted">
-              Away from the editor I'm a gamer and a movie person — a good match
-              or a long watchlist is how I reset after a day of debugging. The
-              rest of my time goes to family and friends, which keeps the
-              balance honest: I like shipping work I'm proud of, and I like
-              closing the laptop for the people around me.
+              When I'm not in the editor, I'm usually deep in a game or working
+              through my watchlist — that's how I switch off after a day of
+              chasing bugs. Whatever's left of my time belongs to family and
+              friends. I care about shipping work I can stand behind, and just
+              as much about knowing when to close the laptop.
             </p>
-            <ul className="mt-4 flex flex-wrap gap-2">
-              {interests.map((interest) => (
-                <li
-                  key={interest}
-                  className="rounded-md border border-line bg-canvas-2 px-2.5 py-1 font-mono text-[12px] text-muted"
-                >
-                  {interest}
-                </li>
-              ))}
-            </ul>
           </motion.div>
         </motion.div>
 

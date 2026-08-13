@@ -47,15 +47,17 @@ const Contact = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.5 }}
-          className="relative min-h-[300px] overflow-hidden"
+          className="relative min-h-[420px]"
         >
-          {/* Archipelago behind the details and social links — the same accent
-              the rest of the page uses, dialled down to a watermark. */}
+          {/* Archipelago filling the column behind the details and social
+              links — the same accent the rest of the page uses, dialled down to
+              a watermark. The map keeps its aspect ratio, so it scales to the
+              column height and centres on the remaining width. */}
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-y-0 -right-6 flex items-center text-accent opacity-[0.22] sm:right-4 lg:-right-4"
+            className="pointer-events-none absolute inset-0 text-accent opacity-[0.22]"
           >
-            <PhilippinesMap className="h-full max-h-[380px] w-auto" />
+            <PhilippinesMap className="h-full w-full" />
           </div>
 
           <div className="relative space-y-4">
