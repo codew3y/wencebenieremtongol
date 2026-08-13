@@ -63,6 +63,11 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 5rem;
+  /* Reserve the scrollbar track even when the page cannot scroll. The loading
+     screen renders before any content exists, so without this the scrollbar
+     arrives with the content, the viewport narrows by its width, and everything
+     centred -- the exiting loader included -- jumps left mid-transition. */
+  scrollbar-gutter: stable;
 }
 
 body {
