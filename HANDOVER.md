@@ -67,7 +67,7 @@ This is the only outstanding work, and it must be done in the Vercel dashboard.
 1. Open the project on [vercel.com](https://vercel.com) → **Storage** tab.
 2. **Create Database → Upstash Redis** (free tier is plenty — this is one
    integer). Pick a region near your visitors.
-3. Connect it to the `wencebenieremtongol` project. Vercel injects the
+3. Connect it to the `wencetongol` project. Vercel injects the
    credentials as environment variables automatically; you do not need to copy
    anything by hand.
 4. **Redeploy** — env vars only reach a deployment built after they exist. A

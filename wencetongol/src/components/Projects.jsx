@@ -86,12 +86,12 @@ const personal = [
   {
     name: "Personal Portfolio Website",
     subtitle: "This site",
-    meta: "wencebenieremtongol.vercel.app",
+    meta: "wencetongol.vercel.app",
     tech: ["ReactJS", "Tailwind CSS"],
     points: [
       "Designed and published a responsive site presenting technical skills, project work, and professional background, with a light and dark theme.",
     ],
-    link: "https://wencebenieremtongol.vercel.app/",
+    link: "https://wencetongol.vercel.app/",
   },
 ];
 
