@@ -65,7 +65,9 @@ const Education = () => {
               className="rounded-xl border border-line bg-surface p-5 transition-[transform,border-color] duration-200 hover:border-accent/40 motion-safe:hover:-translate-y-0.5"
             >
               <div className="flex items-baseline justify-between gap-3">
-                <h3 className="font-semibold text-fg">{entry.school}</h3>
+                {/* Accent, matching the "Outside the code" and certification
+                    headings so every card in the section leads the same way. */}
+                <h3 className="font-semibold text-accent">{entry.school}</h3>
                 <span className="font-mono text-xs whitespace-nowrap text-faint">
                   {entry.period}
                 </span>
