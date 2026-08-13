@@ -47,15 +47,21 @@ const Contact = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.5 }}
-          className="relative min-h-[300px] overflow-hidden"
+          className="relative min-h-[420px]"
         >
-          {/* Archipelago behind the details and social links — the same accent
-              the rest of the page uses, dialled down to a watermark. */}
+          {/* Archipelago behind the details and social links, in the same
+              accent as the rest of the page but dialled down to a watermark.
+              -top-10 reaches back over the section's mt-10 gap so the map
+              starts right under the intro line; the column stretches with the
+              grid row, so bottom-0 lands on the form's bottom edge.
+
+              Light mode needs about twice the opacity: dark teal on a near-white
+              canvas carries far less contrast than bright cyan does on black. */}
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-y-0 -right-6 flex items-center text-accent opacity-[0.22] sm:right-4 lg:-right-4"
+            className="pointer-events-none absolute -top-10 right-0 bottom-0 left-0 text-accent opacity-50 dark:opacity-[0.22]"
           >
-            <PhilippinesMap className="h-full max-h-[380px] w-auto" />
+            <PhilippinesMap className="h-full w-full" />
           </div>
 
           <div className="relative space-y-4">
