@@ -81,7 +81,11 @@ const ProjectModal = ({ project, onClose }) => {
                   <ProjectImages images={project.images} />
                 ) : (
                   <div className="overflow-hidden rounded-xl border border-line">
-                    <ProjectDiagram {...project.diagram} height="h-48" />
+                    <ProjectDiagram
+                      {...project.diagram}
+                      height="h-[34vh] sm:h-[42vh]"
+                      large
+                    />
                   </div>
                 )}
 
