@@ -231,17 +231,17 @@ const personal = [
 const VISIBLE_TAGS = 3;
 
 const TechTags = ({ items }) => (
-  <div className="mt-3 flex flex-wrap gap-2">
+  <div className="mt-3 flex h-6 gap-2 overflow-hidden">
     {items.slice(0, VISIBLE_TAGS).map((item) => (
       <span
         key={item}
-        className="rounded border border-line bg-surface-2 px-2 py-0.5 font-mono text-[11px] text-faint"
+        className="shrink-0 rounded border border-line bg-surface-2 px-2 py-0.5 font-mono text-[11px] whitespace-nowrap text-faint"
       >
         {item}
       </span>
     ))}
     {items.length > VISIBLE_TAGS && (
-      <span className="rounded border border-line px-2 py-0.5 font-mono text-[11px] text-faint">
+      <span className="shrink-0 rounded border border-line px-2 py-0.5 font-mono text-[11px] text-faint">
         +{items.length - VISIBLE_TAGS}
       </span>
     )}
@@ -249,7 +249,7 @@ const TechTags = ({ items }) => (
 );
 
 const Cover = ({ project }) => (
-  <div className="relative h-44 overflow-hidden border-b border-line bg-canvas-2">
+  <div className="relative h-44 shrink-0 overflow-hidden border-b border-line bg-canvas-2">
     {/* Greyscale at rest so screenshots do not fight the palette; colour and a
         slow push-in as the card is hovered. */}
     <img
@@ -282,23 +282,27 @@ const Projects = () => {
       {project.images ? (
         <Cover project={project} />
       ) : (
-        <div className="border-b border-line">
+        <div className="shrink-0 border-b border-line">
           <ProjectDiagram {...project.diagram} />
         </div>
       )}
 
       <div className="flex flex-1 flex-col p-5">
         <div className="flex items-baseline justify-between gap-3">
-          <h4 className="text-base font-semibold text-fg">{project.name}</h4>
-          <span className="font-mono text-xs whitespace-nowrap text-faint">
+          <h4 className="line-clamp-2 min-h-12 text-base font-semibold text-fg">
+            {project.name}
+          </h4>
+          <span className="shrink-0 font-mono text-xs whitespace-nowrap text-faint">
             {project.year ?? project.meta}
           </span>
         </div>
-        <p className="mt-0.5 text-sm text-accent">{project.subtitle}</p>
+        <p className="mt-0.5 line-clamp-1 text-sm text-accent">
+          {project.subtitle}
+        </p>
 
         {/* Clamped so every card in a row ends up the same height regardless
             of how long the summary runs. */}
-        <p className="mt-2.5 line-clamp-3 text-[13px] leading-relaxed text-muted">
+        <p className="mt-2.5 line-clamp-3 min-h-16 text-[13px] leading-relaxed text-muted">
           {project.summary}
         </p>
 
