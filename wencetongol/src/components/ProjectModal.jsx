@@ -44,16 +44,16 @@ const ProjectModal = ({ project, onClose }) => {
             exit={{ opacity: 0, y: 16, scale: 0.98 }}
             transition={{ duration: 0.24, ease: "easeOut" }}
             onClick={(event) => event.stopPropagation()}
-            className="my-auto w-full max-w-5xl overflow-hidden rounded-2xl border border-line bg-surface shadow-xl shadow-black/20 focus:outline-none"
+            className="my-auto w-full max-w-3xl overflow-hidden rounded-2xl border border-line bg-surface shadow-xl shadow-black/20 focus:outline-none"
           >
-            <div className="flex items-start gap-4 border-b border-line bg-canvas-2 p-5 md:p-6">
+            <div className="flex items-start gap-4 border-b border-line bg-canvas-2 p-4 md:p-5">
               <div className="min-w-0">
                 <span className="inline-block rounded-full border border-accent/30 bg-accent-soft px-3 py-1 font-mono text-[10px] tracking-[0.15em] text-accent uppercase">
                   {project.category}
                 </span>
                 <h3
                   id="project-modal-title"
-                  className="mt-3 text-xl font-bold tracking-tight text-fg md:text-2xl"
+                  className="mt-2.5 text-lg font-bold tracking-tight text-fg md:text-xl"
                 >
                   {project.name}
                 </h3>
@@ -75,16 +75,13 @@ const ProjectModal = ({ project, onClose }) => {
               </button>
             </div>
 
-            <div className="grid max-h-[75vh] gap-6 overflow-y-auto p-5 md:grid-cols-[1.15fr_1fr] md:p-6">
+            <div className="grid max-h-[70vh] gap-5 overflow-y-auto p-4 md:grid-cols-[1fr_1fr] md:p-5">
               <div>
                 {project.images ? (
                   <ProjectImages images={project.images} />
                 ) : (
                   <div className="overflow-hidden rounded-xl border border-line">
-                    <ProjectDiagram
-                      {...project.diagram}
-                      height="h-56 sm:h-64"
-                    />
+                    <ProjectDiagram {...project.diagram} height="h-48" />
                   </div>
                 )}
 

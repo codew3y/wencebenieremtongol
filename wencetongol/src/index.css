@@ -114,3 +114,12 @@ body {
 .tech-glow {
   background: radial-gradient(ellipse 60% 50% at 50% -10%, var(--glow), transparent 70%);
 }
+
+/* Backdrop for the project diagrams: the same blueprint lines as the page, at a
+   tighter pitch and without the page-scale mask — that mask is an ellipse sized
+   for a viewport, so inside a card-sized box it faded the grid to nothing. */
+.diagram-grid {
+  background-image: linear-gradient(to right, var(--grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
