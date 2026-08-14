@@ -114,3 +114,50 @@ body {
 .tech-glow {
   background: radial-gradient(ellipse 60% 50% at 50% -10%, var(--glow), transparent 70%);
 }
+
+/* Accent glow that tracks the pointer across a card. The position arrives as
+   custom properties set straight on the node (see useSpotlight), so moving the
+   mouse costs no React renders. */
+.spotlight {
+  position: relative;
+  /* Creates a stacking context, which position:relative alone does not. Without
+     it the z-index:-1 glow below escapes to the nearest ancestor context and
+     paints behind this card's own background, i.e. invisibly. */
+  isolation: isolate;
+}
+
+.spotlight::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  /* Positioned pseudo-elements paint above in-flow text; -1 puts the glow over
+     the card background but under the copy. */
+  z-index: -1;
+  background: radial-gradient(
+    240px circle at var(--spot-x, 50%) var(--spot-y, -20%),
+    var(--accent-soft),
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.spotlight:hover::before {
+  opacity: 1;
+}
+
+/* Touch screens have no hovering pointer to follow, and the glow would stick
+   after a tap. */
+@media (hover: none) {
+  .spotlight::before {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spotlight::before {
+    transition: none;
+  }
+}

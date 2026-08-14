@@ -1,4 +1,5 @@
 import React from "react";
+import { motion, useReducedMotion } from "framer-motion";
 
 /**
  * Decorative outline of the Philippine archipelago, drawn in `currentColor` so
@@ -52,7 +53,39 @@ const specks = [
 
 // The viewBox is trimmed to the drawn coastline (x 33-353, y 78-527) so the
 // archipelago fills its frame instead of floating inside projection margins.
+// North to south, so the archipelago draws the way you would read it. The fill
+// trails the outline slightly -- coastline first, then the land inside it.
+const draw = {
+  hidden: { pathLength: 0, fillOpacity: 0 },
+  show: {
+    pathLength: 1,
+    fillOpacity: 0.07,
+    transition: {
+      pathLength: { duration: 1.4, ease: "easeInOut" },
+      fillOpacity: { duration: 0.8, delay: 0.5 },
+    },
+  },
+};
+
+const pop = {
+  hidden: { scale: 0, fillOpacity: 0 },
+  show: { scale: 1, fillOpacity: 0.07, transition: { duration: 0.3 } },
+};
+
 const PhilippinesMap = ({ className = "" }) => {
+  const reduceMotion = useReducedMotion();
+
+  // pathLength is not a transform, so MotionConfig's reduced-motion handling
+  // does not strip it -- the whole sequence has to be skipped by hand.
+  const animation = reduceMotion
+    ? {}
+    : {
+        variants: { hidden: {}, show: { transition: { staggerChildren: 0.07 } } },
+        initial: "hidden",
+        whileInView: "show",
+        viewport: { once: true, margin: "-80px" },
+      };
+
   return (
     <svg
       viewBox="28 68 334 472"
@@ -61,7 +94,8 @@ const PhilippinesMap = ({ className = "" }) => {
       focusable="false"
       className={className}
     >
-      <g
+      <motion.g
+        {...animation}
         fill="currentColor"
         fillOpacity="0.07"
         stroke="currentColor"
@@ -70,18 +104,29 @@ const PhilippinesMap = ({ className = "" }) => {
         strokeLinejoin="round"
       >
         {islands.map((d) => (
-          <path key={d} d={d} />
+          <motion.path key={d} d={d} variants={reduceMotion ? undefined : draw} />
         ))}
         {specks.map((speck) => (
-          <circle key={`${speck.cx}-${speck.cy}`} {...speck} />
+          <motion.circle
+            key={`${speck.cx}-${speck.cy}`}
+            {...speck}
+            variants={reduceMotion ? undefined : pop}
+            style={{ originX: `${speck.cx}px`, originY: `${speck.cy}px` }}
+          />
         ))}
-      </g>
+      </motion.g>
 
-      {/* Pampanga, where I'm based. */}
-      <g transform="translate(157 198)">
+      {/* Pampanga, where I'm based. Lands once the coastline is drawn. */}
+      <motion.g
+        transform="translate(157 198)"
+        initial={reduceMotion ? undefined : { opacity: 0, scale: 0 }}
+        whileInView={reduceMotion ? undefined : { opacity: 1, scale: 1 }}
+        viewport={{ once: true, margin: "-80px" }}
+        transition={{ delay: 1.5, type: "spring", stiffness: 300, damping: 18 }}
+      >
         <circle r="9" fill="none" stroke="currentColor" strokeOpacity="0.35" />
         <circle r="3.2" fill="currentColor" fillOpacity="0.9" />
-      </g>
+      </motion.g>
     </svg>
   );
 };
