@@ -1,14 +1,47 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import { motion } from "framer-motion";
 import { FiArrowUpRight } from "react-icons/fi";
+import { SiClaude, SiZoho } from "react-icons/si";
+import {
+  TbArrowsExchange,
+  TbBraces,
+  TbBrandOauth,
+  TbBuildingBank,
+  TbFileCheck,
+  TbCoins,
+  TbFileText,
+  TbMaximize,
+  TbPlugConnected,
+  TbServer2,
+  TbTopologyStar3,
+} from "react-icons/tb";
 import Section from "./Section";
+import ProjectDiagram from "./ProjectDiagram";
+import ProjectModal from "./ProjectModal";
 import { fadeUp, stagger, viewportOnce } from "../lib/motion";
 
+import VR1 from "../assets/img/projectsimg/VR1.webp";
+import VR2 from "../assets/img/projectsimg/VR2.webp";
+import VR3 from "../assets/img/projectsimg/VR3.webp";
+import VR4 from "../assets/img/projectsimg/VR4.webp";
+import port1 from "../assets/img/projectsimg/port1.webp";
+import port2 from "../assets/img/projectsimg/port2.webp";
+import port3 from "../assets/img/projectsimg/port3.webp";
+import port4 from "../assets/img/projectsimg/port4.webp";
+import port5 from "../assets/img/projectsimg/port5.webp";
+import port6 from "../assets/img/projectsimg/port6.webp";
+import port7 from "../assets/img/projectsimg/port7.webp";
+
+// Cards carry `summary`; `points` is the detail that opens in the dialog.
 const professional = [
   {
     name: "JB FIX System",
     subtitle: "Private-Bank Order-Routing Connector (FIX 4.4)",
+    category: "Integration engineering",
+    role: "CRM Developer Associate",
     year: "2026",
+    summary:
+      "A runnable FIX 4.4 order-routing service connecting an external asset manager to a private bank through the Broadridge/NYFIX hub, built against the bank's Rules of Engagement — pre-trade validation, a persist-before-send pipeline, session recovery, and a tamper-evident audit trail.",
     tech: [
       "Python",
       "FIX 4.4",
@@ -18,6 +51,15 @@ const professional = [
       "SQLite",
       "pytest",
     ],
+    diagram: {
+      nodes: [
+        { Icon: TbBuildingBank, label: "Asset manager" },
+        { Icon: TbArrowsExchange, label: "FIX 4.4", sub: "mutual TLS" },
+        { Icon: TbTopologyStar3, label: "NYFIX hub" },
+        { Icon: TbBuildingBank, label: "Private bank" },
+      ],
+      footnote: "validate → persist → send · SHA-256 hash-chained audit trail",
+    },
     points: [
       "Engineered a runnable FIX 4.4 order-routing service connecting an external asset manager to a private bank via the Broadridge/NYFIX hub, conforming to the bank's FIX Rules of Engagement with pre-trade validation and a persist-before-send order pipeline.",
       "Implemented resilience and security — auto-reconnect with Order Status reconciliation, sequence gap-fill recovery, idempotent order handling, mutual-TLS transport, and a tamper-evident SHA-256 hash-chained audit trail.",
@@ -27,7 +69,11 @@ const professional = [
   {
     name: "Enterprise MCP Connectors",
     subtitle: "Identity-Aware Integrations on Azure",
+    category: "Cloud & identity",
+    role: "CRM Developer Associate",
     year: "2026",
+    summary:
+      "Three Model Context Protocol connectors on Azure that expose enterprise systems to AI assistants under per-user identity and audit control — Microsoft Graph mail search, Purview eDiscovery, and Bexio accounting — each on least-privilege scopes with no long-lived secrets.",
     tech: [
       "Node.js",
       "Microsoft Azure",
@@ -37,10 +83,27 @@ const professional = [
       "Azure Key Vault",
       "GitHub Actions",
     ],
+    diagram: {
+      nodes: [
+        { Icon: SiClaude, label: "Claude" },
+        {
+          Icon: TbPlugConnected,
+          label: "MCP server",
+          sub: "Azure App Service",
+        },
+        { Icon: TbBrandOauth, label: "Entra ID", sub: "OAuth 2.0 · PKCE" },
+        {
+          Icon: TbServer2,
+          label: "Enterprise APIs",
+          sub: "Graph · Purview · Bexio",
+        },
+      ],
+      footnote: "least-privilege scopes · per-user identity · audit logging",
+    },
     connectors: [
       {
         name: "MWC Mail Search",
-        desc: "Read-only email search across 240+ Exchange Online mailboxes via Microsoft Graph, secured with Microsoft Entra ID OAuth 2.0 (PKCE), an approved-user allowlist, and Exchange Online Application Access Policy scoping.",
+        desc: "Read-only email search across Exchange Online mailboxes via Microsoft Graph, secured with Microsoft Entra ID OAuth 2.0 (PKCE), an approved-user allowlist, and Exchange Online Application Access Policy scoping.",
       },
       {
         name: "MWC Purview eDiscovery",
@@ -55,18 +118,58 @@ const professional = [
   {
     name: "Financial Planning Report Automation",
     subtitle: "CRM-Driven Document Generation in Zoho",
+    category: "Document automation",
+    role: "IT Intern → CRM Developer Associate",
     year: "2026",
-    tech: [
-      "Zoho CRM",
-      "Zoho Writer",
-      "Zoho Deluge",
-      "Document automation",
-    ],
+    summary:
+      "End-to-end automation of the Financial Planning Report in Zoho: a Writer template driven by a Deluge function that maps CRM client records into a finished, adviser-ready document — extended across two regulatory regimes, each with its own template and business logic.",
+    tech: ["Zoho CRM", "Zoho Writer", "Zoho Deluge", "Document automation"],
+    diagram: {
+      nodes: [
+        { Icon: SiZoho, label: "CRM record" },
+        { Icon: TbBraces, label: "Deluge function" },
+        { Icon: TbFileText, label: "Writer template" },
+        { Icon: TbFileCheck, label: "Client report" },
+      ],
+      footnote: "two regulatory regimes · conditional sections and pages",
+    },
     points: [
       "Built the Financial Planning Report (FPR) generator end to end — a Zoho Writer template covering report layout, sections, field placement, and conditional pages, driven by a Deluge function that maps Zoho CRM client records into the finished document.",
       "Mapped CRM fields to Writer merge fields and validated the output against the existing Excel-based reports, correcting compounding and annual-versus-monthly calculations, and reviewing logs for template and computation faults.",
       "Generated beta reports across multiple client records rather than a single sample, and worked around Zoho Writer limits — chart configuration constraints and page breaks that produced blank pages.",
       "Revised retirement analysis and social retirement benefit handling on adviser feedback, separating automated values from those needing manual adviser input, then documented the template and function for handover.",
+    ],
+  },
+  {
+    name: "Investment Proposal Automation",
+    subtitle: "Portfolio Proposals from CRM Holdings Data",
+    category: "Document automation",
+    role: "IT Intern → CRM Developer Associate",
+    year: "2026",
+    summary:
+      "Automated generation of client investment proposals in Zoho, assembling portfolio structure, holdings, ISIN, KIID and factsheet data out of CRM into adviser-ready output — including multi-currency totals converted back to each holding's own currency rather than the account's.",
+    tech: [
+      "Zoho CRM",
+      "Zoho Writer",
+      "Zoho Deluge",
+      "Multi-currency handling",
+      "Document automation",
+    ],
+    diagram: {
+      nodes: [
+        { Icon: SiZoho, label: "CRM holdings" },
+        { Icon: TbBraces, label: "Deluge mapping" },
+        { Icon: TbCoins, label: "Currency logic", sub: "base → original" },
+        { Icon: TbFileCheck, label: "Proposal" },
+      ],
+      footnote: "portfolio · holdings · property · pension sections",
+    },
+    points: [
+      "Analysed the investment proposal workflow end to end — portfolio structure, holdings, and the output advisers expect — then mapped the data fields needed to generate it.",
+      "Mapped investment holdings, ISIN, KIID, and factsheet data across related Zoho CRM modules into the proposal template, so a proposal assembles from records already on file instead of manual re-entry.",
+      "Validated the calculations behind the cash, investments, medium-term investments, property, and pension sections against the existing Excel references, correcting compounding and annual-versus-monthly errors.",
+      "Fixed multi-currency handling so total asset values convert back to each holding's original currency rather than reporting everything in the account currency, and built multi-currency test cases before sign-off.",
+      "Extended the automation across six investment providers, each with its own template and business logic, then documented the templates and left maintenance notes for handover.",
     ],
   },
 ];
@@ -75,8 +178,18 @@ const personal = [
   {
     name: "VistaVR",
     subtitle: "Virtual Reality Eye Testing Application",
-    meta: "Undergraduate Capstone",
+    category: "Undergraduate capstone",
+    role: "Developer",
+    meta: "Capstone project",
+    summary:
+      "A mobile virtual reality application for digital vision assessment, used with a VR headset enclosure. Screens visual acuity, colour blindness, and astigmatism, with voice recognition for hands-free operation.",
     tech: ["Unity", "C#"],
+    images: [
+      { src: VR1, alt: "VistaVR title screen" },
+      { src: VR2, alt: "Visual acuity chart rendered in the VR headset view" },
+      { src: VR3, alt: "Screening test running in the virtual room" },
+      { src: VR4, alt: "Test result record" },
+    ],
     points: [
       "Created a mobile virtual reality (VR) application for digital vision assessment, used with a VR headset enclosure.",
       "Built visual acuity, colour blindness, and astigmatism screening, with voice recognition for hands-free operation and printable result records.",
@@ -86,91 +199,156 @@ const personal = [
   {
     name: "Personal Portfolio Website",
     subtitle: "This site",
+    category: "Web",
+    role: "Designer & developer",
     meta: "wencetongol.vercel.app",
-    tech: ["ReactJS", "Tailwind CSS"],
+    summary:
+      "This site: a single-page React portfolio with a light and dark theme, a serverless contact endpoint on Resend with honeypot and rate-limit spam controls, and a tested API wired to CI.",
+    tech: [
+      "ReactJS",
+      "Tailwind CSS",
+      "Vercel Functions",
+      "Resend",
+      "node:test",
+    ],
+    images: [
+      { src: port1, alt: "Portfolio hero section" },
+      { src: port2, alt: "About section" },
+      { src: port3, alt: "Technical stack section" },
+      { src: port4, alt: "Experience timeline" },
+      { src: port5, alt: "Projects section" },
+      { src: port6, alt: "Background and certifications" },
+      { src: port7, alt: "Contact section" },
+    ],
     points: [
       "Designed and published a responsive site presenting technical skills, project work, and professional background, with a light and dark theme.",
+      "Built the contact form as a Vercel Function on Resend, with a honeypot, per-IP rate limiting in Redis, and a 17-test suite run by GitHub Actions.",
     ],
     link: "https://wencetongol.vercel.app/",
   },
 ];
 
+const VISIBLE_TAGS = 3;
+
 const TechTags = ({ items }) => (
-  <div className="mt-4 flex flex-wrap gap-2">
-    {items.map((item) => (
+  <div className="mt-3 flex h-6 gap-2 overflow-hidden">
+    {items.slice(0, VISIBLE_TAGS).map((item) => (
       <span
         key={item}
-        className="rounded border border-line bg-surface-2 px-2 py-0.5 font-mono text-[11px] text-faint"
+        className="shrink-0 rounded border border-line bg-surface-2 px-2 py-0.5 font-mono text-[11px] whitespace-nowrap text-faint"
       >
         {item}
       </span>
     ))}
+    {items.length > VISIBLE_TAGS && (
+      <span className="shrink-0 rounded border border-line px-2 py-0.5 font-mono text-[11px] text-faint">
+        +{items.length - VISIBLE_TAGS}
+      </span>
+    )}
+  </div>
+);
+
+const Cover = ({ project }) => (
+  <div className="relative h-44 shrink-0 overflow-hidden border-b border-line bg-canvas-2">
+    {/* Greyscale at rest so screenshots do not fight the palette; colour and a
+        slow push-in as the card is hovered. */}
+    <img
+      src={project.images[0].src}
+      alt={project.images[0].alt}
+      className="h-full w-full object-cover object-top opacity-90 grayscale transition-[transform,filter,opacity] duration-500 group-hover:scale-[1.03] group-hover:opacity-100 group-hover:grayscale-0 motion-reduce:transition-none"
+    />
+    <span className="pointer-events-none absolute inset-0 bg-gradient-to-t from-canvas-2/70 via-transparent to-transparent" />
+    <span className="pointer-events-none absolute right-3 bottom-3 inline-flex items-center gap-1.5 rounded-md border border-line bg-canvas-2/90 px-2 py-1 font-mono text-[10px] text-muted backdrop-blur-sm transition-colors group-hover:border-accent/50 group-hover:text-accent">
+      <TbMaximize />
+      {project.images.length} shots
+    </span>
   </div>
 );
 
 const Projects = () => {
+  const [active, setActive] = useState(null);
+  const close = useCallback(() => setActive(null), []);
+
+  // The whole card is clickable for the mouse; the button inside it is what
+  // keyboards and screen readers use, so the card keeps its heading semantics
+  // instead of collapsing into a role="button".
+  const card = (project) => (
+    <motion.article
+      key={project.name}
+      variants={fadeUp}
+      onClick={() => setActive(project)}
+      className="group flex cursor-pointer flex-col overflow-hidden rounded-xl border border-line bg-surface transition-[transform,border-color] duration-200 hover:border-accent/40 motion-safe:hover:-translate-y-0.5"
+    >
+      {project.images ? (
+        <Cover project={project} />
+      ) : (
+        <div className="shrink-0 border-b border-line">
+          <ProjectDiagram {...project.diagram} />
+        </div>
+      )}
+
+      <div className="flex flex-1 flex-col p-5">
+        <div className="flex items-baseline justify-between gap-3">
+          <h4 className="line-clamp-2 min-h-12 text-base font-semibold text-fg">
+            {project.name}
+          </h4>
+          <span className="shrink-0 font-mono text-xs whitespace-nowrap text-faint">
+            {project.year ?? project.meta}
+          </span>
+        </div>
+        <p className="mt-0.5 line-clamp-1 text-sm text-accent">
+          {project.subtitle}
+        </p>
+
+        {/* Clamped so every card in a row ends up the same height regardless
+            of how long the summary runs. */}
+        <p className="mt-2.5 line-clamp-3 min-h-16 text-[13px] leading-relaxed text-muted">
+          {project.summary}
+        </p>
+
+        <TechTags items={project.tech} />
+
+        <div className="mt-4 flex-1" />
+        <button
+          type="button"
+          onClick={(event) => {
+            event.stopPropagation();
+            setActive(project);
+          }}
+          className="inline-flex items-center gap-1.5 self-start font-mono text-xs text-muted transition-colors group-hover:text-accent"
+        >
+          View details <FiArrowUpRight />
+        </button>
+      </div>
+    </motion.article>
+  );
+
   return (
-    <Section id="projects" index="04" label="projects" title="Things I've built">
-      <h3 className="font-mono text-xs tracking-[0.2em] text-accent">
-        // MWC Group projects
-      </h3>
+    <Section
+      id="projects"
+      index="04"
+      label="projects"
+      title="Things I've built"
+    >
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between">
+        <h3 className="font-mono text-xs tracking-[0.2em] text-accent">
+          // MWC Group projects
+        </h3>
+        {/* Says why there are diagrams here and screenshots further down. Framed
+            as discretion, which is the point: this work runs on client data. */}
+        <p className="font-mono text-[11px] text-faint">
+          Screenshots withheld — client and firm systems
+        </p>
+      </div>
 
       <motion.div
         variants={stagger(0.1)}
         initial="hidden"
         whileInView="show"
         viewport={viewportOnce}
-        className="mt-5 space-y-6"
+        className="mt-5 grid gap-6 md:grid-cols-2"
       >
-        {professional.map((project) => (
-          <motion.article
-            key={project.name}
-            variants={fadeUp}
-            className="rounded-xl border border-line bg-surface p-6 transition-[transform,border-color] duration-200 hover:border-accent/40 motion-safe:hover:-translate-y-0.5 md:p-7"
-          >
-            <div className="flex flex-col gap-1 md:flex-row md:items-baseline md:justify-between">
-              <div>
-                <h3 className="text-lg font-semibold text-fg">{project.name}</h3>
-                <p className="mt-0.5 text-sm text-accent">{project.subtitle}</p>
-              </div>
-              <span className="font-mono text-xs text-faint">{project.year}</span>
-            </div>
-
-            <TechTags items={project.tech} />
-
-            {project.points && (
-              <ul className="mt-5 space-y-2.5">
-                {project.points.map((point) => (
-                  <li
-                    key={point}
-                    className="flex gap-3 text-sm leading-relaxed text-muted"
-                  >
-                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
-                    <span>{point}</span>
-                  </li>
-                ))}
-              </ul>
-            )}
-
-            {project.connectors && (
-              <div className="mt-5 grid gap-3 md:grid-cols-3">
-                {project.connectors.map((connector) => (
-                  <div
-                    key={connector.name}
-                    className="rounded-lg border border-line bg-canvas-2 p-4"
-                  >
-                    <h4 className="font-mono text-sm font-semibold text-fg">
-                      {connector.name}
-                    </h4>
-                    <p className="mt-2 text-[13px] leading-relaxed text-muted">
-                      {connector.desc}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            )}
-          </motion.article>
-        ))}
+        {professional.map(card)}
       </motion.div>
 
       <h3 className="mt-14 font-mono text-xs tracking-[0.2em] text-accent">
@@ -184,50 +362,10 @@ const Projects = () => {
         viewport={viewportOnce}
         className="mt-5 grid gap-6 md:grid-cols-2"
       >
-        {personal.map((project) => (
-          <motion.article
-            key={project.name}
-            variants={fadeUp}
-            className="group flex flex-col rounded-xl border border-line bg-surface p-6 transition-[transform,border-color] duration-200 hover:border-accent/40 motion-safe:hover:-translate-y-0.5"
-          >
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <h4 className="text-base font-semibold text-fg">{project.name}</h4>
-                <p className="mt-0.5 text-sm text-accent">{project.subtitle}</p>
-                <p className="mt-1 font-mono text-xs text-faint">{project.meta}</p>
-              </div>
-
-              {project.link && (
-                <a
-                  href={project.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`Open ${project.name}`}
-                  className="shrink-0 rounded-lg border border-line p-2 text-muted transition-colors group-hover:border-accent/50 group-hover:text-accent"
-                >
-                  <FiArrowUpRight />
-                </a>
-              )}
-            </div>
-
-            <ul className="mt-4 space-y-2.5">
-              {project.points.map((point) => (
-                <li
-                  key={point}
-                  className="flex gap-3 text-sm leading-relaxed text-muted"
-                >
-                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
-                  <span>{point}</span>
-                </li>
-              ))}
-            </ul>
-
-            <div className="mt-auto">
-              <TechTags items={project.tech} />
-            </div>
-          </motion.article>
-        ))}
+        {personal.map(card)}
       </motion.div>
+
+      <ProjectModal project={active} onClose={close} />
     </Section>
   );
 };
