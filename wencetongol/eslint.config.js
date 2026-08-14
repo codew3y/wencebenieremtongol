@@ -32,8 +32,8 @@ export default defineConfig([
     },
   },
   {
-    // Serverless functions run on Node, not in the browser.
-    files: ['api/**/*.js'],
+    // Serverless functions and their tests run on Node, not in the browser.
+    files: ['api/**/*.js', 'test/**/*.js'],
     languageOptions: { globals: globals.node },
   },
 ])
