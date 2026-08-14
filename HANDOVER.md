@@ -83,6 +83,37 @@ uses different names depending on how the store was created:
 If neither pair is present the function returns **503** and the footer stays
 bare — that's the signal that step 3 or 4 hasn't taken effect.
 
+## Connect Resend so the contact form can send
+
+`api/contact.js` posts to Resend's REST API. Until its variables exist the
+endpoint returns **503** and the form reports that it isn't configured yet.
+
+1. Sign up at [resend.com](https://resend.com) and create an **API key**.
+2. In Vercel → Settings → **Environment Variables**, add:
+   - `RESEND_API_KEY` — the key from step 1
+   - `CONTACT_TO` — the inbox that receives messages (e.g. `tongolwey@gmail.com`)
+   - `CONTACT_FROM` — *optional*. Defaults to `Portfolio <onboarding@resend.dev>`,
+     which needs no domain of your own. Set this only once a domain is verified
+     in Resend.
+3. **Redeploy** — env vars only reach a deployment built after they exist.
+4. Send yourself a test message and confirm it arrives; hitting reply should
+   address the visitor, not you, because the request sets `reply_to`.
+
+On the free plan Resend allows 3,000 emails a month, 100 a day. Note that
+without a verified domain it may only deliver to your own account address —
+fine for a contact form, but that's the thing to check first if a test message
+never shows up.
+
+Spam handling lives in the function, not in a third-party service:
+
+- a honeypot field named `website`, hidden from people — anything in it gets a
+  200 and goes in the bin, so bots learn nothing
+- five submissions per IP per hour, counted in the same Upstash store as the
+  view counter under `contact:<ip>`
+
+If Upstash is missing or erroring the limiter fails **open** — a storage outage
+must not take the contact form down with it.
+
 ## Check this before debugging anything else
 
 `api/` sits **inside** `wencetongol/`, not at the repo root. That is correct only
