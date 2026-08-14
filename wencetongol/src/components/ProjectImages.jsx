@@ -38,7 +38,7 @@ const ProjectImages = ({ images }) => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.18 }}
-            className="max-h-[38vh] w-full object-contain"
+            className="max-h-[34vh] w-full object-contain sm:max-h-[42vh]"
           />
         </AnimatePresence>
 

@@ -44,7 +44,7 @@ const ProjectModal = ({ project, onClose }) => {
             exit={{ opacity: 0, y: 16, scale: 0.98 }}
             transition={{ duration: 0.24, ease: "easeOut" }}
             onClick={(event) => event.stopPropagation()}
-            className="my-auto w-full max-w-3xl overflow-hidden rounded-2xl border border-line bg-surface shadow-xl shadow-black/20 focus:outline-none"
+            className="my-auto w-full max-w-5xl overflow-hidden rounded-2xl border border-line bg-surface shadow-xl shadow-black/20 focus:outline-none"
           >
             <div className="flex items-start gap-4 border-b border-line bg-canvas-2 p-4 md:p-5">
               <div className="min-w-0">
@@ -75,7 +75,7 @@ const ProjectModal = ({ project, onClose }) => {
               </button>
             </div>
 
-            <div className="grid max-h-[70vh] gap-5 overflow-y-auto p-4 md:grid-cols-[1fr_1fr] md:p-5">
+            <div className="grid max-h-[70vh] gap-5 overflow-y-auto p-4 md:max-h-none md:grid-cols-[1.05fr_1fr] md:gap-6 md:overflow-visible md:p-6">
               <div>
                 {project.images ? (
                   <ProjectImages images={project.images} />
@@ -93,7 +93,7 @@ const ProjectModal = ({ project, onClose }) => {
                 )}
               </div>
 
-              <div className="space-y-6">
+              <div className="space-y-5 md:max-h-[62vh] md:overflow-y-auto md:pr-1">
                 <section className="space-y-2">
                   <Heading>Project overview</Heading>
                   <p className="text-sm leading-relaxed text-muted">
