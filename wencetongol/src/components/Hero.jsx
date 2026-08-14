@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { FiDownload } from "react-icons/fi";
+import { FiFileText } from "react-icons/fi";
 import { FaGithub, FaLinkedinIn } from "react-icons/fa";
 import { HiOutlineMail } from "react-icons/hi";
 import profilePhoto from "../assets/img/profile-photo.JPG";
-import CVResume from "../assets/CV/WenceTongol_Resume.pdf";
+import ResumeModal from "./ResumeModal";
 import useTypewriter from "../hooks/useTypewriter";
 import { fadeIn, stagger } from "../lib/motion";
 
@@ -35,6 +35,7 @@ const socials = [
 ];
 
 const Hero = () => {
+  const [resumeOpen, setResumeOpen] = useState(false);
   const { typed, done } = useTypewriter(PROMPT, {
     speed: 18,
     startDelay: PROMPT_DELAY,
@@ -76,13 +77,13 @@ const Hero = () => {
             >
               Get in touch
             </a>
-            <a
-              href={CVResume}
-              download="WenceTongol_Resume.pdf"
+            <button
+              type="button"
+              onClick={() => setResumeOpen(true)}
               className="inline-flex items-center gap-2 rounded-lg border border-line bg-surface px-5 py-2.5 font-semibold text-fg transition-colors hover:border-accent/60 hover:text-accent"
             >
-              Résumé <FiDownload size={16} />
-            </a>
+              Résumé <FiFileText size={16} />
+            </button>
 
             <div className="ml-1 flex items-center gap-2">
               {socials.map((social) => (
@@ -155,6 +156,8 @@ const Hero = () => {
           </div>
         </motion.div>
       </div>
+
+      <ResumeModal open={resumeOpen} onClose={() => setResumeOpen(false)} />
     </section>
   );
 };
