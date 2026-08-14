@@ -101,8 +101,19 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  if (!RESEND_KEY || !TO) {
-    return res.status(503).json({ error: "The contact form is not configured yet." });
+  // Name which variable is absent -- never its value. Guessing which of the two
+  // is missing from a bare 503 is the slowest part of setting this up, and this
+  // only ever appears while the form is already broken.
+  const missing = [
+    RESEND_KEY ? null : "RESEND_API_KEY",
+    TO ? null : "CONTACT_TO",
+  ].filter((name) => name !== null);
+
+  if (missing.length > 0) {
+    console.error("Contact form missing env vars:", missing.join(", "));
+    return res
+      .status(503)
+      .json({ error: "The contact form is not configured yet.", missing });
   }
 
   let body;
