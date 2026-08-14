@@ -8,8 +8,10 @@ import { TbChevronRight } from "react-icons/tb";
  * tokens rather than a raster, so it stays sharp at any size and follows the
  * theme — and nothing that touches client or firm data goes into it.
  */
-const ProjectDiagram = ({ nodes, footnote }) => (
-  <div className="tech-grid relative flex h-44 w-full items-center overflow-hidden border-b border-line bg-canvas-2 px-3 sm:h-48 sm:px-6">
+const ProjectDiagram = ({ nodes, footnote, height = "h-44 sm:h-48" }) => (
+  <div
+    className={`tech-grid relative flex w-full items-center overflow-hidden bg-canvas-2 px-3 sm:px-6 ${height}`}
+  >
     <motion.div
       initial="hidden"
       whileInView="show"

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import { motion } from "framer-motion";
 import { FiArrowUpRight } from "react-icons/fi";
 import { SiClaude, SiZoho } from "react-icons/si";
@@ -9,13 +9,14 @@ import {
   TbBuildingBank,
   TbFileCheck,
   TbFileText,
+  TbMaximize,
   TbPlugConnected,
   TbServer2,
   TbTopologyStar3,
 } from "react-icons/tb";
 import Section from "./Section";
 import ProjectDiagram from "./ProjectDiagram";
-import ProjectGallery from "./ProjectGallery";
+import ProjectModal from "./ProjectModal";
 import { fadeUp, stagger, viewportOnce } from "../lib/motion";
 
 import VR1 from "../assets/img/projectsimg/VR1.webp";
@@ -30,11 +31,16 @@ import port5 from "../assets/img/projectsimg/port5.webp";
 import port6 from "../assets/img/projectsimg/port6.webp";
 import port7 from "../assets/img/projectsimg/port7.webp";
 
+// Cards carry `summary`; `points` is the detail that opens in the dialog.
 const professional = [
   {
     name: "JB FIX System",
     subtitle: "Private-Bank Order-Routing Connector (FIX 4.4)",
+    category: "Integration engineering",
+    role: "CRM Developer Associate",
     year: "2026",
+    summary:
+      "A runnable FIX 4.4 order-routing service connecting an external asset manager to a private bank through the Broadridge/NYFIX hub, built against the bank's Rules of Engagement — pre-trade validation, a persist-before-send pipeline, session recovery, and a tamper-evident audit trail.",
     tech: [
       "Python",
       "FIX 4.4",
@@ -62,7 +68,11 @@ const professional = [
   {
     name: "Enterprise MCP Connectors",
     subtitle: "Identity-Aware Integrations on Azure",
+    category: "Cloud & identity",
+    role: "CRM Developer Associate",
     year: "2026",
+    summary:
+      "Three Model Context Protocol connectors on Azure that expose enterprise systems to AI assistants under per-user identity and audit control — Microsoft Graph mail search, Purview eDiscovery, and Bexio accounting — each on least-privilege scopes with no long-lived secrets.",
     tech: [
       "Node.js",
       "Microsoft Azure",
@@ -92,7 +102,7 @@ const professional = [
     connectors: [
       {
         name: "MWC Mail Search",
-        desc: "Read-only email search across 240+ Exchange Online mailboxes via Microsoft Graph, secured with Microsoft Entra ID OAuth 2.0 (PKCE), an approved-user allowlist, and Exchange Online Application Access Policy scoping.",
+        desc: "Read-only email search across Exchange Online mailboxes via Microsoft Graph, secured with Microsoft Entra ID OAuth 2.0 (PKCE), an approved-user allowlist, and Exchange Online Application Access Policy scoping.",
       },
       {
         name: "MWC Purview eDiscovery",
@@ -107,7 +117,11 @@ const professional = [
   {
     name: "Financial Planning Report Automation",
     subtitle: "CRM-Driven Document Generation in Zoho",
+    category: "Document automation",
+    role: "IT Intern → CRM Developer Associate",
     year: "2026",
+    summary:
+      "End-to-end automation of the Financial Planning Report in Zoho: a Writer template driven by a Deluge function that maps CRM client records into a finished, adviser-ready document — extended across six investment providers, each with its own template and business logic.",
     tech: ["Zoho CRM", "Zoho Writer", "Zoho Deluge", "Document automation"],
     diagram: {
       nodes: [
@@ -131,7 +145,11 @@ const personal = [
   {
     name: "VistaVR",
     subtitle: "Virtual Reality Eye Testing Application",
-    meta: "Undergraduate Capstone",
+    category: "Undergraduate capstone",
+    role: "Developer",
+    meta: "Capstone project",
+    summary:
+      "A mobile virtual reality application for digital vision assessment, used with a VR headset enclosure. Screens visual acuity, colour blindness, and astigmatism, with voice recognition for hands-free operation.",
     tech: ["Unity", "C#"],
     images: [
       { src: VR1, alt: "VistaVR title screen" },
@@ -148,8 +166,18 @@ const personal = [
   {
     name: "Personal Portfolio Website",
     subtitle: "This site",
+    category: "Web",
+    role: "Designer & developer",
     meta: "wencetongol.vercel.app",
-    tech: ["ReactJS", "Tailwind CSS"],
+    summary:
+      "This site: a single-page React portfolio with a light and dark theme, a serverless contact endpoint on Resend with honeypot and rate-limit spam controls, and a tested API wired to CI.",
+    tech: [
+      "ReactJS",
+      "Tailwind CSS",
+      "Vercel Functions",
+      "Resend",
+      "node:test",
+    ],
     images: [
       { src: port1, alt: "Portfolio hero section" },
       { src: port2, alt: "About section" },
@@ -161,14 +189,17 @@ const personal = [
     ],
     points: [
       "Designed and published a responsive site presenting technical skills, project work, and professional background, with a light and dark theme.",
+      "Built the contact form as a Vercel Function on Resend, with a honeypot, per-IP rate limiting in Redis, and a 17-test suite run by GitHub Actions.",
     ],
     link: "https://wencetongol.vercel.app/",
   },
 ];
 
+const VISIBLE_TAGS = 4;
+
 const TechTags = ({ items }) => (
   <div className="mt-4 flex flex-wrap gap-2">
-    {items.map((item) => (
+    {items.slice(0, VISIBLE_TAGS).map((item) => (
       <span
         key={item}
         className="rounded border border-line bg-surface-2 px-2 py-0.5 font-mono text-[11px] text-faint"
@@ -176,10 +207,87 @@ const TechTags = ({ items }) => (
         {item}
       </span>
     ))}
+    {items.length > VISIBLE_TAGS && (
+      <span className="rounded border border-line px-2 py-0.5 font-mono text-[11px] text-faint">
+        +{items.length - VISIBLE_TAGS}
+      </span>
+    )}
+  </div>
+);
+
+const Cover = ({ project }) => (
+  <div className="relative h-52 overflow-hidden border-b border-line bg-canvas-2 sm:h-56">
+    {/* Greyscale at rest so screenshots do not fight the palette; colour and a
+        slow push-in as the card is hovered. */}
+    <img
+      src={project.images[0].src}
+      alt={project.images[0].alt}
+      className="h-full w-full object-cover object-top opacity-90 grayscale transition-[transform,filter,opacity] duration-500 group-hover:scale-[1.03] group-hover:opacity-100 group-hover:grayscale-0 motion-reduce:transition-none"
+    />
+    <span className="pointer-events-none absolute inset-0 bg-gradient-to-t from-canvas-2/70 via-transparent to-transparent" />
+    <span className="pointer-events-none absolute right-3 bottom-3 inline-flex items-center gap-1.5 rounded-md border border-line bg-canvas-2/90 px-2 py-1 font-mono text-[10px] text-muted backdrop-blur-sm transition-colors group-hover:border-accent/50 group-hover:text-accent">
+      <TbMaximize />
+      {project.images.length} shots
+    </span>
   </div>
 );
 
 const Projects = () => {
+  const [active, setActive] = useState(null);
+  const close = useCallback(() => setActive(null), []);
+
+  // The whole card is clickable for the mouse; the button inside it is what
+  // keyboards and screen readers use, so the card keeps its heading semantics
+  // instead of collapsing into a role="button".
+  const card = (project, index) => (
+    <motion.article
+      key={project.name}
+      variants={fadeUp}
+      onClick={() => setActive(project)}
+      className={`group flex cursor-pointer flex-col overflow-hidden rounded-xl border border-line bg-surface transition-[transform,border-color] duration-200 hover:border-accent/40 motion-safe:hover:-translate-y-0.5 ${
+        index === 0 && project.diagram ? "md:col-span-2" : ""
+      }`}
+    >
+      {project.images ? (
+        <Cover project={project} />
+      ) : (
+        <div className="border-b border-line">
+          <ProjectDiagram {...project.diagram} />
+        </div>
+      )}
+
+      <div className="flex flex-1 flex-col p-6">
+        <div className="flex items-baseline justify-between gap-3">
+          <h4 className="text-base font-semibold text-fg md:text-lg">
+            {project.name}
+          </h4>
+          <span className="font-mono text-xs whitespace-nowrap text-faint">
+            {project.year ?? project.meta}
+          </span>
+        </div>
+        <p className="mt-0.5 text-sm text-accent">{project.subtitle}</p>
+
+        <p className="mt-3 text-sm leading-relaxed text-muted">
+          {project.summary}
+        </p>
+
+        <TechTags items={project.tech} />
+
+        <div className="mt-5 flex-1" />
+        <button
+          type="button"
+          onClick={(event) => {
+            event.stopPropagation();
+            setActive(project);
+          }}
+          className="inline-flex items-center gap-1.5 self-start font-mono text-xs text-muted transition-colors group-hover:text-accent"
+        >
+          View details <FiArrowUpRight />
+        </button>
+      </div>
+    </motion.article>
+  );
+
   return (
     <Section
       id="projects"
@@ -194,8 +302,7 @@ const Projects = () => {
         {/* Says why there are diagrams here and screenshots further down. Framed
             as discretion, which is the point: this work runs on client data. */}
         <p className="font-mono text-[11px] text-faint">
-          Screenshots withheld — client and firm systems. Architecture shown
-          instead.
+          Screenshots withheld — client and firm systems
         </p>
       </div>
 
@@ -204,67 +311,9 @@ const Projects = () => {
         initial="hidden"
         whileInView="show"
         viewport={viewportOnce}
-        className="mt-5 space-y-6"
+        className="mt-5 grid gap-6 md:grid-cols-2"
       >
-        {professional.map((project) => (
-          <motion.article
-            key={project.name}
-            variants={fadeUp}
-            className="overflow-hidden rounded-xl border border-line bg-surface transition-[transform,border-color] duration-200 hover:border-accent/40 motion-safe:hover:-translate-y-0.5"
-          >
-            {project.diagram && <ProjectDiagram {...project.diagram} />}
-
-            <div className="p-6 md:p-7">
-              <div className="flex flex-col gap-1 md:flex-row md:items-baseline md:justify-between">
-                <div>
-                  <h3 className="text-lg font-semibold text-fg">
-                    {project.name}
-                  </h3>
-                  <p className="mt-0.5 text-sm text-accent">
-                    {project.subtitle}
-                  </p>
-                </div>
-                <span className="font-mono text-xs text-faint">
-                  {project.year}
-                </span>
-              </div>
-
-              <TechTags items={project.tech} />
-
-              {project.points && (
-                <ul className="mt-5 space-y-2.5">
-                  {project.points.map((point) => (
-                    <li
-                      key={point}
-                      className="flex gap-3 text-sm leading-relaxed text-muted"
-                    >
-                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
-                      <span>{point}</span>
-                    </li>
-                  ))}
-                </ul>
-              )}
-
-              {project.connectors && (
-                <div className="mt-5 grid gap-3 md:grid-cols-3">
-                  {project.connectors.map((connector) => (
-                    <div
-                      key={connector.name}
-                      className="rounded-lg border border-line bg-canvas-2 p-4"
-                    >
-                      <h4 className="font-mono text-sm font-semibold text-fg">
-                        {connector.name}
-                      </h4>
-                      <p className="mt-2 text-[13px] leading-relaxed text-muted">
-                        {connector.desc}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </motion.article>
-        ))}
+        {professional.map(card)}
       </motion.div>
 
       <h3 className="mt-14 font-mono text-xs tracking-[0.2em] text-accent">
@@ -278,62 +327,10 @@ const Projects = () => {
         viewport={viewportOnce}
         className="mt-5 grid gap-6 md:grid-cols-2"
       >
-        {personal.map((project) => (
-          <motion.article
-            key={project.name}
-            variants={fadeUp}
-            className="group flex flex-col overflow-hidden rounded-xl border border-line bg-surface transition-[transform,border-color] duration-200 hover:border-accent/40 motion-safe:hover:-translate-y-0.5"
-          >
-            {project.images && (
-              <ProjectGallery images={project.images} name={project.name} />
-            )}
-
-            <div className="flex flex-1 flex-col p-6">
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <h4 className="text-base font-semibold text-fg">
-                    {project.name}
-                  </h4>
-                  <p className="mt-0.5 text-sm text-accent">
-                    {project.subtitle}
-                  </p>
-                  <p className="mt-1 font-mono text-xs text-faint">
-                    {project.meta}
-                  </p>
-                </div>
-
-                {project.link && (
-                  <a
-                    href={project.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={`Open ${project.name}`}
-                    className="shrink-0 rounded-lg border border-line p-2 text-muted transition-colors group-hover:border-accent/50 group-hover:text-accent"
-                  >
-                    <FiArrowUpRight />
-                  </a>
-                )}
-              </div>
-
-              <ul className="mt-4 space-y-2.5">
-                {project.points.map((point) => (
-                  <li
-                    key={point}
-                    className="flex gap-3 text-sm leading-relaxed text-muted"
-                  >
-                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
-                    <span>{point}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <div className="mt-auto">
-                <TechTags items={project.tech} />
-              </div>
-            </div>
-          </motion.article>
-        ))}
+        {personal.map(card)}
       </motion.div>
+
+      <ProjectModal project={active} onClose={close} />
     </Section>
   );
 };
