@@ -8,6 +8,7 @@ import {
   TbBrandOauth,
   TbBuildingBank,
   TbFileCheck,
+  TbCoins,
   TbFileText,
   TbMaximize,
   TbPlugConnected,
@@ -139,6 +140,38 @@ const professional = [
       "Revised retirement analysis and social retirement benefit handling on adviser feedback, separating automated values from those needing manual adviser input, then documented the template and function for handover.",
     ],
   },
+  {
+    name: "Investment Proposal Automation",
+    subtitle: "Portfolio Proposals from CRM Holdings Data",
+    category: "Document automation",
+    role: "IT Intern → CRM Developer Associate",
+    year: "2026",
+    summary:
+      "Automated generation of client investment proposals in Zoho, assembling portfolio structure, holdings, ISIN, KIID and factsheet data out of CRM into adviser-ready output — including multi-currency totals converted back to each holding's own currency rather than the account's.",
+    tech: [
+      "Zoho CRM",
+      "Zoho Writer",
+      "Zoho Deluge",
+      "Multi-currency handling",
+      "Document automation",
+    ],
+    diagram: {
+      nodes: [
+        { Icon: SiZoho, label: "CRM holdings", sub: "ISIN · KIID" },
+        { Icon: TbBraces, label: "Deluge mapping" },
+        { Icon: TbCoins, label: "Currency logic", sub: "base → original" },
+        { Icon: TbFileCheck, label: "Proposal" },
+      ],
+      footnote: "portfolio · regular holdings · property · pension sections",
+    },
+    points: [
+      "Analysed the investment proposal workflow end to end — portfolio structure, holdings, regular holdings, and the output advisers expect — then mapped the data fields needed to generate it.",
+      "Mapped investment holdings, ISIN, KIID, and factsheet data across related Zoho CRM modules into the proposal template, so a proposal assembles from records already on file instead of manual re-entry.",
+      "Validated the calculations behind the cash, investments, medium-term investments, property, and pension sections against the existing Excel references, correcting compounding and annual-versus-monthly errors.",
+      "Fixed multi-currency handling so total asset values convert back to each holding's original currency rather than reporting everything in the account currency, and built multi-currency test cases before sign-off.",
+      "Extended the automation across six investment providers, each with its own template and business logic, then documented the templates and left maintenance notes for handover.",
+    ],
+  },
 ];
 
 const personal = [
@@ -195,10 +228,10 @@ const personal = [
   },
 ];
 
-const VISIBLE_TAGS = 4;
+const VISIBLE_TAGS = 3;
 
 const TechTags = ({ items }) => (
-  <div className="mt-4 flex flex-wrap gap-2">
+  <div className="mt-3 flex flex-wrap gap-2">
     {items.slice(0, VISIBLE_TAGS).map((item) => (
       <span
         key={item}
@@ -216,7 +249,7 @@ const TechTags = ({ items }) => (
 );
 
 const Cover = ({ project }) => (
-  <div className="relative h-52 overflow-hidden border-b border-line bg-canvas-2 sm:h-56">
+  <div className="relative h-44 overflow-hidden border-b border-line bg-canvas-2">
     {/* Greyscale at rest so screenshots do not fight the palette; colour and a
         slow push-in as the card is hovered. */}
     <img
@@ -239,14 +272,12 @@ const Projects = () => {
   // The whole card is clickable for the mouse; the button inside it is what
   // keyboards and screen readers use, so the card keeps its heading semantics
   // instead of collapsing into a role="button".
-  const card = (project, index) => (
+  const card = (project) => (
     <motion.article
       key={project.name}
       variants={fadeUp}
       onClick={() => setActive(project)}
-      className={`group flex cursor-pointer flex-col overflow-hidden rounded-xl border border-line bg-surface transition-[transform,border-color] duration-200 hover:border-accent/40 motion-safe:hover:-translate-y-0.5 ${
-        index === 0 && project.diagram ? "md:col-span-2" : ""
-      }`}
+      className="group flex cursor-pointer flex-col overflow-hidden rounded-xl border border-line bg-surface transition-[transform,border-color] duration-200 hover:border-accent/40 motion-safe:hover:-translate-y-0.5"
     >
       {project.images ? (
         <Cover project={project} />
@@ -256,24 +287,24 @@ const Projects = () => {
         </div>
       )}
 
-      <div className="flex flex-1 flex-col p-6">
+      <div className="flex flex-1 flex-col p-5">
         <div className="flex items-baseline justify-between gap-3">
-          <h4 className="text-base font-semibold text-fg md:text-lg">
-            {project.name}
-          </h4>
+          <h4 className="text-base font-semibold text-fg">{project.name}</h4>
           <span className="font-mono text-xs whitespace-nowrap text-faint">
             {project.year ?? project.meta}
           </span>
         </div>
         <p className="mt-0.5 text-sm text-accent">{project.subtitle}</p>
 
-        <p className="mt-3 text-sm leading-relaxed text-muted">
+        {/* Clamped so every card in a row ends up the same height regardless
+            of how long the summary runs. */}
+        <p className="mt-2.5 line-clamp-3 text-[13px] leading-relaxed text-muted">
           {project.summary}
         </p>
 
         <TechTags items={project.tech} />
 
-        <div className="mt-5 flex-1" />
+        <div className="mt-4 flex-1" />
         <button
           type="button"
           onClick={(event) => {
