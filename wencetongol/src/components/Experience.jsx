@@ -2,6 +2,7 @@ import React, { useRef } from "react";
 import { motion, useReducedMotion, useScroll, useSpring } from "framer-motion";
 import Section from "./Section";
 import { fadeUp, stagger, viewportOnce } from "../lib/motion";
+import useSpotlight from "../hooks/useSpotlight";
 
 const roles = [
   {
@@ -32,6 +33,7 @@ const roles = [
 ];
 
 const Experience = () => {
+  const onSpotlight = useSpotlight();
   const timelineRef = useRef(null);
   const reduceMotion = useReducedMotion();
   // Named edges: 0 when the timeline's top reaches the viewport centre, 1 when
@@ -75,7 +77,10 @@ const Experience = () => {
             variants={fadeUp}
             className={idx === roles.length - 1 ? "" : "mb-10"}
           >
-            <div className="rounded-xl border border-line bg-surface p-6 transition-[transform,border-color] duration-200 hover:border-accent/40 motion-safe:hover:-translate-y-0.5">
+            <div
+              onPointerMove={onSpotlight}
+              className="spotlight rounded-xl border border-line bg-surface p-6 transition-[transform,border-color] duration-200 hover:border-accent/40 motion-safe:hover:-translate-y-0.5"
+            >
               <div className="flex flex-col gap-1 md:flex-row md:items-baseline md:justify-between">
                 <div>
                   <h3 className="text-lg font-semibold text-fg">{role.title}</h3>
