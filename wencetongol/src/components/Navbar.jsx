@@ -32,14 +32,17 @@ const Navbar = () => {
   // underline stayed stuck on the section below. Measuring positions on scroll
   // resolves to exactly one section every frame instead.
   useEffect(() => {
-    const sections = links
-      .map((link) => ({ href: link.href, el: document.querySelector(link.href) }))
-      .filter((section) => section.el);
-
     let frame = null;
 
     const measure = () => {
       frame = null;
+      // Resolved every pass, not cached at mount: the sections below the fold
+      // are lazy, so most of them do not exist yet when this first runs.
+      const sections = links
+        .map((link) => ({ href: link.href, el: document.querySelector(link.href) }))
+        .filter((section) => section.el);
+      if (sections.length === 0) return;
+
       // The line sits just below the 64px header.
       const line = 96;
       const last = sections[sections.length - 1];

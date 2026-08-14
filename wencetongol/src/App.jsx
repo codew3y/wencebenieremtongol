@@ -1,16 +1,54 @@
-import React, { useEffect, useState } from "react";
+import React, { lazy, Suspense, useEffect, useState } from "react";
 import { AnimatePresence, motion, MotionConfig } from "framer-motion";
+import ErrorBoundary from "./components/ErrorBoundary";
 import Loader from "./components/Loader";
 import Navbar from "./components/Navbar";
 import ScrollProgress from "./components/ScrollProgress";
 import Hero from "./components/Hero";
 import About from "./components/About";
-import Skills from "./components/Skills";
-import Experience from "./components/Experience";
-import Projects from "./components/Projects";
-import Education from "./components/Education";
-import Contact from "./components/Contact";
-import Footer from "./components/Footer";
+
+// Hero and About are what the visitor actually lands on; everything below the
+// fold ships as its own chunk so the first paint is not waiting on all of it.
+// The chunks download while the loading screen is up, so the Suspense fallbacks
+// below are rarely seen.
+const Skills = lazy(() => import("./components/Skills"));
+const Experience = lazy(() => import("./components/Experience"));
+const Projects = lazy(() => import("./components/Projects"));
+const Education = lazy(() => import("./components/Education"));
+const Contact = lazy(() => import("./components/Contact"));
+const Footer = lazy(() => import("./components/Footer"));
+
+// Holds roughly the section's height so the scrollbar does not lurch while a
+// chunk lands.
+const Placeholder = ({ height }) => (
+  <div aria-hidden="true" className={height} />
+);
+
+const SectionFailed = ({ id }) => (
+  <section id={id} className="mx-auto max-w-6xl px-6 py-20">
+    <p className="rounded-xl border border-line bg-surface px-5 py-4 text-sm text-muted">
+      This section didn't load. Refreshing usually fixes it — or reach me at{" "}
+      <a
+        href="mailto:tongolwey@gmail.com"
+        className="text-accent hover:underline"
+      >
+        tongolwey@gmail.com
+      </a>
+      .
+    </p>
+  </section>
+);
+
+/**
+ * One lazy section: its own chunk, its own error boundary. A section that fails
+ * to render — or whose chunk fails to load — leaves the rest of the page alone.
+ * The fallback keeps the section's id so the nav and deep links still resolve.
+ */
+const LazySection = ({ id, height = "min-h-[60vh]", children }) => (
+  <ErrorBoundary name={id} fallback={<SectionFailed id={id} />}>
+    <Suspense fallback={<Placeholder height={height} />}>{children}</Suspense>
+  </ErrorBoundary>
+);
 
 function App() {
   const [ready, setReady] = useState(false);
@@ -22,9 +60,7 @@ function App() {
     let hold = null;
     let cancelled = false;
 
-    const fonts = document.fonts
-      ? document.fonts.ready
-      : Promise.resolve();
+    const fonts = document.fonts ? document.fonts.ready : Promise.resolve();
 
     Promise.race([
       fonts,
@@ -75,28 +111,47 @@ function App() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, ease: "easeInOut" }}
           >
-            <ScrollProgress />
+            <ErrorBoundary name="chrome">
+              <ScrollProgress />
 
-            <a
-              href="#home"
-              className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[70] focus:rounded-lg focus:bg-accent focus:px-4 focus:py-2 focus:font-semibold focus:text-accent-fg"
-            >
-              Skip to content
-            </a>
+              <a
+                href="#home"
+                className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[70] focus:rounded-lg focus:bg-accent focus:px-4 focus:py-2 focus:font-semibold focus:text-accent-fg"
+              >
+                Skip to content
+              </a>
 
-            <Navbar />
+              <Navbar />
+            </ErrorBoundary>
 
             <main>
-              <Hero />
-              <About />
-              <Skills />
-              <Experience />
-              <Projects />
-              <Education />
-              <Contact />
+              <ErrorBoundary name="hero" fallback={<SectionFailed id="home" />}>
+                <Hero />
+              </ErrorBoundary>
+              <ErrorBoundary name="about" fallback={<SectionFailed id="about" />}>
+                <About />
+              </ErrorBoundary>
+
+              <LazySection id="skills">
+                <Skills />
+              </LazySection>
+              <LazySection id="experience">
+                <Experience />
+              </LazySection>
+              <LazySection id="projects">
+                <Projects />
+              </LazySection>
+              <LazySection id="education">
+                <Education />
+              </LazySection>
+              <LazySection id="contact">
+                <Contact />
+              </LazySection>
             </main>
 
-            <Footer />
+            <LazySection id="footer" height="min-h-[20vh]">
+              <Footer />
+            </LazySection>
           </motion.div>
         )}
       </div>
