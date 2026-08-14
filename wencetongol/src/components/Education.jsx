@@ -2,7 +2,6 @@ import React from "react";
 import { motion } from "framer-motion";
 import Section from "./Section";
 import { fadeUp, stagger, viewportOnce } from "../lib/motion";
-import useSpotlight from "../hooks/useSpotlight";
 
 const education = [
   {
@@ -44,8 +43,6 @@ const certifications = [
 ];
 
 const Education = () => {
-  const onSpotlight = useSpotlight();
-
   return (
     <Section
       id="education"
@@ -65,8 +62,7 @@ const Education = () => {
             <motion.div
               key={entry.school}
               variants={fadeUp}
-              onPointerMove={onSpotlight}
-              className="spotlight rounded-xl border border-line bg-surface p-5 transition-[transform,border-color] duration-200 hover:border-accent/40 motion-safe:hover:-translate-y-0.5"
+              className="rounded-xl border border-line bg-surface p-5 transition-[transform,border-color] duration-200 hover:border-accent/40 motion-safe:hover:-translate-y-0.5"
             >
               <div className="flex items-baseline justify-between gap-3">
                 {/* Accent, matching the "Outside the code" and certification
@@ -84,8 +80,7 @@ const Education = () => {
               certifications column, and says something the resume does not. */}
           <motion.div
             variants={fadeUp}
-            onPointerMove={onSpotlight}
-            className="spotlight rounded-xl border border-line bg-surface p-5 transition-[transform,border-color] duration-200 hover:border-accent/40 motion-safe:hover:-translate-y-0.5"
+            className="rounded-xl border border-line bg-surface p-5 transition-[transform,border-color] duration-200 hover:border-accent/40 motion-safe:hover:-translate-y-0.5"
           >
             <h3 className="font-mono text-sm text-accent">Outside the code</h3>
             <p className="mt-3 text-sm leading-relaxed text-muted">

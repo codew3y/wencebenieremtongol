@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import { FiArrowUpRight } from "react-icons/fi";
 import Section from "./Section";
 import { fadeUp, stagger, viewportOnce } from "../lib/motion";
-import useSpotlight from "../hooks/useSpotlight";
 
 const professional = [
   {
@@ -110,8 +109,6 @@ const TechTags = ({ items }) => (
 );
 
 const Projects = () => {
-  const onSpotlight = useSpotlight();
-
   return (
     <Section id="projects" index="04" label="projects" title="Things I've built">
       <h3 className="font-mono text-xs tracking-[0.2em] text-accent">
@@ -129,8 +126,7 @@ const Projects = () => {
           <motion.article
             key={project.name}
             variants={fadeUp}
-            onPointerMove={onSpotlight}
-            className="spotlight rounded-xl border border-line bg-surface p-6 transition-[transform,border-color] duration-200 hover:border-accent/40 motion-safe:hover:-translate-y-0.5 md:p-7"
+            className="rounded-xl border border-line bg-surface p-6 transition-[transform,border-color] duration-200 hover:border-accent/40 motion-safe:hover:-translate-y-0.5 md:p-7"
           >
             <div className="flex flex-col gap-1 md:flex-row md:items-baseline md:justify-between">
               <div>
@@ -192,8 +188,7 @@ const Projects = () => {
           <motion.article
             key={project.name}
             variants={fadeUp}
-            onPointerMove={onSpotlight}
-            className="spotlight group flex flex-col rounded-xl border border-line bg-surface p-6 transition-[transform,border-color] duration-200 hover:border-accent/40 motion-safe:hover:-translate-y-0.5"
+            className="group flex flex-col rounded-xl border border-line bg-surface p-6 transition-[transform,border-color] duration-200 hover:border-accent/40 motion-safe:hover:-translate-y-0.5"
           >
             <div className="flex items-start justify-between gap-4">
               <div>
