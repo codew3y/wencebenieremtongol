@@ -31,7 +31,11 @@ const socials = [
     href: "https://www.linkedin.com/in/wence-tongol-32a968393/",
     label: "LinkedIn",
   },
-  { icon: <HiOutlineMail />, href: "mailto:tongolwey@gmail.com", label: "Email" },
+  {
+    icon: <HiOutlineMail />,
+    href: "mailto:tongolwey@gmail.com",
+    label: "Email",
+  },
 ];
 
 const Hero = () => {
@@ -63,11 +67,11 @@ const Hero = () => {
           </h1>
 
           <p className="mt-6 max-w-xl leading-relaxed text-muted">
-            I automate business processes and connect enterprise systems — Zoho CRM
-            automation in Deluge, MCP connectors on Microsoft Azure, and REST
-            integrations secured with OAuth 2.0. I use Claude throughout the
-            development workflow, from drafting and debugging code to documentation
-            and integration troubleshooting.
+            I automate business processes and connect enterprise systems — Zoho
+            CRM automation in Deluge, MCP connectors on Microsoft Azure, and
+            REST integrations secured with OAuth 2.0. I use Claude throughout
+            the development workflow, from drafting and debugging code to
+            documentation and integration troubleshooting.
           </p>
 
           <div className="mt-9 flex flex-wrap items-center gap-3">
@@ -90,7 +94,9 @@ const Hero = () => {
                 <a
                   key={social.label}
                   href={social.href}
-                  target={social.href.startsWith("mailto:") ? undefined : "_blank"}
+                  target={
+                    social.href.startsWith("mailto:") ? undefined : "_blank"
+                  }
                   rel="noopener noreferrer"
                   aria-label={social.label}
                   className="grid h-10 w-10 place-items-center rounded-lg border border-line bg-surface text-muted transition-colors hover:border-accent/50 hover:text-accent"
@@ -137,7 +143,11 @@ const Hero = () => {
               className="mt-6 space-y-2.5 font-mono text-xs"
             >
               {meta.map((item) => (
-                <motion.div key={item.key} variants={fadeIn} className="flex gap-2">
+                <motion.div
+                  key={item.key}
+                  variants={fadeIn}
+                  className="flex gap-2"
+                >
                   {/* Wide enough for "location" (8 chars) so every value aligns. */}
                   <dt className="w-16 shrink-0 text-accent">{item.key}</dt>
                   <dd className="text-muted">{item.value}</dd>
@@ -145,11 +155,14 @@ const Hero = () => {
               ))}
             </motion.dl>
 
-            <p className="mt-6 min-h-[1.5em] font-mono text-[11px] text-faint">
+            <p
+              aria-hidden="true"
+              className="mt-6 min-h-[1.5em] font-mono text-[11px] text-faint"
+            >
               <span className="text-accent">$</span> {typed}
               <span
                 className={`ml-0.5 inline-block h-3.5 w-2 translate-y-0.5 bg-accent ${
-                  done ? "animate-pulse" : ""
+                  done ? "motion-safe:animate-pulse" : ""
                 }`}
               />
             </p>

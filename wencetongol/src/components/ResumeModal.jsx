@@ -1,7 +1,9 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
+import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { FiDownload, FiExternalLink, FiX } from "react-icons/fi";
 import CVResume from "../assets/CV/WenceTongol_Resume.pdf";
+import useDialog from "../hooks/useDialog";
 
 const FILE_NAME = "WenceTongol_Resume.pdf";
 
@@ -12,32 +14,9 @@ const FILE_NAME = "WenceTongol_Resume.pdf";
  * fallback inside the frame covers that case.
  */
 const ResumeModal = ({ open, onClose }) => {
-  const panelRef = useRef(null);
-  const returnFocusTo = useRef(null);
+  const panelRef = useDialog(open, onClose);
 
-  useEffect(() => {
-    if (!open) return;
-
-    returnFocusTo.current = document.activeElement;
-    const { overflow } = document.body.style;
-    document.body.style.overflow = "hidden";
-
-    const onKeyDown = (event) => {
-      if (event.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", onKeyDown);
-
-    // Move focus into the dialog so the keyboard lands somewhere sensible.
-    panelRef.current?.focus();
-
-    return () => {
-      window.removeEventListener("keydown", onKeyDown);
-      document.body.style.overflow = overflow;
-      returnFocusTo.current?.focus?.();
-    };
-  }, [open, onClose]);
-
-  return (
+  return createPortal(
     <AnimatePresence>
       {open && (
         <motion.div
@@ -107,7 +86,11 @@ const ResumeModal = ({ open, onClose }) => {
                 {/* Shown only where inline PDFs are unsupported. */}
                 <p className="p-6 text-sm text-muted">
                   Your browser can't display the PDF here.{" "}
-                  <a href={CVResume} download={FILE_NAME} className="text-accent">
+                  <a
+                    href={CVResume}
+                    download={FILE_NAME}
+                    className="text-accent"
+                  >
                     Download it instead
                   </a>
                   .
@@ -117,7 +100,8 @@ const ResumeModal = ({ open, onClose }) => {
           </motion.div>
         </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body,
   );
 };
 
