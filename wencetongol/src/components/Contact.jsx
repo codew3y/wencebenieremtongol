@@ -1,8 +1,15 @@
 import React, { useState } from "react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { FaFacebookF, FaGithub, FaLinkedinIn } from "react-icons/fa";
 import { HiOutlineMail } from "react-icons/hi";
-import { FiMapPin } from "react-icons/fi";
+import {
+  FiAlertCircle,
+  FiCheck,
+  FiCornerUpLeft,
+  FiLoader,
+  FiMapPin,
+  FiSend,
+} from "react-icons/fi";
 import Section from "./Section";
 import PhilippinesMap from "./PhilippinesMap";
 
@@ -29,14 +36,32 @@ const socials = [
   },
 ];
 
+// Mirrors the limits api/contact.js enforces, so the browser stops you before a
+// pointless round trip rather than after one.
+const MAX_LENGTH = { name: 100, email: 200, subject: 150, message: 5000 };
+
 const fieldClass =
-  "w-full rounded-lg border border-line bg-canvas-2 px-4 py-2.5 text-sm text-fg placeholder-faint transition-colors focus:border-accent focus:outline-none disabled:opacity-60";
+  "w-full rounded-lg border border-line bg-canvas-2 px-4 py-3 text-sm text-fg placeholder-faint transition-colors hover:border-line-strong focus:border-accent focus:outline-none disabled:cursor-not-allowed disabled:opacity-60";
+
+const labelClass =
+  "mb-2 block font-mono text-[11px] tracking-[0.15em] text-faint uppercase";
+
+const Field = ({ id, label, required, children }) => (
+  <div>
+    <label htmlFor={id} className={labelClass}>
+      {label}
+      {required && <span className="ml-1 text-accent">*</span>}
+    </label>
+    {children}
+  </div>
+);
 
 const Contact = () => {
   // idle -> sending -> sent | error. The form posts to /api/contact rather than
   // navigating away, so the visitor never leaves the page.
   const [status, setStatus] = useState("idle");
   const [error, setError] = useState("");
+  const [typed, setTyped] = useState(0);
 
   const onSubmit = async (event) => {
     event.preventDefault();
@@ -57,6 +82,7 @@ const Contact = () => {
       }
 
       form.reset();
+      setTyped(0);
       setStatus("sent");
     } catch (cause) {
       setError(cause.message);
@@ -65,6 +91,7 @@ const Contact = () => {
   };
 
   const sending = status === "sending";
+  const nearLimit = typed > MAX_LENGTH.message * 0.9;
 
   return (
     <Section
@@ -138,103 +165,181 @@ const Contact = () => {
           </div>
         </motion.div>
 
-        <motion.form
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          onSubmit={onSubmit}
-          className="flex flex-col gap-4 rounded-xl border border-line bg-surface p-6"
+          className="overflow-hidden rounded-2xl border border-line bg-surface"
         >
-          {/* Honeypot: hidden from people, irresistible to bots. Anything typed
-              here means the submission is discarded server-side. */}
-          <input
-            type="text"
-            name="website"
-            tabIndex={-1}
-            autoComplete="off"
-            aria-hidden="true"
-            className="hidden"
-          />
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div>
-              <label htmlFor="name" className="sr-only">
-                Your name
-              </label>
-              <input
-                id="name"
-                type="text"
-                name="name"
-                placeholder="Your name"
-                required
-                disabled={sending}
-                className={fieldClass}
-              />
-            </div>
-            <div>
-              <label htmlFor="email" className="sr-only">
-                Your email
-              </label>
-              <input
-                id="email"
-                type="email"
-                name="email"
-                placeholder="Your email"
-                required
-                disabled={sending}
-                className={fieldClass}
-              />
-            </div>
-          </div>
-
-          <div>
-            <label htmlFor="subject" className="sr-only">
-              Subject
-            </label>
-            <input
-              id="subject"
-              type="text"
-              name="subject"
-              placeholder="Subject"
-              disabled={sending}
-              className={fieldClass}
-            />
-          </div>
-
-          <div>
-            <label htmlFor="message" className="sr-only">
-              Your message
-            </label>
-            <textarea
-              id="message"
-              name="message"
-              rows="5"
-              placeholder="Your message"
-              required
-              disabled={sending}
-              className={`${fieldClass} resize-none`}
-            />
-          </div>
-
-          <div className="flex flex-wrap items-center gap-4">
-            <button
-              type="submit"
-              disabled={sending}
-              className="rounded-lg bg-accent px-6 py-2.5 font-semibold text-accent-fg transition-opacity hover:opacity-90 disabled:opacity-60"
-            >
-              {sending ? "Sending…" : "Send message"}
-            </button>
-
-            <p
-              role="status"
-              aria-live="polite"
-              className={`text-sm ${status === "error" ? "text-red-400" : "text-accent"}`}
-            >
-              {status === "sent" && "Thanks — your message is on its way."}
-              {status === "error" && error}
+          {/* Card header echoes the section headers: mono label, hairline rule. */}
+          <div className="flex items-center gap-4 border-b border-line px-6 py-4 md:px-8">
+            <p className="font-mono text-xs tracking-[0.2em] text-accent">
+              <span className="text-faint">//</span> send a message
             </p>
+            <span className="h-px flex-1 bg-line" />
           </div>
-        </motion.form>
+
+          <div className="p-6 md:p-8">
+            <AnimatePresence mode="wait" initial={false}>
+              {status === "sent" ? (
+                <motion.div
+                  key="sent"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.25 }}
+                  className="flex flex-col items-center gap-4 py-10 text-center"
+                >
+                  <span className="grid h-12 w-12 place-items-center rounded-full border border-accent/40 bg-accent-soft text-xl text-accent">
+                    <FiCheck />
+                  </span>
+                  <div>
+                    <p className="font-semibold text-fg">Message sent</p>
+                    <p className="mt-1 text-sm text-muted">
+                      Thanks for reaching out — I'll reply to the address you
+                      gave me.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setStatus("idle")}
+                    className="inline-flex items-center gap-2 rounded-lg border border-line px-4 py-2 font-mono text-xs text-muted transition-colors hover:border-accent/50 hover:text-accent"
+                  >
+                    <FiCornerUpLeft />
+                    Send another
+                  </button>
+                </motion.div>
+              ) : (
+                <motion.form
+                  key="form"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  onSubmit={onSubmit}
+                  className="flex flex-col gap-5"
+                >
+                  {/* Honeypot: hidden from people, irresistible to bots.
+                      Anything typed here means the submission is discarded
+                      server-side. */}
+                  <input
+                    type="text"
+                    name="website"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    aria-hidden="true"
+                    className="hidden"
+                  />
+
+                  <div className="grid gap-5 sm:grid-cols-2">
+                    <Field id="name" label="Name" required>
+                      <input
+                        id="name"
+                        type="text"
+                        name="name"
+                        placeholder="Juan Dela Cruz"
+                        autoComplete="name"
+                        maxLength={MAX_LENGTH.name}
+                        required
+                        disabled={sending}
+                        className={fieldClass}
+                      />
+                    </Field>
+
+                    <Field id="email" label="Email" required>
+                      <input
+                        id="email"
+                        type="email"
+                        name="email"
+                        placeholder="you@company.com"
+                        autoComplete="email"
+                        maxLength={MAX_LENGTH.email}
+                        required
+                        disabled={sending}
+                        className={fieldClass}
+                      />
+                    </Field>
+                  </div>
+
+                  <Field id="subject" label="Subject">
+                    <input
+                      id="subject"
+                      type="text"
+                      name="subject"
+                      placeholder="What is this about?"
+                      maxLength={MAX_LENGTH.subject}
+                      disabled={sending}
+                      className={fieldClass}
+                    />
+                  </Field>
+
+                  <div>
+                    <div className="flex items-baseline justify-between">
+                      <label htmlFor="message" className={labelClass}>
+                        Message
+                        <span className="ml-1 text-accent">*</span>
+                      </label>
+                      <span
+                        aria-hidden="true"
+                        className={`font-mono text-[11px] ${
+                          nearLimit ? "text-accent" : "text-faint"
+                        }`}
+                      >
+                        {typed}/{MAX_LENGTH.message}
+                      </span>
+                    </div>
+                    <textarea
+                      id="message"
+                      name="message"
+                      rows="6"
+                      placeholder="Tell me a bit about what you need."
+                      maxLength={MAX_LENGTH.message}
+                      required
+                      disabled={sending}
+                      onChange={(event) => setTyped(event.target.value.length)}
+                      className={`${fieldClass} resize-none`}
+                    />
+                  </div>
+
+                  {status === "error" && (
+                    <p
+                      role="alert"
+                      className="flex items-start gap-2 rounded-lg border border-red-400/30 bg-red-400/5 px-4 py-3 text-sm text-red-400"
+                    >
+                      <FiAlertCircle className="mt-0.5 shrink-0" />
+                      {error}
+                    </p>
+                  )}
+
+                  <div className="flex flex-wrap items-center justify-between gap-4">
+                    <button
+                      type="submit"
+                      disabled={sending}
+                      className="group inline-flex items-center gap-2 rounded-lg bg-accent px-6 py-3 text-sm font-semibold text-accent-fg transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+                    >
+                      {sending ? (
+                        <>
+                          <FiLoader className="animate-spin" />
+                          Sending
+                        </>
+                      ) : (
+                        <>
+                          <FiSend className="transition-transform group-hover:-translate-y-px group-hover:translate-x-px" />
+                          Send message
+                        </>
+                      )}
+                    </button>
+
+                    <p className="font-mono text-[11px] text-faint">
+                      Replies go to the address you enter.
+                    </p>
+                  </div>
+                </motion.form>
+              )}
+            </AnimatePresence>
+          </div>
+        </motion.div>
       </div>
     </Section>
   );
