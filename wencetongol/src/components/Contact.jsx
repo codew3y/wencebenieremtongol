@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { FaFacebookF, FaGithub, FaLinkedinIn } from "react-icons/fa";
 import { HiOutlineMail } from "react-icons/hi";
@@ -30,9 +30,42 @@ const socials = [
 ];
 
 const fieldClass =
-  "w-full rounded-lg border border-line bg-canvas-2 px-4 py-2.5 text-sm text-fg placeholder-faint transition-colors focus:border-accent focus:outline-none";
+  "w-full rounded-lg border border-line bg-canvas-2 px-4 py-2.5 text-sm text-fg placeholder-faint transition-colors focus:border-accent focus:outline-none disabled:opacity-60";
 
 const Contact = () => {
+  // idle -> sending -> sent | error. The form posts to /api/contact rather than
+  // navigating away, so the visitor never leaves the page.
+  const [status, setStatus] = useState("idle");
+  const [error, setError] = useState("");
+
+  const onSubmit = async (event) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    setStatus("sending");
+    setError("");
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(Object.fromEntries(new FormData(form))),
+      });
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(data.error ?? "The message could not be sent.");
+      }
+
+      form.reset();
+      setStatus("sent");
+    } catch (cause) {
+      setError(cause.message);
+      setStatus("error");
+    }
+  };
+
+  const sending = status === "sending";
+
   return (
     <Section
       id="contact"
@@ -110,10 +143,19 @@ const Contact = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          action="https://formspree.io/f/xvzgeavj"
-          method="POST"
+          onSubmit={onSubmit}
           className="flex flex-col gap-4 rounded-xl border border-line bg-surface p-6"
         >
+          {/* Honeypot: hidden from people, irresistible to bots. Anything typed
+              here means the submission is discarded server-side. */}
+          <input
+            type="text"
+            name="website"
+            tabIndex={-1}
+            autoComplete="off"
+            aria-hidden="true"
+            className="hidden"
+          />
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <label htmlFor="name" className="sr-only">
@@ -125,6 +167,7 @@ const Contact = () => {
                 name="name"
                 placeholder="Your name"
                 required
+                disabled={sending}
                 className={fieldClass}
               />
             </div>
@@ -138,6 +181,7 @@ const Contact = () => {
                 name="email"
                 placeholder="Your email"
                 required
+                disabled={sending}
                 className={fieldClass}
               />
             </div>
@@ -152,6 +196,7 @@ const Contact = () => {
               type="text"
               name="subject"
               placeholder="Subject"
+              disabled={sending}
               className={fieldClass}
             />
           </div>
@@ -166,16 +211,29 @@ const Contact = () => {
               rows="5"
               placeholder="Your message"
               required
+              disabled={sending}
               className={`${fieldClass} resize-none`}
             />
           </div>
 
-          <button
-            type="submit"
-            className="self-start rounded-lg bg-accent px-6 py-2.5 font-semibold text-accent-fg transition-opacity hover:opacity-90"
-          >
-            Send message
-          </button>
+          <div className="flex flex-wrap items-center gap-4">
+            <button
+              type="submit"
+              disabled={sending}
+              className="rounded-lg bg-accent px-6 py-2.5 font-semibold text-accent-fg transition-opacity hover:opacity-90 disabled:opacity-60"
+            >
+              {sending ? "Sending…" : "Send message"}
+            </button>
+
+            <p
+              role="status"
+              aria-live="polite"
+              className={`text-sm ${status === "error" ? "text-red-400" : "text-accent"}`}
+            >
+              {status === "sent" && "Thanks — your message is on its way."}
+              {status === "error" && error}
+            </p>
+          </div>
         </motion.form>
       </div>
     </Section>
