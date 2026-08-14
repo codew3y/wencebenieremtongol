@@ -122,7 +122,7 @@ const professional = [
     role: "IT Intern → CRM Developer Associate",
     year: "2026",
     summary:
-      "End-to-end automation of the Financial Planning Report in Zoho: a Writer template driven by a Deluge function that maps CRM client records into a finished, adviser-ready document — extended across six investment providers, each with its own template and business logic.",
+      "End-to-end automation of the Financial Planning Report in Zoho: a Writer template driven by a Deluge function that maps CRM client records into a finished, adviser-ready document — extended across two regulatory regimes, each with its own template and business logic.",
     tech: ["Zoho CRM", "Zoho Writer", "Zoho Deluge", "Document automation"],
     diagram: {
       nodes: [
@@ -131,7 +131,7 @@ const professional = [
         { Icon: TbFileText, label: "Writer template" },
         { Icon: TbFileCheck, label: "Client report" },
       ],
-      footnote: "six investment providers · conditional sections and pages",
+      footnote: "two regulatory regimes · conditional sections and pages",
     },
     points: [
       "Built the Financial Planning Report (FPR) generator end to end — a Zoho Writer template covering report layout, sections, field placement, and conditional pages, driven by a Deluge function that maps Zoho CRM client records into the finished document.",
@@ -157,15 +157,15 @@ const professional = [
     ],
     diagram: {
       nodes: [
-        { Icon: SiZoho, label: "CRM holdings", sub: "ISIN · KIID" },
+        { Icon: SiZoho, label: "CRM holdings" },
         { Icon: TbBraces, label: "Deluge mapping" },
         { Icon: TbCoins, label: "Currency logic", sub: "base → original" },
         { Icon: TbFileCheck, label: "Proposal" },
       ],
-      footnote: "portfolio · regular holdings · property · pension sections",
+      footnote: "portfolio · holdings · property · pension sections",
     },
     points: [
-      "Analysed the investment proposal workflow end to end — portfolio structure, holdings, regular holdings, and the output advisers expect — then mapped the data fields needed to generate it.",
+      "Analysed the investment proposal workflow end to end — portfolio structure, holdings, and the output advisers expect — then mapped the data fields needed to generate it.",
       "Mapped investment holdings, ISIN, KIID, and factsheet data across related Zoho CRM modules into the proposal template, so a proposal assembles from records already on file instead of manual re-entry.",
       "Validated the calculations behind the cash, investments, medium-term investments, property, and pension sections against the existing Excel references, correcting compounding and annual-versus-monthly errors.",
       "Fixed multi-currency handling so total asset values convert back to each holding's original currency rather than reporting everything in the account currency, and built multi-currency test cases before sign-off.",
