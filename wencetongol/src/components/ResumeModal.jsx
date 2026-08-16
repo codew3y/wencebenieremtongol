@@ -3,15 +3,16 @@ import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { FiDownload, FiExternalLink, FiX } from "react-icons/fi";
 import CVResume from "../assets/CV/WenceTongol_Resume.pdf";
+import ResumePages from "./ResumePages";
 import useDialog from "../hooks/useDialog";
 
 const FILE_NAME = "WenceTongol_Resume.pdf";
 
 /**
  * Reads the resume in place, so nobody has to download a file to decide whether
- * to keep reading. Download and open-in-tab stay available, because plenty of
- * mobile browsers refuse to render a PDF in an iframe — the noscript-ish
- * fallback inside the frame covers that case.
+ * to keep reading. Every page is drawn to canvas rather than handed to an
+ * iframe, which on a phone shows page one and refuses to scroll any further.
+ * Download and open-in-tab stay available regardless.
  */
 const ResumeModal = ({ open, onClose }) => {
   const panelRef = useDialog(open, onClose);
@@ -77,40 +78,9 @@ const ResumeModal = ({ open, onClose }) => {
               </button>
             </div>
 
-            <div className="min-h-0 flex-1 bg-canvas-2">
-              <iframe
-                src={`${CVResume}#view=FitH`}
-                title="Résumé — Wence Benierem Tongol"
-                className="h-full w-full"
-              >
-                {/* Shown only where inline PDFs are unsupported. */}
-                <p className="p-6 text-sm text-muted">
-                  Your browser can't display the PDF here.{" "}
-                  <a
-                    href={CVResume}
-                    download={FILE_NAME}
-                    className="text-accent"
-                  >
-                    Download it instead
-                  </a>
-                  .
-                </p>
-              </iframe>
+            <div className="min-h-0 flex-1">
+              <ResumePages file={CVResume} fileName={FILE_NAME} />
             </div>
-
-            {/* Phone browsers render only the first page of a PDF in an iframe
-                and will not scroll to the second, and the header's controls are
-                icon-only at this size — so small screens get a labelled way out
-                to the browser's own viewer, which pages properly. */}
-            <a
-              href={CVResume}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex shrink-0 items-center justify-center gap-2 border-t border-line bg-canvas-2 px-4 py-3 font-mono text-xs text-accent md:hidden"
-            >
-              <FiExternalLink />
-              Open both pages
-            </a>
           </motion.div>
         </motion.div>
       )}
