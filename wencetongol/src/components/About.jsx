@@ -13,7 +13,7 @@ const facts = [
 
 const About = () => {
   return (
-    <Section id="about" index="01" label="about" title="Who I am">
+    <Section id="about" label="about" title="Who I am">
       <div className="grid gap-10 lg:grid-cols-[1.3fr_1fr]">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

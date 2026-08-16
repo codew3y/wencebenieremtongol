@@ -96,7 +96,6 @@ const Contact = () => {
   return (
     <Section
       id="contact"
-      index="06"
       label="contact"
       title="Get in touch"
       intro="Have a question or an opportunity? Send a message and I'll get back to you."
@@ -175,7 +174,7 @@ const Contact = () => {
           {/* Card header echoes the section headers: mono label, hairline rule. */}
           <div className="flex items-center gap-4 border-b border-line px-6 py-4 md:px-8">
             <p className="font-mono text-xs tracking-[0.2em] text-accent">
-              <span className="text-faint">//</span> send a message
+              send a message
             </p>
             <span className="h-px flex-1 bg-line" />
           </div>

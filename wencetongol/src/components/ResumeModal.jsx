@@ -46,7 +46,7 @@ const ResumeModal = ({ open, onClose }) => {
                 id="resume-title"
                 className="font-mono text-xs tracking-[0.2em] text-accent"
               >
-                <span className="text-faint">//</span> résumé
+                résumé
               </p>
               <span className="h-px flex-1 bg-line" />
 

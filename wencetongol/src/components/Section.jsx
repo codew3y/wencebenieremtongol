@@ -2,9 +2,9 @@ import React from "react";
 import { motion } from "framer-motion";
 
 /**
- * Shared section shell: mono index label, title, optional intro, then content.
+ * Shared section shell: mono label, title, optional intro, then content.
  */
-const Section = ({ id, index, label, title, intro, children }) => {
+const Section = ({ id, label, title, intro, children }) => {
   return (
     <section id={id} className="mx-auto max-w-6xl px-6 py-20 md:py-28">
       <motion.header
@@ -15,7 +15,7 @@ const Section = ({ id, index, label, title, intro, children }) => {
       >
         <div className="flex items-center gap-4">
           <p className="font-mono text-xs tracking-[0.2em] text-accent sm:whitespace-nowrap">
-            <span className="text-faint">{index}</span> // {label}
+            {label}
           </p>
           <span className="h-px flex-1 bg-line" />
         </div>

@@ -137,7 +137,6 @@ const Skills = () => {
   return (
     <Section
       id="skills"
-      index="02"
       label="skills"
       title="Technical stack"
       intro="The languages, platforms, and practices I work with day to day."

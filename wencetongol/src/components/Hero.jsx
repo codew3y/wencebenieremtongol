@@ -57,7 +57,7 @@ const Hero = () => {
           transition={{ duration: 0.7 }}
         >
           <p className="font-mono text-xs tracking-[0.2em] text-accent">
-            // crm developer &amp; integrations specialist
+            crm developer &amp; integrations specialist
           </p>
 
           <h1 className="mt-5 text-4xl font-extrabold tracking-tight text-fg sm:text-5xl md:text-6xl">
