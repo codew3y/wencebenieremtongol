@@ -1,7 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
+// The legacy build, not the default one: the default assumes a browser recent
+// enough for the modern syntax it ships, and a phone a few versions behind
+// fails the import outright rather than degrading. Legacy costs ~50KB more.
+//
 // The minified worker: Vite copies it through as an asset rather than bundling
 // it, so the unminified build would ship all 2.2MB of itself.
-import workerUrl from "pdfjs-dist/build/pdf.worker.min.mjs?url";
+import workerUrl from "pdfjs-dist/legacy/build/pdf.worker.min.mjs?url";
 
 /**
  * Renders every page of a PDF to canvas with pdf.js.
@@ -29,13 +33,24 @@ const ResumePages = ({ file, fileName }) => {
   const loadingTaskRef = useRef(null);
   const [pages, setPages] = useState(0);
   const [status, setStatus] = useState("loading");
+  // Surfaced in the fallback: without it a reader on a browser this does not
+  // suit can only report that it "didn't work".
+  const [reason, setReason] = useState("");
 
   useEffect(() => {
     let cancelled = false;
 
     (async () => {
       try {
-        const pdfjs = await import("pdfjs-dist");
+        // Retried once: this is a few hundred KB fetched the moment the dialog
+        // opens, and a phone that drops it on the first try usually has it on
+        // the second. pdf.js handles the worker itself — where module workers
+        // are unavailable it falls back to running on the main thread.
+        const pdfjs = await import("pdfjs-dist/legacy/build/pdf.mjs").catch(
+          () => import("pdfjs-dist/legacy/build/pdf.mjs"),
+        );
+        if (cancelled) return;
+
         pdfjs.GlobalWorkerOptions.workerSrc = workerUrl;
 
         // v6 dropped the bare-string shorthand; it wants a source object.
@@ -48,8 +63,10 @@ const ResumePages = ({ file, fileName }) => {
         docRef.current = doc;
         setPages(doc.numPages);
         setStatus("ready");
-      } catch {
-        if (!cancelled) setStatus("error");
+      } catch (error) {
+        if (cancelled) return;
+        setReason(String(error?.message || error).slice(0, 120));
+        setStatus("error");
       }
     })();
 
@@ -155,22 +172,33 @@ const ResumePages = ({ file, fileName }) => {
   return (
     <div className="h-full overflow-y-auto overscroll-contain bg-canvas-2 p-3 md:p-5">
       {status === "error" ? (
-        <p className="p-6 text-center text-sm text-muted">
-          The résumé couldn&apos;t be rendered here.{" "}
-          <a
-            href={file}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-accent underline"
-          >
-            Open it in a new tab
-          </a>{" "}
-          or{" "}
-          <a href={file} download={fileName} className="text-accent underline">
-            download it
-          </a>
-          .
-        </p>
+        // Falls back to the browser's own PDF handling rather than to a dead
+        // end: on a phone that shows the first page and no further, which is
+        // still better than showing nothing at all.
+        <div className="flex h-full flex-col gap-3">
+          <iframe
+            src={`${file}#view=FitH`}
+            title="Résumé — Wence Benierem Tongol"
+            className="min-h-0 w-full flex-1 rounded-lg border border-line bg-white"
+          />
+          <p className="text-center text-xs text-muted">
+            This browser can&apos;t page through the résumé here
+            {reason ? ` (${reason})` : ""}.{" "}
+            <a
+              href={file}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-accent underline"
+            >
+              Open both pages
+            </a>{" "}
+            or{" "}
+            <a href={file} download={fileName} className="text-accent underline">
+              download
+            </a>
+            .
+          </p>
+        </div>
       ) : (
         <div ref={columnRef} className="mx-auto flex max-w-3xl flex-col gap-3">
           {status === "loading" && (
