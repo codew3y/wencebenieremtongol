@@ -14,7 +14,7 @@ const Section = ({ id, index, label, title, intro, children }) => {
         transition={{ duration: 0.6 }}
       >
         <div className="flex items-center gap-4">
-          <p className="font-mono text-xs tracking-[0.2em] whitespace-nowrap text-accent">
+          <p className="font-mono text-xs tracking-[0.2em] text-accent sm:whitespace-nowrap">
             <span className="text-faint">{index}</span> // {label}
           </p>
           <span className="h-px flex-1 bg-line" />

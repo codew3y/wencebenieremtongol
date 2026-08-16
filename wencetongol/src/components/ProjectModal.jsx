@@ -75,8 +75,11 @@ const ProjectModal = ({ project, onClose }) => {
               </button>
             </div>
 
-            <div className="grid max-h-[70vh] gap-5 overflow-y-auto p-4 md:max-h-none md:grid-cols-[1.05fr_1fr] md:gap-6 md:overflow-visible md:p-6">
-              <div>
+            <div className="grid max-h-[70vh] gap-5 overflow-y-auto p-4 md:max-h-none md:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] md:gap-6 md:overflow-visible md:p-6">
+              {/* min-w-0: without it the column sizes to the screenshot's
+                  intrinsic width (1600px), so the image spills out of the
+                  dialog and the body scrolls sideways on a phone. */}
+              <div className="min-w-0">
                 {project.images ? (
                   <ProjectImages images={project.images} />
                 ) : (
@@ -97,7 +100,7 @@ const ProjectModal = ({ project, onClose }) => {
                 )}
               </div>
 
-              <div className="space-y-5 md:max-h-[62vh] md:overflow-y-auto md:pr-1">
+              <div className="min-w-0 space-y-5 md:max-h-[62vh] md:overflow-y-auto md:pr-1">
                 <section className="space-y-2">
                   <Heading>Project overview</Heading>
                   <p className="text-sm leading-relaxed text-muted">

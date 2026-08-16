@@ -67,8 +67,10 @@ const ProjectImages = ({ images }) => {
         )}
       </div>
 
+      {/* The strip wraps rather than scrolls: a sideways-scrolling row inside a
+          dialog that already scrolls vertically is easy to miss entirely. */}
       {count > 1 && (
-        <div className="flex gap-2 overflow-x-auto pb-1">
+        <div className="flex flex-wrap gap-2 pb-1">
           {images.map((image, index) => (
             <button
               key={image.src}
