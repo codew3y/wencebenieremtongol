@@ -97,6 +97,20 @@ const ResumeModal = ({ open, onClose }) => {
                 </p>
               </iframe>
             </div>
+
+            {/* Phone browsers render only the first page of a PDF in an iframe
+                and will not scroll to the second, and the header's controls are
+                icon-only at this size — so small screens get a labelled way out
+                to the browser's own viewer, which pages properly. */}
+            <a
+              href={CVResume}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex shrink-0 items-center justify-center gap-2 border-t border-line bg-canvas-2 px-4 py-3 font-mono text-xs text-accent md:hidden"
+            >
+              <FiExternalLink />
+              Open both pages
+            </a>
           </motion.div>
         </motion.div>
       )}
