@@ -94,13 +94,12 @@ function App() {
       {/* No background here: `body` paints the canvas, so the -z-10 backdrop
           below stays visible instead of being covered by this background. */}
       <div className="relative min-h-screen text-fg">
-        {/* Decorative backdrop: blueprint grid + accent glow behind the fold. */}
+        {/* Decorative backdrop: blueprint grid behind the fold. */}
         <div
           aria-hidden="true"
           className="pointer-events-none fixed inset-0 -z-10 overflow-hidden"
         >
           <div className="tech-grid absolute inset-0" />
-          <div className="tech-glow absolute inset-x-0 top-0 h-[70vh]" />
         </div>
 
         <AnimatePresence>{!ready && <Loader />}</AnimatePresence>

@@ -46,7 +46,6 @@ const Experience = () => {
   return (
     <Section
       id="experience"
-      index="03"
       label="experience"
       title="Where I've worked"
     >

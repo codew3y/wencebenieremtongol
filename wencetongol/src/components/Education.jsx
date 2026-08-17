@@ -46,7 +46,6 @@ const Education = () => {
   return (
     <Section
       id="education"
-      index="05"
       label="education + certifications"
       title="Background"
     >

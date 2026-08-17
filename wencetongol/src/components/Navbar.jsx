@@ -92,7 +92,7 @@ const Navbar = () => {
         </a>
 
         <ul className="hidden items-center gap-7 font-mono text-[13px] text-muted md:flex">
-          {links.map((link, idx) => (
+          {links.map((link) => (
             <li key={link.name}>
               <a
                 href={link.href}
@@ -101,9 +101,6 @@ const Navbar = () => {
                   active === link.href ? "text-accent" : ""
                 }`}
               >
-                <span className="text-faint">
-                  {String(idx + 1).padStart(2, "0")}.
-                </span>{" "}
                 {link.name}
                 {/* Shared layoutId lets the underline glide between links
                     instead of disappearing and reappearing. */}
@@ -135,16 +132,13 @@ const Navbar = () => {
 
       {open && (
         <ul className="border-b border-line bg-canvas/95 px-6 pb-4 font-mono text-sm text-muted backdrop-blur-md md:hidden">
-          {links.map((link, idx) => (
+          {links.map((link) => (
             <li key={link.name}>
               <a
                 href={link.href}
                 onClick={() => setOpen(false)}
                 className="block py-2 transition-colors hover:text-accent"
               >
-                <span className="text-faint">
-                  {String(idx + 1).padStart(2, "0")}.
-                </span>{" "}
                 {link.name}
               </a>
             </li>

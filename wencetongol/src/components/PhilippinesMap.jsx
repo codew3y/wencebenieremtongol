@@ -72,11 +72,27 @@ const pop = {
   show: { scale: 1, fillOpacity: 0.07, transition: { duration: 0.3 } },
 };
 
+// The marker lands once the coastline is drawn. A variant rather than its own
+// whileInView, so it fires from the same observer as everything else.
+const landing = {
+  hidden: { opacity: 0, scale: 0 },
+  show: {
+    opacity: 1,
+    scale: 1,
+    transition: { delay: 1.5, type: "spring", stiffness: 300, damping: 18 },
+  },
+};
+
 const PhilippinesMap = ({ className = "" }) => {
   const reduceMotion = useReducedMotion();
 
   // pathLength is not a transform, so MotionConfig's reduced-motion handling
   // does not strip it -- the whole sequence has to be skipped by hand.
+  //
+  // The reveal is triggered from the wrapping div, not from inside the <svg>:
+  // WebKit does not fire IntersectionObserver for SVG children, so a
+  // whileInView on the <g> left the map drawn on desktop but permanently
+  // invisible on a phone. Variants still cascade to the paths from here.
   const animation = reduceMotion
     ? {}
     : {
@@ -87,47 +103,60 @@ const PhilippinesMap = ({ className = "" }) => {
       };
 
   return (
-    <svg
-      viewBox="28 68 334 472"
-      role="presentation"
-      aria-hidden="true"
-      focusable="false"
-      className={className}
-    >
-      <motion.g
-        {...animation}
-        fill="currentColor"
-        fillOpacity="0.07"
-        stroke="currentColor"
-        strokeOpacity="0.55"
-        strokeWidth="1.6"
-        strokeLinejoin="round"
+    <motion.div {...animation} className={className}>
+      <svg
+        viewBox="28 68 334 472"
+        role="presentation"
+        aria-hidden="true"
+        focusable="false"
+        className="h-full w-full"
       >
-        {islands.map((d) => (
-          <motion.path key={d} d={d} variants={reduceMotion ? undefined : draw} />
-        ))}
-        {specks.map((speck) => (
-          <motion.circle
-            key={`${speck.cx}-${speck.cy}`}
-            {...speck}
-            variants={reduceMotion ? undefined : pop}
-            style={{ originX: `${speck.cx}px`, originY: `${speck.cy}px` }}
-          />
-        ))}
-      </motion.g>
+        <motion.g
+          fill="currentColor"
+          fillOpacity="0.07"
+          stroke="currentColor"
+          strokeOpacity="0.55"
+          strokeWidth="1.6"
+          strokeLinejoin="round"
+        >
+          {islands.map((d) => (
+            <motion.path
+              key={d}
+              d={d}
+              variants={reduceMotion ? undefined : draw}
+            />
+          ))}
+          {specks.map((speck) => (
+            <motion.circle
+              key={`${speck.cx}-${speck.cy}`}
+              {...speck}
+              variants={reduceMotion ? undefined : pop}
+              style={{ originX: `${speck.cx}px`, originY: `${speck.cy}px` }}
+            />
+          ))}
+        </motion.g>
 
-      {/* Pampanga, where I'm based. Lands once the coastline is drawn. */}
-      <motion.g
-        transform="translate(157 198)"
-        initial={reduceMotion ? undefined : { opacity: 0, scale: 0 }}
-        whileInView={reduceMotion ? undefined : { opacity: 1, scale: 1 }}
-        viewport={{ once: true, margin: "-80px" }}
-        transition={{ delay: 1.5, type: "spring", stiffness: 300, damping: 18 }}
-      >
-        <circle r="9" fill="none" stroke="currentColor" strokeOpacity="0.35" />
-        <circle r="3.2" fill="currentColor" fillOpacity="0.9" />
-      </motion.g>
-    </svg>
+        {/* Pampanga, where I'm based. Lands once the coastline is drawn.
+            The translate stays on a plain outer <g>: animating scale writes a
+            CSS transform, which would override the transform attribute and
+            drop the marker at the viewBox origin. fill-box keeps the pop
+            centred on the marker itself. */}
+        <g transform="translate(157 198)">
+          <motion.g
+            variants={reduceMotion ? undefined : landing}
+            style={{ transformBox: "fill-box", transformOrigin: "center" }}
+          >
+            <circle
+              r="9"
+              fill="none"
+              stroke="currentColor"
+              strokeOpacity="0.35"
+            />
+            <circle r="3.2" fill="currentColor" fillOpacity="0.9" />
+          </motion.g>
+        </g>
+      </svg>
+    </motion.div>
   );
 };
 

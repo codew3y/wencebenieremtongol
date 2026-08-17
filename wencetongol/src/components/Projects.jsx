@@ -326,16 +326,30 @@ const Projects = () => {
   return (
     <Section
       id="projects"
-      index="04"
       label="projects"
       title="Things I've built"
     >
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between">
+      <h3 className="font-mono text-xs tracking-[0.2em] text-accent">
+        personal projects
+      </h3>
+
+      <motion.div
+        variants={stagger(0.1)}
+        initial="hidden"
+        whileInView="show"
+        viewport={viewportOnce}
+        className="mt-5 grid gap-6 md:grid-cols-2"
+      >
+        {personal.map(card)}
+      </motion.div>
+
+      <div className="mt-14 flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between">
         <h3 className="font-mono text-xs tracking-[0.2em] text-accent">
-          // MWC Group projects
+          MWC Group projects
         </h3>
-        {/* Says why there are diagrams here and screenshots further down. Framed
-            as discretion, which is the point: this work runs on client data. */}
+        {/* Says why these carry diagrams where the personal work above carries
+            screenshots. Framed as discretion, which is the point: this work
+            runs on client data. */}
         <p className="font-mono text-[11px] text-faint">
           Screenshots withheld — client and firm systems
         </p>
@@ -349,20 +363,6 @@ const Projects = () => {
         className="mt-5 grid gap-6 md:grid-cols-2"
       >
         {professional.map(card)}
-      </motion.div>
-
-      <h3 className="mt-14 font-mono text-xs tracking-[0.2em] text-accent">
-        // personal projects
-      </h3>
-
-      <motion.div
-        variants={stagger(0.1)}
-        initial="hidden"
-        whileInView="show"
-        viewport={viewportOnce}
-        className="mt-5 grid gap-6 md:grid-cols-2"
-      >
-        {personal.map(card)}
       </motion.div>
 
       <ProjectModal project={active} onClose={close} />
