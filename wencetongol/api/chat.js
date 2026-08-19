@@ -10,9 +10,11 @@
 import { CORPUS } from "./_corpus.js";
 
 const GEMINI_KEY = process.env.GEMINI_API_KEY;
-// Flash-Lite carries the highest free daily request allowance of the 2.5 line,
-// which is the limit a portfolio actually runs into.
-const MODEL = process.env.GEMINI_MODEL ?? "gemini-2.5-flash-lite";
+// Flash-Lite is the cheapest-to-serve tier, which on a free key means the
+// highest daily request allowance -- the limit a portfolio actually meets.
+// The 2.5 line is closed to new keys ("no longer available to new users"), so
+// this tracks the current generation; GEMINI_MODEL overrides it.
+const MODEL = process.env.GEMINI_MODEL ?? "gemini-3.5-flash-lite";
 
 const REDIS_URL = process.env.KV_REST_API_URL ?? process.env.UPSTASH_REDIS_REST_URL;
 const REDIS_TOKEN =
@@ -107,43 +109,6 @@ export function readTurns(body) {
 
 export default async function handler(req, res) {
   res.setHeader("Cache-Control", "no-store");
-
-  // TEMPORARY: names the models this key can actually reach, so the default
-  // below is chosen from a list rather than from a docs page. Remove once set.
-  if (req.method === "GET" && req.query?.models === "1") {
-    if (!GEMINI_KEY) return res.status(503).json({ missing: ["GEMINI_API_KEY"] });
-    const list = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models?key=${GEMINI_KEY}`,
-    );
-    const payload = await list.json();
-
-    // Same call the endpoint makes, so the failure reproduces here with the
-    // message attached rather than only in the log.
-    const probe = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${GEMINI_KEY}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [{ role: "user", parts: [{ text: "ping" }] }],
-        }),
-      },
-    );
-    const probePayload = await probe.json();
-
-    return res.status(200).json({
-      configuredModel: MODEL,
-      probeStatus: probe.status,
-      probeError: probePayload.error?.message,
-      listStatus: list.status,
-      models: (payload.models ?? [])
-        .filter((model) =>
-          (model.supportedGenerationMethods ?? []).includes("generateContent"),
-        )
-        .map((model) => model.name),
-      error: payload.error?.message,
-    });
-  }
 
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
