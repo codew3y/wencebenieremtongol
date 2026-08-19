@@ -167,10 +167,16 @@ export default async function handler(req, res) {
     }
 
     if (!response.ok) {
+      // The status goes back to the caller; Google's message stays in the log.
+      // A number identifies the fault — 403 key rejected or API not enabled,
+      // 404 wrong model, 400 malformed request — without putting anything
+      // sensitive on the wire, and saves reading the logs to find out.
       console.error("Gemini responded", response.status, await response.text());
-      return res
-        .status(502)
-        .json({ error: "The assistant is unavailable.", reason: "upstream" });
+      return res.status(502).json({
+        error: "The assistant is unavailable.",
+        reason: "upstream",
+        upstreamStatus: response.status,
+      });
     }
 
     payload = await response.json();

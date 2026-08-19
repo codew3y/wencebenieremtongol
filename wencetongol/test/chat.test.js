@@ -116,6 +116,8 @@ test("names the free tier's own quota separately from a server fault", async () 
   const broken = await call(ask("Hi"));
   assert.equal(broken.status, 502);
   assert.equal(broken.payload.reason, "upstream");
+  // The upstream status is the whole diagnosis when this fails in production.
+  assert.equal(broken.payload.upstreamStatus, 500);
 });
 
 test("reports an empty candidate rather than returning a blank answer", async () => {
