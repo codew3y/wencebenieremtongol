@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Local secrets for `vercel dev`.
+.env
+.env.*
+!.env.example
