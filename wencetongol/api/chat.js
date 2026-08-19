@@ -23,6 +23,13 @@ const REDIS_TOKEN =
 const WINDOW_SECONDS = 3600;
 const MAX_PER_WINDOW = 20;
 const MAX_QUESTION = 500;
+// The client sends the whole visible thread back, so its own past answers
+// arrive as model turns. They are far longer than a question and must not be
+// measured against the question limit -- that rejected every follow-up once the
+// first answer ran past 500 characters. Still bounded: the thread is client
+// controlled, so a caller could otherwise pad the prompt with invented replies.
+const MAX_ANSWER = 4000;
+const MAX_THREAD = 12000;
 const MAX_TURNS = 12;
 const MAX_OUTPUT_TOKENS = 700;
 
@@ -88,6 +95,8 @@ export function readTurns(body) {
   }
 
   const clean = [];
+  let total = 0;
+
   for (const turn of turns) {
     const role = turn?.role === "assistant" ? "model" : "user";
     const text = String(turn?.content ?? "").trim();
@@ -95,9 +104,18 @@ export function readTurns(body) {
     if (role === "user" && text.length === 0) {
       return { error: "Ask a question first." };
     }
-    if (text.length > MAX_QUESTION) {
+    if (role === "user" && text.length > MAX_QUESTION) {
       return { error: `Keep it under ${MAX_QUESTION} characters.` };
     }
+    if (role === "model" && text.length > MAX_ANSWER) {
+      return { error: "That conversation is long — start a fresh one." };
+    }
+
+    total += text.length;
+    if (total > MAX_THREAD) {
+      return { error: "That conversation is long — start a fresh one." };
+    }
+
     if (text.length > 0) clean.push({ role, parts: [{ text }] });
   }
 

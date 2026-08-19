@@ -90,6 +90,50 @@ test("maps assistant turns to the role Gemini expects", () => {
   );
 });
 
+test("a long answer in the thread does not block the next question", () => {
+  // The regression: the client sends its own past answers back as model turns,
+  // and the question limit was applied to those too -- so once one answer ran
+  // past 500 characters, every follow-up was refused as "too long".
+  const { error, turns } = readTurns({
+    messages: [
+      { role: "user", content: "What does he do at Manentia?" },
+      { role: "assistant", content: "A".repeat(900) },
+      { role: "user", content: "age?" },
+    ],
+  });
+
+  assert.equal(error, undefined, "a short follow-up must be accepted");
+  assert.equal(turns.length, 3);
+  assert.equal(turns[2].parts[0].text, "age?");
+});
+
+test("still bounds a client-supplied thread", () => {
+  // The thread is client controlled, so model turns are capped too, just far
+  // above what a real answer reaches.
+  assert.match(
+    readTurns({
+      messages: [
+        { role: "assistant", content: "A".repeat(4001) },
+        { role: "user", content: "hi" },
+      ],
+    }).error,
+    /long/,
+  );
+  assert.match(
+    readTurns({
+      messages: [
+        // Each under the per-answer cap; together over the thread cap.
+        { role: "assistant", content: "A".repeat(3900) },
+        { role: "assistant", content: "B".repeat(3900) },
+        { role: "assistant", content: "C".repeat(3900) },
+        { role: "assistant", content: "D".repeat(3900) },
+        { role: "user", content: "hi" },
+      ],
+    }).error,
+    /long/,
+  );
+});
+
 test("refuses an empty question, an over-long one, and a long thread", () => {
   assert.match(readTurns({ messages: [] }).error, /Ask a question/);
   assert.match(readTurns({}).error, /Ask a question/);
