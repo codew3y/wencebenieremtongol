@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { FiFileText } from "react-icons/fi";
+import { FiFileText, FiMessageSquare } from "react-icons/fi";
 import { FaGithub, FaLinkedinIn } from "react-icons/fa";
 import { HiOutlineMail } from "react-icons/hi";
 import profilePhoto from "../assets/img/profile-photo.JPG";
+import AskDialog from "./AskDialog";
 import ResumeModal from "./ResumeModal";
 import useTypewriter from "../hooks/useTypewriter";
 import { fadeIn, stagger } from "../lib/motion";
@@ -40,6 +41,7 @@ const socials = [
 
 const Hero = () => {
   const [resumeOpen, setResumeOpen] = useState(false);
+  const [askOpen, setAskOpen] = useState(false);
   const { typed, done } = useTypewriter(PROMPT, {
     speed: 18,
     startDelay: PROMPT_DELAY,
@@ -87,6 +89,13 @@ const Hero = () => {
               className="inline-flex items-center gap-2 rounded-lg border border-line bg-surface px-5 py-2.5 font-semibold text-fg transition-colors hover:border-accent/60 hover:text-accent"
             >
               Résumé <FiFileText size={16} />
+            </button>
+            <button
+              type="button"
+              onClick={() => setAskOpen(true)}
+              className="inline-flex items-center gap-2 rounded-lg border border-line bg-surface px-5 py-2.5 font-semibold text-fg transition-colors hover:border-accent/60 hover:text-accent"
+            >
+              Ask about my work <FiMessageSquare size={16} />
             </button>
 
             <div className="ml-1 flex items-center gap-2">
@@ -171,6 +180,7 @@ const Hero = () => {
       </div>
 
       <ResumeModal open={resumeOpen} onClose={() => setResumeOpen(false)} />
+      <AskDialog open={askOpen} onClose={() => setAskOpen(false)} />
     </section>
   );
 };

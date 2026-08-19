@@ -60,10 +60,36 @@ instead of showing a wrong number. The same applies to `npm run dev`, which
 serves no serverless functions; use `vercel dev` to exercise the endpoint
 locally.
 
+## Ask-about-my-work assistant
+
+The hero's **Ask about my work** button opens a dialog backed by `/api/chat`,
+which answers questions from `api/_corpus.js` and nothing else. The corpus is a
+prose copy of what the sections already say, so the assistant cannot invent an
+employer, a date, or a credential — anything outside it gets "that isn't
+covered here, use the contact form".
+
+Setup is one environment variable: `GEMINI_API_KEY`, from
+[Google AI Studio](https://aistudio.google.com/apikey) — the free tier needs no
+card. `GEMINI_MODEL` optionally overrides the default `gemini-2.5-flash-lite`,
+which carries the highest free daily request allowance of the 2.5 line.
+
+The free tier is metered in requests per minute and per day rather than in
+dollars, so the state to design for is a visitor meeting a limit, not a bill.
+Every failure — this endpoint's own per-IP limit, Google's daily quota, a
+missing key, an upstream fault — returns a `reason` that the dialog turns into a
+sentence pointing at the résumé and the contact form. Unlike the contact form's
+limiter, this one fails *closed*: a Redis outage stops the endpoint rather than
+leaving a metered quota open to a loop.
+
+`test/corpus.test.js` fails if a project reaches `Projects.jsx` without reaching
+the corpus, which is the drift that would otherwise go unnoticed.
+
 ## Structure
 
 ```
 api/
+  chat.js              grounded Q&A endpoint (Gemini free tier)
+  _corpus.js           the only facts the assistant may answer from
   views.js             serverless view counter (Upstash Redis)
 src/
   App.jsx              page shell, section order, background layers
