@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Local secrets: GEMINI_API_KEY and friends for `vercel dev`.
+.env
+.env.*
+!.env.example
