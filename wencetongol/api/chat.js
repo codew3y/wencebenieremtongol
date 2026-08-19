@@ -116,8 +116,26 @@ export default async function handler(req, res) {
       `https://generativelanguage.googleapis.com/v1beta/models?key=${GEMINI_KEY}`,
     );
     const payload = await list.json();
-    return res.status(list.status).json({
-      status: list.status,
+
+    // Same call the endpoint makes, so the failure reproduces here with the
+    // message attached rather than only in the log.
+    const probe = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${GEMINI_KEY}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ role: "user", parts: [{ text: "ping" }] }],
+        }),
+      },
+    );
+    const probePayload = await probe.json();
+
+    return res.status(200).json({
+      configuredModel: MODEL,
+      probeStatus: probe.status,
+      probeError: probePayload.error?.message,
+      listStatus: list.status,
       models: (payload.models ?? [])
         .filter((model) =>
           (model.supportedGenerationMethods ?? []).includes("generateContent"),
