@@ -108,6 +108,25 @@ export function readTurns(body) {
 export default async function handler(req, res) {
   res.setHeader("Cache-Control", "no-store");
 
+  // TEMPORARY: names the models this key can actually reach, so the default
+  // below is chosen from a list rather than from a docs page. Remove once set.
+  if (req.method === "GET" && req.query?.models === "1") {
+    if (!GEMINI_KEY) return res.status(503).json({ missing: ["GEMINI_API_KEY"] });
+    const list = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models?key=${GEMINI_KEY}`,
+    );
+    const payload = await list.json();
+    return res.status(list.status).json({
+      status: list.status,
+      models: (payload.models ?? [])
+        .filter((model) =>
+          (model.supportedGenerationMethods ?? []).includes("generateContent"),
+        )
+        .map((model) => model.name),
+      error: payload.error?.message,
+    });
+  }
+
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
     return res.status(405).json({ error: "Method not allowed" });
