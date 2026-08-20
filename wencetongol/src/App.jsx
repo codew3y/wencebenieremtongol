@@ -56,9 +56,9 @@ function App() {
   // loader for a frame, and its exit animation needs frames a background tab
   // does not give -- leaving a full-screen overlay in the DOM, swallowing the
   // first click of whoever eventually switches to it.
-  const [ready, setReady] = useState(
-    () => typeof document !== "undefined" && document.visibilityState === "hidden",
-  );
+  const openedHidden =
+    typeof document !== "undefined" && document.visibilityState === "hidden";
+  const [ready, setReady] = useState(openedHidden);
 
   // Eased scrolling for every in-page link, once the sections exist to scroll to.
   useSmoothAnchors(ready);
@@ -137,7 +137,11 @@ function App() {
 
         {ready && (
           <motion.div
-            initial={{ opacity: 0 }}
+            // No fade when the intro was skipped. The page mounts at once in
+            // that case, and a hidden tab gets no frames to run a fade with --
+            // so the content would sit at opacity 0 and the page would look
+            // blank, which is worse than the loader it replaced.
+            initial={openedHidden ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, ease: "easeInOut" }}
           >
