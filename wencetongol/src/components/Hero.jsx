@@ -3,6 +3,13 @@ import { motion } from "framer-motion";
 import { FiFileText } from "react-icons/fi";
 import { FaGithub, FaLinkedinIn } from "react-icons/fa";
 import { HiOutlineMail } from "react-icons/hi";
+import { SiClaude, SiNodedotjs, SiPython, SiReact, SiZoho } from "react-icons/si";
+import {
+  TbBrandAzure,
+  TbBrandOauth,
+  TbPlugConnected,
+  TbTopologyStar3,
+} from "react-icons/tb";
 import profilePhoto from "../assets/img/profile-photo.JPG";
 import ResumeModal from "./ResumeModal";
 import useTypewriter from "../hooks/useTypewriter";
@@ -15,13 +22,19 @@ const ROW_STAGGER = 0.075;
 const PROMPT = "automation · integration · cloud";
 const PROMPT_DELAY = 850;
 
-// Cover art. Four lines of the actual shape of the work -- token, fetch, merge,
-// audit -- rather than a stock photo of a laptop.
-const COVER_CODE = [
-  "const token = await entra.getToken(SCOPES);",
-  "const rows  = await graph.mail.search(query, token);",
-  "await zoho.writer.merge(template, mapFields(rows));",
-  "audit.append({ actor, action, hash: sha256(payload) });",
+// Cover: the stack itself, drawn from the same icon set the skills section
+// uses. It answers "what does he work with" before anyone scrolls, which is
+// more than a decorative band usually earns.
+const STACK = [
+  { Icon: SiZoho, label: "Zoho" },
+  { Icon: TbBrandAzure, label: "Microsoft Azure" },
+  { Icon: SiNodedotjs, label: "Node.js" },
+  { Icon: TbBrandOauth, label: "OAuth 2.0" },
+  { Icon: TbPlugConnected, label: "Model Context Protocol" },
+  { Icon: SiPython, label: "Python" },
+  { Icon: TbTopologyStar3, label: "REST integration" },
+  { Icon: SiReact, label: "React" },
+  { Icon: SiClaude, label: "Claude" },
 ];
 
 const meta = [
@@ -68,28 +81,25 @@ const Hero = () => {
         transition={{ duration: 0.7 }}
         className="overflow-hidden rounded-2xl border border-line bg-surface shadow-xl shadow-black/5"
       >
-        {/* The cover: the page's own blueprint grid, with a few lines of the
-            work behind it. Stock imagery would say "developer" generically;
-            this says which developer. The snippet is decorative -- aria-hidden,
-            unselectable, and clipped by the band on purpose. */}
-        <div className="diagram-grid relative h-28 overflow-hidden border-b border-line bg-surface-2 sm:h-40">
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 px-6 py-3.5 font-mono text-[10px] leading-[1.9] whitespace-pre text-faint opacity-60 select-none sm:px-8 sm:py-5 sm:text-[11px]"
-          >
-            {COVER_CODE.map((line, index) => (
-              <div key={line} className="flex gap-3">
-                <span className="w-3 shrink-0 text-right text-accent/50">
-                  {index + 1}
-                </span>
-                <span className="truncate">{line}</span>
-              </div>
+        {/* The cover: the stack, as logos. It answers "what does he work
+            with" before anyone scrolls, which is more than a decorative band
+            usually earns. */}
+        <div className="relative h-28 overflow-hidden border-b border-line bg-canvas-2 sm:h-40">
+          {/* The band has to be opaque. --surface-2 is white at 7% in dark
+              mode, so the page's fixed blueprint backdrop was showing straight
+              through it -- the "lines inside the cover". canvas-2 is solid in
+              both themes; the tint goes on top of it. */}
+          <div className="absolute inset-0 bg-surface-2" />
+          {/* Static on purpose: this sits directly above the name, and a
+              moving band competes with reading it. */}
+          <ul className="absolute inset-0 flex flex-wrap items-center justify-center gap-x-8 gap-y-4 px-6 sm:gap-x-12 md:px-10">
+            {STACK.map(({ Icon, label }) => (
+              <li key={label} className="text-faint/70" title={label}>
+                <Icon size={28} aria-hidden="true" className="sm:h-10 sm:w-10" />
+                <span className="sr-only">{label}</span>
+              </li>
             ))}
-          </div>
-
-          <span className="absolute top-4 right-5 font-mono text-xs text-faint">
-            ~/whoami
-          </span>
+          </ul>
         </div>
 
         <div className="px-6 pb-8 md:px-8">
@@ -99,13 +109,25 @@ const Hero = () => {
             {/* relative z-10: the cover band is positioned, so it paints in a
                 later layer than static content and was clipping the top of the
                 head. This puts the avatar in that layer, after it. */}
-            <img
-              src={profilePhoto}
-              alt="Wence Benierem Tongol"
-              width="397"
-              height="595"
-              className="relative z-10 -mt-14 h-28 w-28 rounded-full object-cover object-top ring-4 ring-surface sm:-mt-20 sm:h-36 sm:w-36"
-            />
+            {/* The head sits between 28% and 59% of the frame, so object-top
+                was leaving a third of the circle as empty backdrop above it.
+                Framed on the face instead, and scaled in so the head fills the
+                circle rather than floating in it.
+
+                The nudge left is a translate, not object-position: the source is
+                a portrait in a square box, so object-cover crops vertically only
+                and has no horizontal slack to pan into. The slack comes from the
+                scale, and a percentage keeps the nudge proportional at both
+                avatar sizes. */}
+            <div className="relative z-10 -mt-14 h-28 w-28 shrink-0 overflow-hidden rounded-full ring-4 ring-surface sm:-mt-20 sm:h-36 sm:w-36">
+              <img
+                src={profilePhoto}
+                alt="Wence Benierem Tongol"
+                width="397"
+                height="595"
+                className="h-full w-full -translate-x[4%] scale-[1.10] object-cover object-[50%_50%]"
+              />
+            </div>
 
             {/* Sits where a profile header carries the company row, so it
                 needs the same chip treatment -- as bare text it floated in the
