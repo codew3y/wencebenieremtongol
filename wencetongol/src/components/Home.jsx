@@ -80,10 +80,6 @@ const Home = () => {
     pointerY.set(0);
   };
 
-  // The highlight tracks the pointer across the face, as a light source would.
-  const sheenX = useTransform(pointerX, [-0.5, 0.5], ["-30%", "130%"]);
-  const sheenY = useTransform(pointerY, [-0.5, 0.5], ["-30%", "130%"]);
-
   return (
     <section
       id="home"
@@ -210,15 +206,6 @@ const Home = () => {
               style={{ transform: "translateZ(0px)" }}
               className="absolute inset-0 rounded-2xl border border-line bg-canvas-2 shadow-2xl shadow-black/40"
             />
-
-            {/* Specular highlight, clipped to its own layer so the clip cannot
-                flatten the card's children. */}
-            <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-2xl">
-              <motion.span
-                style={{ left: sheenX, top: sheenY }}
-                className="absolute h-40 w-40 -translate-x-1/2 -translate-y-1/2 rounded-full bg-fg/[0.07] blur-2xl"
-              />
-            </div>
 
             {/* Content, lifted toward the viewer so it parallaxes against the
                 face when the card turns. */}
