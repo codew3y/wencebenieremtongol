@@ -4,10 +4,11 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import Loader from "./components/Loader";
 import Navbar from "./components/Navbar";
 import ScrollProgress from "./components/ScrollProgress";
-import Hero from "./components/Hero";
+import useSmoothAnchors from "./hooks/useSmoothAnchors";
+import Home from "./components/Home";
 import About from "./components/About";
 
-// Hero and About are what the visitor actually lands on; everything below the
+// Home and About are what the visitor actually lands on; everything below the
 // fold ships as its own chunk so the first paint is not waiting on all of it.
 // The chunks download while the loading screen is up, so the Suspense fallbacks
 // below are rarely seen.
@@ -51,14 +52,43 @@ const LazySection = ({ id, height = "min-h-[60vh]", children }) => (
 );
 
 function App() {
-  const [ready, setReady] = useState(false);
+  // Starts open on a hidden tab. Waiting until the effect runs would mount the
+  // loader for a frame, and its exit animation needs frames a background tab
+  // does not give -- leaving a full-screen overlay in the DOM, swallowing the
+  // first click of whoever eventually switches to it.
+  const openedHidden =
+    typeof document !== "undefined" && document.visibilityState === "hidden";
+  const [ready, setReady] = useState(openedHidden);
+
+  // Eased scrolling for every in-page link, once the sections exist to scroll to.
+  useSmoothAnchors(ready);
 
   // Hold the page until the webfonts land, then a beat longer so the loader
   // reads as intentional rather than a flash. The race is a safety net: if
   // fonts.ready never settles, the site still opens.
+  //
+  // Both timers are skipped entirely while the tab is hidden. A background tab
+  // has its timers throttled -- to once a minute once it has been hidden a
+  // while -- so these two could hold the loader up for minutes on a link
+  // opened in a new tab, which reads as a page that takes minutes to load.
+  // Nobody is watching an intro they cannot see, so it is not worth waiting on.
   useEffect(() => {
     let hold = null;
     let cancelled = false;
+
+    const open = () => {
+      if (!cancelled) setReady(true);
+    };
+
+    if (document.visibilityState === "hidden") {
+      open();
+      return undefined;
+    }
+
+    const onVisibilityChange = () => {
+      if (document.visibilityState === "hidden") open();
+    };
+    document.addEventListener("visibilitychange", onVisibilityChange);
 
     const fonts = document.fonts ? document.fonts.ready : Promise.resolve();
 
@@ -66,11 +96,12 @@ function App() {
       fonts,
       new Promise((resolve) => setTimeout(resolve, 2500)),
     ]).then(() => {
-      if (!cancelled) hold = setTimeout(() => setReady(true), 800);
+      if (!cancelled) hold = setTimeout(open, 800);
     });
 
     return () => {
       cancelled = true;
+      document.removeEventListener("visibilitychange", onVisibilityChange);
       if (hold) clearTimeout(hold);
     };
   }, []);
@@ -106,7 +137,11 @@ function App() {
 
         {ready && (
           <motion.div
-            initial={{ opacity: 0 }}
+            // No fade when the intro was skipped. The page mounts at once in
+            // that case, and a hidden tab gets no frames to run a fade with --
+            // so the content would sit at opacity 0 and the page would look
+            // blank, which is worse than the loader it replaced.
+            initial={openedHidden ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, ease: "easeInOut" }}
           >
@@ -124,8 +159,8 @@ function App() {
             </ErrorBoundary>
 
             <main>
-              <ErrorBoundary name="hero" fallback={<SectionFailed id="home" />}>
-                <Hero />
+              <ErrorBoundary name="home" fallback={<SectionFailed id="home" />}>
+                <Home />
               </ErrorBoundary>
               <ErrorBoundary name="about" fallback={<SectionFailed id="about" />}>
                 <About />
