@@ -4,10 +4,11 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import Loader from "./components/Loader";
 import Navbar from "./components/Navbar";
 import ScrollProgress from "./components/ScrollProgress";
-import Hero from "./components/Hero";
+import useSmoothAnchors from "./hooks/useSmoothAnchors";
+import Home from "./components/Home";
 import About from "./components/About";
 
-// Hero and About are what the visitor actually lands on; everything below the
+// Home and About are what the visitor actually lands on; everything below the
 // fold ships as its own chunk so the first paint is not waiting on all of it.
 // The chunks download while the loading screen is up, so the Suspense fallbacks
 // below are rarely seen.
@@ -52,6 +53,9 @@ const LazySection = ({ id, height = "min-h-[60vh]", children }) => (
 
 function App() {
   const [ready, setReady] = useState(false);
+
+  // Eased scrolling for every in-page link, once the sections exist to scroll to.
+  useSmoothAnchors(ready);
 
   // Hold the page until the webfonts land, then a beat longer so the loader
   // reads as intentional rather than a flash. The race is a safety net: if
@@ -124,8 +128,8 @@ function App() {
             </ErrorBoundary>
 
             <main>
-              <ErrorBoundary name="hero" fallback={<SectionFailed id="home" />}>
-                <Hero />
+              <ErrorBoundary name="home" fallback={<SectionFailed id="home" />}>
+                <Home />
               </ErrorBoundary>
               <ErrorBoundary name="about" fallback={<SectionFailed id="about" />}>
                 <About />
