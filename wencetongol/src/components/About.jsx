@@ -150,11 +150,12 @@ const About = () => {
             I build the automation that sits between business systems: CRM
             workflows that turn records into finished client documents,
             connectors that let AI assistants reach enterprise data under
-            per-user identity and audit control, and order routing that has to
-            survive a dropped session mid-trade. Underneath it is mostly REST
-            and OAuth 2.0, verified with Postman and PowerShell before it
-            reaches production. I care about least-privilege scopes, audit
-            logging, and documentation someone else can actually follow.
+            per-user identity and audit control, and integrations that recover
+            on their own when a connection drops mid-transfer. Underneath it is
+            mostly REST and OAuth 2.0, verified with Postman and PowerShell
+            before it reaches production. I keep permissions narrow, keep an
+            audit trail, and leave documentation someone else can actually
+            follow.
           </p>
 
           <div className="mt-6 flex items-center gap-2">
