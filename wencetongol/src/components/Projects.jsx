@@ -24,13 +24,6 @@ import VR1 from "../assets/img/projectsimg/VR1.webp";
 import VR2 from "../assets/img/projectsimg/VR2.webp";
 import VR3 from "../assets/img/projectsimg/VR3.webp";
 import VR4 from "../assets/img/projectsimg/VR4.webp";
-import port1 from "../assets/img/projectsimg/port1.webp";
-import port2 from "../assets/img/projectsimg/port2.webp";
-import port3 from "../assets/img/projectsimg/port3.webp";
-import port4 from "../assets/img/projectsimg/port4.webp";
-import port5 from "../assets/img/projectsimg/port5.webp";
-import port6 from "../assets/img/projectsimg/port6.webp";
-import port7 from "../assets/img/projectsimg/port7.webp";
 
 // Cards carry `summary`; `points` is the detail that opens in the dialog.
 const professional = [
@@ -195,36 +188,6 @@ const personal = [
       "Built visual acuity, colour blindness, and astigmatism screening, with voice recognition for hands-free operation and printable result records.",
     ],
     link: null,
-  },
-  {
-    name: "Personal Portfolio Website",
-    subtitle: "This site",
-    category: "Web",
-    role: "Designer & developer",
-    meta: "wencetongol.vercel.app",
-    summary:
-      "This site: a single-page React portfolio with a light and dark theme, a serverless contact endpoint on Resend with honeypot and rate-limit spam controls, and a tested API wired to CI.",
-    tech: [
-      "ReactJS",
-      "Tailwind CSS",
-      "Vercel Functions",
-      "Resend",
-      "node:test",
-    ],
-    images: [
-      { src: port1, alt: "Portfolio hero section" },
-      { src: port2, alt: "About section" },
-      { src: port3, alt: "Technical stack section" },
-      { src: port4, alt: "Experience timeline" },
-      { src: port5, alt: "Projects section" },
-      { src: port6, alt: "Background and certifications" },
-      { src: port7, alt: "Contact section" },
-    ],
-    points: [
-      "Designed and published a responsive site presenting technical skills, project work, and professional background, with a light and dark theme.",
-      "Built the contact form as a Vercel Function on Resend, with a honeypot, per-IP rate limiting in Redis, and a 17-test suite run by GitHub Actions.",
-    ],
-    link: "https://wencetongol.vercel.app/",
   },
 ];
 

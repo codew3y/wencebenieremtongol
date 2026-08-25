@@ -61,8 +61,13 @@
 }
 
 html {
-  scroll-behavior: smooth;
-  scroll-padding-top: 5rem;
+  /* No scroll-behavior here: useSmoothAnchors animates in-page links itself,
+     with a fixed duration and an ease of its own, and the two would fight. */
+  /* Only a hair, not the header's height: every section carries py-20/py-28 of
+     its own, which already clears the fixed header. Reserving 5rem on top of
+     that stacked the two, so a jump to #about landed on 127px of empty padding
+     with the heading pushed well below the reading line. */
+  scroll-padding-top: 0.5rem;
   /* Reserve the scrollbar track even when the page cannot scroll. The loading
      screen renders before any content exists, so without this the scrollbar
      arrives with the content, the viewport narrows by its width, and everything
@@ -79,12 +84,6 @@ body {
 @media (prefers-reduced-motion: no-preference) {
   body {
     transition: background-color 0.3s ease, color 0.3s ease;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
   }
 }
 

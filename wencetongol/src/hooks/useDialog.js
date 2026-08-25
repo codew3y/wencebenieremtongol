@@ -11,7 +11,7 @@ const FOCUSABLE =
  * almost always pass an inline arrow function, so depending on it would tear
  * down and re-run this effect on every parent render -- and the cleanup returns
  * focus to the trigger, so an open dialog would keep losing focus while
- * anything above it re-rendered (Hero re-renders on every typewriter tick).
+ * anything above it re-rendered (Home re-renders on every typewriter tick).
  *
  * Returns a ref to attach to the panel element.
  */
