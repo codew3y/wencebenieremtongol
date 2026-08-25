@@ -77,17 +77,19 @@ const About = () => {
         transition={{ duration: 0.7 }}
         className="overflow-hidden rounded-2xl border border-line bg-surface shadow-xl shadow-black/5"
       >
-        {/* The band has to be opaque. --surface-2 is white at 7% in dark mode,
-            so the page's fixed blueprint backdrop showed straight through it.
-            canvas-2 is solid in both themes; the tint goes on top of it. */}
-        <div className="relative h-28 overflow-hidden border-b border-line bg-canvas-2 sm:h-40">
-          <div className="absolute inset-0 bg-surface-2" />
-
+        {/* A flat deep teal, the same in both themes: this band reads as
+            cover art rather than surface, so it should not invert with the
+            palette. It also has to be opaque -- a translucent fill let the
+            page's fixed blueprint backdrop show straight through. Darker than
+            --accent, but not so dark that the black marks below stop reading:
+            black sits at about 3:1 on this, and drops under 2.5:1 by the time
+            you reach teal-900. */}
+        <div className="relative h-28 overflow-hidden border-b border-line bg-[#0b6173] sm:h-40">
           {/* Static on purpose: this sits directly above the name, and a moving
               band competes with reading it. */}
           <ul className="absolute inset-0 flex flex-wrap items-center justify-center gap-x-8 gap-y-4 px-6 sm:gap-x-12 md:px-10">
             {STACK.map(({ Icon, label }) => (
-              <li key={label} className="text-faint/70" title={label}>
+              <li key={label} className="text-black" title={label}>
                 <Icon size={28} aria-hidden="true" className="sm:h-10 sm:w-10" />
                 <span className="sr-only">{label}</span>
               </li>
