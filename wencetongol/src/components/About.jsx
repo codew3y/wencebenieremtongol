@@ -147,15 +147,14 @@ const About = () => {
               paragraphs beside a facts panel said the same things twice; this
               keeps the substance and leaves the section clean. */}
           <p className="mt-5 max-w-3xl text-sm leading-relaxed text-muted">
-            My work spans Microsoft Graph email search and Microsoft Purview
-            eDiscovery under app-only authentication, Zoho Writer templates that
-            generate client reports and investment proposals, and a FIX 4.4
-            order-routing service built against a private bank's Rules of
-            Engagement. I verify integrations with Postman, PowerShell, and
-            EcoHub, and I care about least-privilege scopes, audit logging, and
-            documentation that someone else can actually follow. I use Claude
-            throughout the development workflow, and resolve assigned IT
-            helpdesk tickets alongside development.
+            I build the automation that sits between business systems: CRM
+            workflows that turn records into finished client documents,
+            connectors that let AI assistants reach enterprise data under
+            per-user identity and audit control, and order routing that has to
+            survive a dropped session mid-trade. Underneath it is mostly REST
+            and OAuth 2.0, verified with Postman and PowerShell before it
+            reaches production. I care about least-privilege scopes, audit
+            logging, and documentation someone else can actually follow.
           </p>
 
           <div className="mt-6 flex items-center gap-2">
