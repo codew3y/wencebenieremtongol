@@ -118,8 +118,9 @@ const Home = () => {
             custom={2}
             className="mt-7 max-w-xl leading-relaxed text-muted"
           >
-            Zoho CRM automation in Deluge, MCP connectors on Microsoft Azure,
-            and REST integrations secured with OAuth 2.0.
+            Automation workflows that run end to end — CRM record to finished
+            document, enterprise system to AI assistant, service to service over
+            REST and OAuth 2.0.
           </motion.p>
 
           <motion.div
