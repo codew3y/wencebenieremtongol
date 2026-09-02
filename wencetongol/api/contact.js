@@ -1,6 +1,6 @@
 // Contact-form endpoint. Validates the message, drops bot submissions, rate
-// limits by IP in the same Upstash store the view counter uses, then hands the
-// mail to Resend's REST API — one fetch, no SDK, same shape as api/views.js.
+// limits by IP in Upstash Redis, then hands the mail to Resend's REST API --
+// one fetch, no SDK.
 
 const REDIS_URL = process.env.KV_REST_API_URL ?? process.env.UPSTASH_REDIS_REST_URL;
 const REDIS_TOKEN =

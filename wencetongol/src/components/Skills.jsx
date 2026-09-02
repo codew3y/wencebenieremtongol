@@ -82,6 +82,7 @@ const groups = [
       { name: "Microsoft Graph", Icon: TbChartDots3 },
       { name: "Microsoft Purview eDiscovery", Icon: TbShieldSearch },
       { name: "Model Context Protocol", Icon: TbPlugConnected },
+      { name: "REST APIs", Icon: TbApi },
       { name: "Webhooks", Icon: TbWebhook },
     ],
   },
