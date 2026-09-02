@@ -1,44 +1,11 @@
-# Handover — footer view counter
+# Handover — contact endpoint
 
 Context for picking this up on another device. The code is committed and pushed;
-what remains is one piece of infrastructure setup that can only be done in the
-Vercel dashboard.
+what remains is infrastructure setup that can only be done in the Vercel
+dashboard.
 
-## Where things stand
-
-The footer now reads:
-
-```
-© 2026 Wence Benierem Tongol · 1,247 views          Built with React, Tailwind CSS & Vite
-```
-
-The counting logic is written, linted, and builds clean. **It is not live yet** —
-there is no database behind it, so the endpoint returns 503 and the footer
-currently renders just the copyright line. Connecting the store (below) is the
-only thing standing between here and a working counter.
-
-## How it works
-
-1. Every page load, `ViewCounter.jsx` fires `POST /api/views`.
-2. `api/views.js` runs as a Vercel serverless function. It sends `INCR` to a
-   single Redis key (`pageviews:site`) on Upstash over the REST API, and returns
-   the new total as `{ "views": 1247 }`.
-3. The component renders that number. On **any** failure it renders nothing —
-   no error, no zero — so a broken counter degrades to the plain copyright line
-   rather than showing a number that isn't real.
-
-It counts **total page views**: refreshes and repeat visits each add one. That
-was the deliberate choice over unique-per-browser.
-
-### Files
-
-| File | What it is |
-| --- | --- |
-| `wencetongol/api/views.js` | Serverless function. `POST` increments and returns; `GET` reads without incrementing. |
-| `wencetongol/src/components/ViewCounter.jsx` | Footer text. One fetch per load, silent on failure. |
-| `wencetongol/src/components/Footer.jsx` | Wraps copyright + counter in a flex group so the `·` separator sits between them. |
-| `wencetongol/eslint.config.js` | Added a block declaring `api/**` as Node, so `process` isn't flagged `no-undef`. |
-| `wencetongol/README.md` | "View counter" section + structure tree. |
+The footer view counter this document used to describe has been removed — the
+endpoint, the component, and the Redis key are all gone.
 
 ## Setup on the new device
 
@@ -49,39 +16,16 @@ npm install
 npm run dev
 ```
 
-The site will run, but **the counter will not appear in `npm run dev`** — Vite
-serves no serverless functions, so `/api/views` 404s and the component hides
-itself. This is expected, not a bug. To exercise the endpoint locally:
+The site runs, but **the contact form will not send under `npm run dev`** — Vite
+serves no serverless functions, so `/api/contact` 404s. This is expected, not a
+bug. To exercise the endpoint locally:
 
 ```bash
 npm i -g vercel
 vercel link          # link to the existing project
-vercel env pull      # pulls the Upstash credentials into .env.local
-vercel dev           # serves the site AND /api/views
+vercel env pull      # pulls the credentials into .env.local
+vercel dev           # serves the site AND /api/contact
 ```
-
-## The remaining step: connect Upstash Redis
-
-This is the only outstanding work, and it must be done in the Vercel dashboard.
-
-1. Open the project on [vercel.com](https://vercel.com) → **Storage** tab.
-2. **Create Database → Upstash Redis** (free tier is plenty — this is one
-   integer). Pick a region near your visitors.
-3. Connect it to the `wencetongol` project. Vercel injects the
-   credentials as environment variables automatically; you do not need to copy
-   anything by hand.
-4. **Redeploy** — env vars only reach a deployment built after they exist. A
-   deploy from the dashboard is enough; no code change needed.
-5. Load the live site, refresh once, and confirm the number climbs.
-
-`api/views.js` accepts either credential naming scheme, since the integration
-uses different names depending on how the store was created:
-
-- `KV_REST_API_URL` + `KV_REST_API_TOKEN`, or
-- `UPSTASH_REDIS_REST_URL` + `UPSTASH_REDIS_REST_TOKEN`
-
-If neither pair is present the function returns **503** and the footer stays
-bare — that's the signal that step 3 or 4 hasn't taken effect.
 
 ## Connect Resend so the contact form can send
 
@@ -104,15 +48,21 @@ without a verified domain it may only deliver to your own account address —
 fine for a contact form, but that's the thing to check first if a test message
 never shows up.
 
-Spam handling lives in the function, not in a third-party service:
+## Spam handling
+
+It lives in the function, not in a third-party service:
 
 - a honeypot field named `website`, hidden from people — anything in it gets a
   200 and goes in the bin, so bots learn nothing
-- five submissions per IP per hour, counted in the same Upstash store as the
-  view counter under `contact:<ip>`
+- five submissions per IP per hour, counted in Upstash Redis under `contact:<ip>`
 
 If Upstash is missing or erroring the limiter fails **open** — a storage outage
-must not take the contact form down with it.
+must not take the contact form down with it. That also means the limit does
+nothing until the store is connected: **Vercel → Storage → Create Database →
+Upstash Redis**, connected to this project, then redeploy. `api/contact.js`
+reads either `KV_REST_API_URL` / `KV_REST_API_TOKEN` or
+`UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN`, whichever the integration
+provides. Until then the honeypot is the only spam control in force.
 
 ## Check this before debugging anything else
 
@@ -120,42 +70,28 @@ must not take the contact form down with it.
 if the Vercel project's **Root Directory** is set to `wencetongol` (Settings →
 General → Root Directory). Given the repo's only top-level folder is
 `wencetongol`, it almost certainly is — but confirm it before chasing a 404 on
-`/api/views`. If the root directory is the repo root instead, move the `api/`
+`/api/contact`. If the root directory is the repo root instead, move the `api/`
 folder up one level.
-
-## If you want a non-zero starting number
-
-The count starts at 0, not at the site's existing traffic. To seed it, run this
-once in the Upstash console (Data Browser → CLI):
-
-```
-SET pageviews:site 500
-```
-
-Verify: `GET pageviews:site`. Leaving it at 0 is the honest option.
 
 ## Troubleshooting
 
 | Symptom | Likely cause |
 | --- | --- |
-| No number in the footer, live site | Upstash not connected, or not redeployed since connecting. Check `/api/views` directly in the browser — 503 means no credentials. |
-| `/api/views` returns 404 | Vercel Root Directory isn't `wencetongol` (see above). |
-| `/api/views` returns 502 | Credentials exist but Upstash rejected the call — check the token is still valid in the Vercel env vars. |
-| No number in `npm run dev` | Expected. Use `vercel dev`. |
-| Number jumps by 2 per visit | React StrictMode double-effect. There is a `useRef` guard for this in `ViewCounter.jsx`; if it reappears, that guard is the place to look. |
+| Form says it isn't configured | `RESEND_API_KEY` or `CONTACT_TO` missing, or not redeployed since adding them. The 503 body names which one is absent. |
+| `/api/contact` returns 404 | Vercel Root Directory isn't `wencetongol` (see above). |
+| `/api/contact` returns 502 | Resend rejected the call — check the key is still valid in the Vercel env vars. |
+| Form does nothing under `npm run dev` | Expected. Use `vercel dev`. |
+| Message sends but never arrives | Check spam, then whether Resend's free tier will deliver to that address without a verified domain. |
+| Rate limit never triggers | Upstash isn't connected; the limiter fails open by design. |
 
-## Verified before pushing
+## Tests
 
-- `npm run lint` — clean.
-- `npm run build` — succeeds.
-- Handler tested against a stubbed Upstash: `POST` returned `{views: 42}` after
-  incrementing, `GET` returned 42 without incrementing, and an Upstash 500
-  degraded to a 502 rather than throwing.
-
-Not verified: the live path against real Upstash credentials, which is exactly
-what the setup step above closes.
+`npm test` runs 17 tests over `api/contact.js` with Node's built-in runner
+(`node --test`) — validation, the honeypot, HTML escaping, the `reply_to` field
+name, and the limiter's fail-open behaviour, with Resend and Upstash stubbed.
+CI runs lint, test, and build on every push.
 
 ---
 
-Drafted by Claude (Claude Code) on 2026-08-12 for Wence Tongol. Review before
-relying on it.
+Drafted by Claude (Claude Code) on 2026-08-12 for Wence Tongol, rewritten
+2026-08-25 when the view counter was removed. Review before relying on it.
