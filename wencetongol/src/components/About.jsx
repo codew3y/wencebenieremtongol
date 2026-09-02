@@ -10,7 +10,7 @@ import {
   TbPlugConnected,
   TbTopologyStar3,
 } from "react-icons/tb";
-import profilePhoto from "../assets/img/profile-photo.JPG";
+import profilePhoto from "../assets/img/profile-photo.webp";
 import ResumeModal from "./ResumeModal";
 import Section from "./Section";
 import { fadeIn, stagger } from "../lib/motion";
