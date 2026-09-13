@@ -20,6 +20,11 @@ import ProjectDiagram from "./ProjectDiagram";
 import ProjectModal from "./ProjectModal";
 import { fadeUp, stagger, viewportOnce } from "../lib/motion";
 
+import BH1 from "../assets/img/projectsimg/BH1.webp";
+import BH2 from "../assets/img/projectsimg/BH2.webp";
+import BH3 from "../assets/img/projectsimg/BH3.webp";
+import BH4 from "../assets/img/projectsimg/BH4.webp";
+import BH5 from "../assets/img/projectsimg/BH5.webp";
 import VR1 from "../assets/img/projectsimg/VR1.webp";
 import VR2 from "../assets/img/projectsimg/VR2.webp";
 import VR3 from "../assets/img/projectsimg/VR3.webp";
@@ -168,6 +173,31 @@ const professional = [
 ];
 
 const personal = [
+  {
+    name: "BarberHouse",
+    subtitle: "Barbershop Booking Website",
+    category: "Full-stack web development",
+    role: "Developer",
+    year: "2026",
+    summary:
+      "A booking site for a Quezon City barbershop: pick a barber, pick a service, pick a slot, and hold the chair with a 20% downpayment paid by QR. Availability is live per barber, and customers reschedule or cancel from their own dashboard instead of calling the shop.",
+    tech: ["Next.js", "React", "Tailwind CSS", "REST API", "Vercel"],
+    images: [
+      { src: BH1, alt: "BarberHouse landing page" },
+      { src: BH2, alt: "Service menu priced per barber" },
+      { src: BH3, alt: "Booking step one: barber and service" },
+      { src: BH4, alt: "Booking step two: calendar and open slots" },
+      { src: BH5, alt: "Booking step three: review and QR downpayment" },
+    ],
+    points: [
+      "Built a three-step booking flow — barber and service, then date and time, then review and checkout — with each step gated on the one before it.",
+      "Modelled pricing per barber rather than per service, so the same cut carries a different price and downpayment depending on whose chair it is.",
+      "Generated live availability per barber in 15-minute slots, split across morning and afternoon, with service duration and buffers taken off the open times.",
+      "Held chairs on a 20% downpayment paid by QR through GCash, Maya, or a bank app, confirmed automatically, with the balance settled at the shop.",
+      "Gave customers an authenticated dashboard to reschedule or cancel on their own, releasing the slot back to the queue immediately, and served shop, staff, and service data over a versioned REST API so the site is not tied to one shop's content.",
+    ],
+    link: "https://barberhouseph.vercel.app",
+  },
   {
     name: "VistaVR",
     subtitle: "Virtual Reality Eye Testing Application",
