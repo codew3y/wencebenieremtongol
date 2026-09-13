@@ -2,6 +2,7 @@ import React from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { FiArrowUpRight, FiCheck } from "react-icons/fi";
+import { SiGithub } from "react-icons/si";
 import { TbX } from "react-icons/tb";
 import ProjectDiagram from "./ProjectDiagram";
 import ProjectImages from "./ProjectImages";
@@ -98,6 +99,34 @@ const ProjectModal = ({ project, onClose }) => {
                     systems. The diagram shows the request path instead.
                   </p>
                 )}
+
+                {/* Under the media rather than at the foot of the prose: the
+                    right column scrolls on its own, so a link parked at its
+                    end only appears once the bullets have been read past. */}
+                {(project.link || project.repo) && (
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {project.link && (
+                      <a
+                        href={project.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 rounded-lg bg-accent px-4 py-2.5 text-sm font-semibold text-accent-fg transition-opacity hover:opacity-90"
+                      >
+                        Visit live site <FiArrowUpRight />
+                      </a>
+                    )}
+                    {project.repo && (
+                      <a
+                        href={project.repo}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 rounded-lg border border-line bg-surface-2 px-4 py-2.5 text-sm font-semibold text-fg transition-colors hover:border-accent/50 hover:text-accent"
+                      >
+                        <SiGithub /> View source
+                      </a>
+                    )}
+                  </div>
+                )}
               </div>
 
               <div className="min-w-0 space-y-5 md:max-h-[62vh] md:overflow-y-auto md:pr-1">
@@ -159,17 +188,6 @@ const ProjectModal = ({ project, onClose }) => {
                     ))}
                   </div>
                 </section>
-
-                {project.link && (
-                  <a
-                    href={project.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 rounded-lg bg-accent px-4 py-2.5 text-sm font-semibold text-accent-fg transition-opacity hover:opacity-90"
-                  >
-                    Visit live site <FiArrowUpRight />
-                  </a>
-                )}
               </div>
             </div>
           </motion.div>
