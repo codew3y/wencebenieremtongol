@@ -197,6 +197,7 @@ const personal = [
       "Gave customers an authenticated dashboard to reschedule or cancel on their own, releasing the slot back to the queue immediately, and served shop, staff, and service data over a versioned REST API so the site is not tied to one shop's content.",
     ],
     link: "https://barberhouseph.vercel.app",
+    repo: "https://github.com/codew3y/barber-shop-system",
   },
   {
     name: "VistaVR",
