@@ -16,6 +16,7 @@ import {
   SiPython,
   SiReact,
   SiTailwindcss,
+  SiTypescript,
   SiZoho,
 } from "react-icons/si";
 import {
@@ -50,6 +51,7 @@ const groups = [
     title: "Languages",
     items: [
       { name: "JavaScript", Icon: SiJavascript },
+      { name: "TypeScript", Icon: SiTypescript },
       { name: "Node.js", Icon: SiNodedotjs },
       { name: "Python", Icon: SiPython },
       { name: "Zoho Deluge", Icon: SiZoho },
