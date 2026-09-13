@@ -181,7 +181,7 @@ const personal = [
     year: "2026",
     summary:
       "A booking site for a Quezon City barbershop: pick a barber, pick a service, pick a slot, and hold the chair with a 20% downpayment paid by QR. Availability is live per barber, and customers reschedule or cancel from their own dashboard instead of calling the shop.",
-    tech: ["Next.js", "React", "Tailwind CSS", "REST API", "Vercel"],
+    tech: ["Next.js", "TypeScript", "React", "Tailwind CSS", "REST API", "Vercel"],
     images: [
       { src: BH1, alt: "BarberHouse landing page" },
       { src: BH2, alt: "Service menu priced per barber" },
