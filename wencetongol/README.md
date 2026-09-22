@@ -10,7 +10,8 @@ professional background. Live at
 - **Tailwind CSS 4** for styling
 - **framer-motion** for scroll and entrance animations
 - **react-icons** for iconography
-- **Formspree** for the contact form
+- **Resend** behind `api/contact.js` for the contact form
+- **`node:test`** for the endpoint unit tests
 
 ## Getting started
 
@@ -19,6 +20,7 @@ npm install
 npm run dev      # dev server with HMR
 npm run build    # production build to dist/
 npm run preview  # serve the production build
+npm test         # unit tests
 npm run lint     # eslint
 ```
 
