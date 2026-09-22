@@ -48,7 +48,7 @@ const ProjectImages = ({ images }) => {
               type="button"
               onClick={() => step(-1)}
               aria-label="Previous screenshot"
-              className="absolute top-1/2 left-2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-line bg-canvas/80 text-muted backdrop-blur-sm transition-colors hover:border-accent/50 hover:text-accent"
+              className="pressable absolute top-1/2 left-2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-line bg-canvas/80 text-muted backdrop-blur-sm transition-colors hover:border-accent/50 hover:text-accent"
             >
               <TbChevronLeft />
             </button>
@@ -56,7 +56,7 @@ const ProjectImages = ({ images }) => {
               type="button"
               onClick={() => step(1)}
               aria-label="Next screenshot"
-              className="absolute top-1/2 right-2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-line bg-canvas/80 text-muted backdrop-blur-sm transition-colors hover:border-accent/50 hover:text-accent"
+              className="pressable absolute top-1/2 right-2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-line bg-canvas/80 text-muted backdrop-blur-sm transition-colors hover:border-accent/50 hover:text-accent"
             >
               <TbChevronRight />
             </button>

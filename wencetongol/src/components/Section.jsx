@@ -3,14 +3,15 @@ import { motion } from "framer-motion";
 
 /**
  * Shared section shell: mono label, title, optional intro, then content.
+ *
+ * A jump lands the heading just under the header rather than a screen below it.
+ * The maths: the landing point is scroll-padding (0.5rem) plus this margin, and
+ * the heading sits one section-padding below that -- 80px at this size, 112px
+ * from md. So mobile needs no pull and md needs -2rem, both leaving the heading
+ * about 24px clear of the header.
  */
 const Section = ({ id, label, title, intro, children }) => {
   return (
-    // A jump lands the heading just under the header rather than a screen
-    // below it. The maths: the landing point is scroll-padding (0.5rem) plus
-    // this margin, and the heading sits one section-padding below that -- 80px
-    // at this size, 112px from md. So mobile needs no pull and md needs -2rem,
-    // both leaving the heading about 24px clear of the header.
     <section
       id={id}
       className="mx-auto max-w-6xl px-6 py-20 md:py-28 md:-scroll-mt-8"
@@ -28,7 +29,8 @@ const Section = ({ id, label, title, intro, children }) => {
           <span className="h-px flex-1 bg-line" />
         </div>
 
-        <h2 className="mt-4 text-3xl font-bold tracking-tight text-fg md:text-4xl">
+        {/* Type scale kept from the visual pass: larger, tighter, balanced. */}
+        <h2 className="mt-4 text-[1.75rem] leading-[1.15] font-semibold tracking-[-0.022em] text-balance text-fg md:text-[2.125rem]">
           {title}
         </h2>
 

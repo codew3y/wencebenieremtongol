@@ -1,5 +1,6 @@
 import React from "react";
 import { motion, useReducedMotion } from "framer-motion";
+import { EASE_IN_OUT } from "../lib/motion";
 
 /**
  * Decorative outline of the Philippine archipelago, drawn in `currentColor` so
@@ -61,21 +62,21 @@ const draw = {
     pathLength: 1,
     fillOpacity: 0.07,
     transition: {
-      pathLength: { duration: 1.4, ease: "easeInOut" },
+      pathLength: { duration: 1.4, ease: EASE_IN_OUT },
       fillOpacity: { duration: 0.8, delay: 0.5 },
     },
   },
 };
 
 const pop = {
-  hidden: { scale: 0, fillOpacity: 0 },
+  hidden: { scale: 0.9, fillOpacity: 0 },
   show: { scale: 1, fillOpacity: 0.07, transition: { duration: 0.3 } },
 };
 
 // The marker lands once the coastline is drawn. A variant rather than its own
 // whileInView, so it fires from the same observer as everything else.
 const landing = {
-  hidden: { opacity: 0, scale: 0 },
+  hidden: { opacity: 0, scale: 0.9 },
   show: {
     opacity: 1,
     scale: 1,
@@ -96,7 +97,10 @@ const PhilippinesMap = ({ className = "" }) => {
   const animation = reduceMotion
     ? {}
     : {
-        variants: { hidden: {}, show: { transition: { staggerChildren: 0.07 } } },
+        variants: {
+          hidden: {},
+          show: { transition: { staggerChildren: 0.07 } },
+        },
         initial: "hidden",
         whileInView: "show",
         viewport: { once: true, margin: "-80px" },

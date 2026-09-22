@@ -4,6 +4,7 @@ import {
   SiAnthropic,
   SiClaude,
   SiCss3,
+  SiDocker,
   SiGit,
   SiGithubactions,
   SiHtml5,
@@ -11,12 +12,16 @@ import {
   SiJsonwebtokens,
   SiMongodb,
   SiMysql,
+  SiNextdotjs,
   SiNodedotjs,
+  SiPostgresql,
   SiPostman,
   SiPython,
   SiReact,
+  SiSupabase,
   SiTailwindcss,
   SiTypescript,
+  SiVitest,
   SiZoho,
 } from "react-icons/si";
 import {
@@ -37,7 +42,6 @@ import {
   TbTargetArrow,
   TbTerminal2,
   TbTestPipe,
-  TbTopologyStar3,
   TbUsersGroup,
   TbWebhook,
 } from "react-icons/tb";
@@ -64,6 +68,7 @@ const groups = [
     title: "Frontend",
     items: [
       { name: "ReactJS", Icon: SiReact },
+      { name: "Next.js", Icon: SiNextdotjs },
       { name: "Tailwind CSS", Icon: SiTailwindcss },
     ],
   },
@@ -93,6 +98,11 @@ const groups = [
     items: [
       { name: "MySQL", Icon: SiMysql },
       { name: "MongoDB", Icon: SiMongodb },
+      { name: "PostgreSQL", Icon: SiPostgresql },
+      { name: "Supabase", Icon: SiSupabase },
+      // No Neon mark in this react-icons version; Neon is serverless Postgres,
+      // so the Postgres elephant is the honest stand-in.
+      { name: "Neon", Icon: SiPostgresql },
     ],
   },
   {
@@ -100,10 +110,10 @@ const groups = [
     items: [
       { name: "Postman", Icon: SiPostman },
       { name: "PowerShell", Icon: TbBrandPowershell },
-      { name: "EcoHub", Icon: TbTopologyStar3 },
+      { name: "Docker", Icon: SiDocker },
       { name: "Git", Icon: SiGit },
       { name: "GitHub Actions", Icon: SiGithubactions },
-      { name: "Node.js test runner", Icon: SiNodedotjs },
+      { name: "Vitest", Icon: SiVitest },
     ],
   },
   {

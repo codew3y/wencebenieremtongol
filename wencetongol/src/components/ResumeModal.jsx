@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { FiDownload, FiExternalLink, FiX } from "react-icons/fi";
 import CVResume from "../assets/CV/WenceTongol_Resume.pdf";
 import useDialog from "../hooks/useDialog";
+import { EASE_OUT } from "../lib/motion";
 
 const FILE_NAME = "WenceTongol_Resume.pdf";
 
@@ -36,10 +37,10 @@ const ResumeModal = ({ open, onClose }) => {
             initial={{ opacity: 0, y: 12, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 12, scale: 0.98 }}
-            transition={{ duration: 0.22, ease: "easeOut" }}
+            transition={{ duration: 0.22, ease: EASE_OUT }}
             // Clicks inside must not reach the backdrop's close handler.
             onClick={(event) => event.stopPropagation()}
-            className="flex h-full max-h-[900px] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-line bg-surface shadow-xl shadow-black/20 focus:outline-none"
+            className="card-edge flex h-full max-h-[900px] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-line bg-surface shadow-xl shadow-black/20 focus:outline-none"
           >
             <div className="flex items-center gap-3 border-b border-line bg-canvas-2 px-4 py-3 md:px-5">
               <p
@@ -54,7 +55,7 @@ const ResumeModal = ({ open, onClose }) => {
                 href={CVResume}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-lg border border-line px-3 py-1.5 font-mono text-[11px] text-muted transition-colors hover:border-accent/50 hover:text-accent"
+                className="pressable inline-flex items-center gap-2 rounded-lg border border-line px-3 py-1.5 font-mono text-[11px] text-muted transition-colors hover:border-accent/50 hover:text-accent"
               >
                 <FiExternalLink />
                 <span className="hidden sm:inline">New tab</span>
@@ -62,7 +63,7 @@ const ResumeModal = ({ open, onClose }) => {
               <a
                 href={CVResume}
                 download={FILE_NAME}
-                className="inline-flex items-center gap-2 rounded-lg bg-accent px-3 py-1.5 font-mono text-[11px] font-semibold text-accent-fg transition-opacity hover:opacity-90"
+                className="pressable inline-flex items-center gap-2 rounded-lg bg-accent px-3 py-1.5 font-mono text-[11px] font-semibold text-accent-fg transition-opacity hover:opacity-90"
               >
                 <FiDownload />
                 <span className="hidden sm:inline">Download</span>
@@ -71,7 +72,7 @@ const ResumeModal = ({ open, onClose }) => {
                 type="button"
                 onClick={onClose}
                 aria-label="Close résumé"
-                className="grid h-8 w-8 place-items-center rounded-lg border border-line text-muted transition-colors hover:border-accent/50 hover:text-accent"
+                className="pressable grid h-8 w-8 place-items-center rounded-lg border border-line text-muted transition-colors hover:border-accent/50 hover:text-accent"
               >
                 <FiX />
               </button>

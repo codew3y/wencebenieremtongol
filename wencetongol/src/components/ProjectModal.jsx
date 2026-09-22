@@ -7,6 +7,7 @@ import { TbX } from "react-icons/tb";
 import ProjectDiagram from "./ProjectDiagram";
 import ProjectImages from "./ProjectImages";
 import useDialog from "../hooks/useDialog";
+import { EASE_OUT } from "../lib/motion";
 
 const Heading = ({ children }) => (
   <h4 className="font-mono text-[11px] tracking-[0.2em] text-accent uppercase">
@@ -43,9 +44,9 @@ const ProjectModal = ({ project, onClose }) => {
             initial={{ opacity: 0, y: 16, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 16, scale: 0.98 }}
-            transition={{ duration: 0.24, ease: "easeOut" }}
+            transition={{ duration: 0.24, ease: EASE_OUT }}
             onClick={(event) => event.stopPropagation()}
-            className="my-auto w-full max-w-5xl overflow-hidden rounded-2xl border border-line bg-surface shadow-xl shadow-black/20 focus:outline-none"
+            className="card-edge my-auto w-full max-w-5xl overflow-hidden rounded-2xl border border-line bg-surface shadow-xl shadow-black/20 focus:outline-none"
           >
             <div className="flex items-start gap-4 border-b border-line bg-canvas-2 p-4 md:p-5">
               <div className="min-w-0">
@@ -70,7 +71,7 @@ const ProjectModal = ({ project, onClose }) => {
                 type="button"
                 onClick={onClose}
                 aria-label="Close project details"
-                className="ml-auto grid h-9 w-9 shrink-0 place-items-center rounded-full border border-line text-muted transition-colors hover:border-accent/50 hover:text-accent"
+                className="pressable ml-auto grid h-9 w-9 shrink-0 place-items-center rounded-full border border-line text-muted transition-colors hover:border-accent/50 hover:text-accent"
               >
                 <TbX />
               </button>
@@ -110,7 +111,7 @@ const ProjectModal = ({ project, onClose }) => {
                         href={project.link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 rounded-lg bg-accent px-4 py-2.5 text-sm font-semibold text-accent-fg transition-opacity hover:opacity-90"
+                        className="pressable inline-flex items-center gap-2 rounded-lg bg-accent px-4 py-2.5 text-sm font-semibold text-accent-fg transition-opacity hover:opacity-90"
                       >
                         Visit live site <FiArrowUpRight />
                       </a>
@@ -120,7 +121,7 @@ const ProjectModal = ({ project, onClose }) => {
                         href={project.repo}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 rounded-lg border border-line bg-surface-2 px-4 py-2.5 text-sm font-semibold text-fg transition-colors hover:border-accent/50 hover:text-accent"
+                        className="card-edge pressable inline-flex items-center gap-2 rounded-lg border border-line bg-surface-2 px-4 py-2.5 text-sm font-semibold text-fg transition-colors hover:border-accent/50 hover:text-accent"
                       >
                         <SiGithub /> View source
                       </a>

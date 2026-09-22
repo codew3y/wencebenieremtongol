@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { FiMoon, FiSun } from "react-icons/fi";
+import { EASE_OUT } from "../lib/motion";
 
 const STORAGE_KEY = "theme";
 
@@ -11,7 +12,9 @@ const getInitialTheme = () => {
   } catch {
     // localStorage can throw in private/blocked contexts — fall through to system.
   }
-  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  return window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light";
 };
 
 const ThemeToggle = ({ className = "" }) => {
@@ -69,7 +72,7 @@ const ThemeToggle = ({ className = "" }) => {
           initial={{ y: 12, opacity: 0, rotate: -45 }}
           animate={{ y: 0, opacity: 1, rotate: 0 }}
           exit={{ y: -12, opacity: 0, rotate: 45 }}
-          transition={{ duration: 0.18, ease: "easeOut" }}
+          transition={{ duration: 0.18, ease: EASE_OUT }}
           className="grid place-items-center"
         >
           {isDark ? <FiMoon size={16} /> : <FiSun size={16} />}
