@@ -44,14 +44,10 @@ const Experience = () => {
   const drawn = useSpring(scrollYProgress, { stiffness: 120, damping: 30 });
 
   return (
-    <Section
-      id="experience"
-      label="experience"
-      title="Where I've worked"
-    >
+    <Section id="experience" label="experience" title="Where I've worked">
       <motion.div
         ref={timelineRef}
-        variants={stagger(0.12)}
+        variants={stagger(0.07)}
         initial="hidden"
         whileInView="show"
         viewport={viewportOnce}
@@ -74,10 +70,12 @@ const Experience = () => {
             variants={fadeUp}
             className={idx === roles.length - 1 ? "" : "mb-10"}
           >
-            <div className="rounded-xl border border-line bg-surface p-6 transition-[transform,border-color] duration-200 hover:border-accent/40 motion-safe:hover:-translate-y-0.5">
+            <div className="card-edge rounded-xl border border-line bg-surface p-6 transition-[transform,border-color] duration-200 hover:border-accent/40 motion-safe:hover:-translate-y-0.5">
               <div className="flex flex-col gap-1 md:flex-row md:items-baseline md:justify-between">
                 <div>
-                  <h3 className="text-lg font-semibold text-fg">{role.title}</h3>
+                  <h3 className="text-lg font-semibold text-fg">
+                    {role.title}
+                  </h3>
                   <p className="mt-0.5 text-sm text-accent">{role.company}</p>
                 </div>
                 <span className="font-mono text-xs whitespace-nowrap text-faint">

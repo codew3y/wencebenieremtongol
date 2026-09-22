@@ -25,7 +25,7 @@ const PROMPT_DELAY = 900;
 // charged. No network or bank marks either: the brand slot carries this site's
 // own mark.
 const CARD = {
-  label: "integrations",
+  label: "software developer",
   line: "YOUR VISION, MY CODE.",
   holder: "WENCE TONGOL",
   since: "06/26",
@@ -94,7 +94,7 @@ const Home = () => {
             custom={0}
             className="font-mono text-xs tracking-[0.25em] text-accent"
           >
-            crm developer &amp; integrations specialist
+            full-stack developer
           </motion.p>
 
           {/* Two lines, the second dropped to muted: the statement lands on the
@@ -104,11 +104,13 @@ const Home = () => {
             initial="hidden"
             animate="show"
             custom={1}
-            className="mt-6 text-3xl leading-[1.12] font-semibold tracking-[-0.02em] text-fg sm:text-4xl lg:text-[2.5rem]"
+            className="mt-6 text-[2rem] leading-[1.08] font-semibold tracking-[-0.03em] text-balance text-fg sm:text-[2.5rem] lg:text-[3rem]"
           >
-            I automate business processes
+            I build scalable web applications
             <br />
-            <span className="text-muted">and connect enterprise systems.</span>
+            <span className="text-muted">
+              and deliver high-performance solutions.
+            </span>
           </motion.h1>
 
           <motion.p
@@ -118,9 +120,10 @@ const Home = () => {
             custom={2}
             className="mt-7 max-w-xl leading-relaxed text-muted"
           >
-            Automation workflows that run end to end — CRM record to finished
-            document, enterprise system to AI assistant, service to service over
-            REST and OAuth 2.0.
+            I develop reliable digital solutions and responsive user experiences
+            powered by modern web technologies and Generative AI, working across
+            the full stack from the interfaces people use to the services and
+            data behind them.
           </motion.p>
 
           <motion.div
@@ -132,7 +135,7 @@ const Home = () => {
           >
             <a
               href="#projects"
-              className="group inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 font-semibold text-accent-fg transition-opacity hover:opacity-90"
+              className="pressable group inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 font-semibold text-accent-fg transition-opacity hover:opacity-90"
             >
               See the work
               <FiArrowRight
@@ -142,7 +145,7 @@ const Home = () => {
             </a>
             <a
               href="#about"
-              className="inline-flex items-center gap-2 rounded-full border border-line-strong px-6 py-3 font-semibold text-fg transition-colors hover:border-accent/60 hover:text-accent"
+              className="pressable inline-flex items-center gap-2 rounded-full border border-line-strong px-6 py-3 font-semibold text-fg transition-colors hover:border-accent/60 hover:text-accent"
             >
               About me
             </a>
@@ -291,7 +294,7 @@ const Home = () => {
         custom={5}
         href="#about"
         aria-label="Scroll to about"
-        className="mx-auto mt-10 hidden h-10 w-10 place-items-center rounded-full border border-line text-faint transition-colors hover:border-accent/50 hover:text-accent sm:grid"
+        className="pressable mx-auto mt-10 hidden h-10 w-10 place-items-center rounded-full border border-line text-faint transition-colors hover:border-accent/50 hover:text-accent sm:grid"
       >
         <FiChevronDown size={18} className="motion-safe:animate-bounce" />
       </motion.a>

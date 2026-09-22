@@ -39,7 +39,10 @@ const Navbar = () => {
       // Resolved every pass, not cached at mount: the sections below the fold
       // are lazy, so most of them do not exist yet when this first runs.
       const sections = links
-        .map((link) => ({ href: link.href, el: document.querySelector(link.href) }))
+        .map((link) => ({
+          href: link.href,
+          el: document.querySelector(link.href),
+        }))
         .filter((section) => section.el);
       if (sections.length === 0) return;
 
@@ -52,7 +55,8 @@ const Navbar = () => {
 
       let current = "";
       for (const section of sections) {
-        if (section.el.getBoundingClientRect().top <= line) current = section.href;
+        if (section.el.getBoundingClientRect().top <= line)
+          current = section.href;
       }
 
       // A short final section may never reach the line; the footer counts as it.
@@ -120,7 +124,7 @@ const Navbar = () => {
           <ThemeToggle />
           <button
             type="button"
-            className="grid h-9 w-9 place-items-center rounded-lg border border-line bg-surface text-fg md:hidden"
+            className="card-edge pressable grid h-9 w-9 place-items-center rounded-lg border border-line bg-surface text-fg md:hidden"
             onClick={() => setOpen(!open)}
             aria-expanded={open}
             aria-label="Toggle menu"

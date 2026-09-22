@@ -1,5 +1,6 @@
 import React, { lazy, Suspense, useEffect, useState } from "react";
 import { AnimatePresence, motion, MotionConfig } from "framer-motion";
+import { EASE_IN_OUT } from "./lib/motion";
 import ErrorBoundary from "./components/ErrorBoundary";
 import Loader from "./components/Loader";
 import Navbar from "./components/Navbar";
@@ -131,6 +132,10 @@ function App() {
           className="pointer-events-none fixed inset-0 -z-10 overflow-hidden"
         >
           <div className="tech-grid absolute inset-0" />
+          {/* Grain sits above the grid so it breaks up both the flat canvas and
+              the ruled lines. Fixed with the rest of the backdrop, so it does
+              not swim against the page as you scroll. */}
+          <div className="grain absolute inset-0" />
         </div>
 
         <AnimatePresence>{!ready && <Loader />}</AnimatePresence>
@@ -143,7 +148,7 @@ function App() {
             // blank, which is worse than the loader it replaced.
             initial={openedHidden ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, ease: "easeInOut" }}
+            transition={{ duration: 0.8, ease: EASE_IN_OUT }}
           >
             <ErrorBoundary name="chrome">
               <ScrollProgress />
@@ -162,7 +167,10 @@ function App() {
               <ErrorBoundary name="home" fallback={<SectionFailed id="home" />}>
                 <Home />
               </ErrorBoundary>
-              <ErrorBoundary name="about" fallback={<SectionFailed id="about" />}>
+              <ErrorBoundary
+                name="about"
+                fallback={<SectionFailed id="about" />}
+              >
                 <About />
               </ErrorBoundary>
 

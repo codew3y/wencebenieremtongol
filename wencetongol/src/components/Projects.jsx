@@ -181,7 +181,14 @@ const personal = [
     year: "2026",
     summary:
       "A booking site for a Quezon City barbershop: pick a barber, pick a service, pick a slot, and hold the chair with a 20% downpayment paid by QR. Availability is live per barber, and customers reschedule or cancel from their own dashboard instead of calling the shop.",
-    tech: ["Next.js", "TypeScript", "React", "Tailwind CSS", "REST API", "Vercel"],
+    tech: [
+      "Next.js",
+      "TypeScript",
+      "React",
+      "Tailwind CSS",
+      "REST API",
+      "Vercel",
+    ],
     images: [
       { src: BH1, alt: "BarberHouse landing page" },
       { src: BH2, alt: "Service menu priced per barber" },
@@ -271,7 +278,7 @@ const Projects = () => {
       key={project.name}
       variants={fadeUp}
       onClick={() => setActive(project)}
-      className="group flex cursor-pointer flex-col overflow-hidden rounded-xl border border-line bg-surface transition-[transform,border-color] duration-200 hover:border-accent/40 motion-safe:hover:-translate-y-0.5"
+      className="card-edge pressable group flex cursor-pointer flex-col overflow-hidden rounded-xl border border-line bg-surface transition-[transform,border-color] duration-200 hover:border-accent/40 motion-safe:hover:-translate-y-0.5"
     >
       {project.images ? (
         <Cover project={project} />
@@ -318,17 +325,13 @@ const Projects = () => {
   );
 
   return (
-    <Section
-      id="projects"
-      label="projects"
-      title="Things I've built"
-    >
+    <Section id="projects" label="projects" title="Things I've built">
       <h3 className="font-mono text-xs tracking-[0.2em] text-accent">
         personal projects
       </h3>
 
       <motion.div
-        variants={stagger(0.1)}
+        variants={stagger(0.06)}
         initial="hidden"
         whileInView="show"
         viewport={viewportOnce}
@@ -350,7 +353,7 @@ const Projects = () => {
       </div>
 
       <motion.div
-        variants={stagger(0.1)}
+        variants={stagger(0.06)}
         initial="hidden"
         whileInView="show"
         viewport={viewportOnce}

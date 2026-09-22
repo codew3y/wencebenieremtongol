@@ -155,7 +155,7 @@ const Contact = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={social.label}
-                  className="grid h-11 w-11 place-items-center rounded-lg border border-line bg-surface text-muted transition-colors hover:border-accent/50 hover:text-accent"
+                  className="card-edge pressable grid h-11 w-11 place-items-center rounded-lg border border-line bg-surface text-muted transition-colors hover:border-accent/50 hover:text-accent"
                 >
                   {social.icon}
                 </a>
@@ -169,7 +169,7 @@ const Contact = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="overflow-hidden rounded-2xl border border-line bg-surface"
+          className="card-edge overflow-hidden rounded-2xl border border-line bg-surface"
         >
           {/* Card header echoes the section headers: mono label, hairline rule. */}
           <div className="flex items-center gap-4 border-b border-line px-6 py-4 md:px-8">
@@ -203,7 +203,7 @@ const Contact = () => {
                   <button
                     type="button"
                     onClick={() => setStatus("idle")}
-                    className="inline-flex items-center gap-2 rounded-lg border border-line px-4 py-2 font-mono text-xs text-muted transition-colors hover:border-accent/50 hover:text-accent"
+                    className="pressable inline-flex items-center gap-2 rounded-lg border border-line px-4 py-2 font-mono text-xs text-muted transition-colors hover:border-accent/50 hover:text-accent"
                   >
                     <FiCornerUpLeft />
                     Send another
@@ -315,7 +315,7 @@ const Contact = () => {
                     <button
                       type="submit"
                       disabled={sending}
-                      className="group inline-flex items-center gap-2 rounded-lg bg-accent px-6 py-3 text-sm font-semibold text-accent-fg transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+                      className="pressable group inline-flex items-center gap-2 rounded-lg bg-accent px-6 py-3 text-sm font-semibold text-accent-fg transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
                     >
                       {sending ? (
                         <>

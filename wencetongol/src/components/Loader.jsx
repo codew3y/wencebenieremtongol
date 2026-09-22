@@ -1,5 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { EASE_IN_OUT } from "../lib/motion";
 
 /**
  * First-paint loading screen, modelled on markyisulat.dev: two counter-rotating
@@ -16,7 +17,7 @@ const Loader = () => {
       className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-canvas/80 backdrop-blur-sm"
       initial={{ opacity: 1 }}
       exit={{ opacity: 0, filter: "blur(10px)" }}
-      transition={{ duration: 0.8, ease: "easeInOut" }}
+      transition={{ duration: 0.8, ease: EASE_IN_OUT }}
     >
       <div className="relative flex flex-col items-center justify-center gap-6">
         <div className="relative flex items-center justify-center">
@@ -36,7 +37,7 @@ const Loader = () => {
         <motion.p
           className="font-mono text-xl tracking-[0.2em] text-accent uppercase md:text-2xl"
           animate={{ opacity: [0.4, 1, 0.4] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          transition={{ duration: 2, repeat: Infinity, ease: EASE_IN_OUT }}
         >
           Loading
         </motion.p>

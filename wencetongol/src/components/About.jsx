@@ -3,7 +3,13 @@ import { motion } from "framer-motion";
 import { FiFileText } from "react-icons/fi";
 import { FaGithub, FaLinkedinIn } from "react-icons/fa";
 import { HiOutlineMail } from "react-icons/hi";
-import { SiClaude, SiNodedotjs, SiPython, SiReact, SiZoho } from "react-icons/si";
+import {
+  SiClaude,
+  SiNodedotjs,
+  SiPython,
+  SiReact,
+  SiZoho,
+} from "react-icons/si";
 import {
   TbBrandAzure,
   TbBrandOauth,
@@ -38,9 +44,9 @@ const STACK = [
 // separate facts panel went: it listed the same things twice, one of them a
 // column away from the other.
 const meta = [
-  { key: "role", value: "CRM Developer Associate" },
+  { key: "current role", value: "CRM Developer Associate" },
   { key: "company", value: "Manentia Enterprise Support PH Inc." },
-  { key: "focus", value: "Integrations & Automation" },
+  { key: "focus", value: "Full-stack development & automation" },
   { key: "stack", value: "Deluge · Node.js · Azure" },
   { key: "school", value: "Pampanga State University" },
   { key: "location", value: "Pampanga, Philippines" },
@@ -61,7 +67,6 @@ const socials = [
   },
 ];
 
-
 const About = () => {
   const [resumeOpen, setResumeOpen] = useState(false);
 
@@ -75,7 +80,7 @@ const About = () => {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-80px" }}
         transition={{ duration: 0.7 }}
-        className="overflow-hidden rounded-2xl border border-line bg-surface shadow-xl shadow-black/5"
+        className="card-edge overflow-hidden rounded-2xl border border-line bg-surface shadow-xl shadow-black/5"
       >
         {/* A flat deep teal, the same in both themes: this band reads as
             cover art rather than surface, so it should not invert with the
@@ -84,13 +89,17 @@ const About = () => {
             --accent, but not so dark that the black marks below stop reading:
             black sits at about 3:1 on this, and drops under 2.5:1 by the time
             you reach teal-900. */}
-        <div className="relative h-28 overflow-hidden border-b border-line bg-[#0b6173] sm:h-40">
+        <div className="relative h-28 overflow-hidden border-b border-line bg-[#0f665e] sm:h-40">
           {/* Static on purpose: this sits directly above the name, and a moving
               band competes with reading it. */}
           <ul className="absolute inset-0 flex flex-wrap items-center justify-center gap-x-8 gap-y-4 px-6 sm:gap-x-12 md:px-10">
             {STACK.map(({ Icon, label }) => (
               <li key={label} className="text-black" title={label}>
-                <Icon size={28} aria-hidden="true" className="sm:h-10 sm:w-10" />
+                <Icon
+                  size={28}
+                  aria-hidden="true"
+                  className="sm:h-10 sm:w-10"
+                />
                 <span className="sr-only">{label}</span>
               </li>
             ))}
@@ -120,7 +129,7 @@ const About = () => {
             <button
               type="button"
               onClick={() => setResumeOpen(true)}
-              className="mb-1 inline-flex items-center gap-2 rounded-full border border-line-strong px-5 py-2.5 text-sm font-semibold text-fg transition-colors hover:border-accent/60 hover:text-accent"
+              className="pressable mb-1 inline-flex items-center gap-2 rounded-full border border-line-strong px-5 py-2.5 text-sm font-semibold text-fg transition-colors hover:border-accent/60 hover:text-accent"
             >
               Résumé <FiFileText size={15} />
             </button>
@@ -132,7 +141,7 @@ const About = () => {
             </h3>
 
             <p className="mt-2 font-mono text-sm text-accent">
-              crm developer &amp; integrations specialist
+              full-stack developer
             </p>
 
             <p className="mt-1.5 text-sm text-muted">
@@ -147,15 +156,19 @@ const About = () => {
               paragraphs beside a facts panel said the same things twice; this
               keeps the substance and leaves the section clean. */}
           <p className="mt-5 max-w-3xl text-sm leading-relaxed text-muted">
-            I build the automation that sits between business systems: CRM
-            workflows that turn records into finished client documents,
-            connectors that let AI assistants reach enterprise data under
-            per-user identity and audit control, and integrations that recover
-            on their own when a connection drops mid-transfer. Underneath it is
-            mostly REST and OAuth 2.0, verified with Postman and PowerShell
-            before it reaches production. I keep permissions narrow, keep an
-            audit trail, and leave documentation someone else can actually
-            follow.
+            I'm a full-stack developer working mainly in TypeScript. I build
+            Next.js and React interfaces, the APIs that serve them, and the
+            PostgreSQL databases behind both, as well as the integrations that
+            connect applications to AI tools. I test as I build and document as
+            I go, so the work can be handed over cleanly.
+          </p>
+
+          <p className="mt-4 max-w-3xl text-sm leading-relaxed text-muted">
+            In my current role that work is business automation: CRM workflows
+            that turn records into finished client documents, MCP connectors
+            that automate our daily work, and integrations that recover on their
+            own when a connection drops. Mostly REST and OAuth 2.0 underneath,
+            verified with Postman and PowerShell before it reaches production.
           </p>
 
           <div className="mt-6 flex items-center gap-2">
@@ -163,10 +176,12 @@ const About = () => {
               <a
                 key={social.label}
                 href={social.href}
-                target={social.href.startsWith("mailto:") ? undefined : "_blank"}
+                target={
+                  social.href.startsWith("mailto:") ? undefined : "_blank"
+                }
                 rel="noopener noreferrer"
                 aria-label={social.label}
-                className="grid h-10 w-10 place-items-center rounded-full border border-line bg-surface text-muted transition-colors hover:border-accent/50 hover:text-accent"
+                className="pressable grid h-10 w-10 place-items-center rounded-full border border-line bg-surface text-muted transition-colors hover:border-accent/50 hover:text-accent"
               >
                 {social.icon}
               </a>
@@ -188,7 +203,7 @@ const About = () => {
                 className="flex min-w-0 gap-2"
               >
                 {/* Wide enough for "languages" so every value aligns. */}
-                <dt className="w-20 shrink-0 text-accent">{item.key}</dt>
+                <dt className="w-24 shrink-0 text-accent">{item.key}</dt>
                 <dd className="min-w-0 text-muted">{item.value}</dd>
               </motion.div>
             ))}

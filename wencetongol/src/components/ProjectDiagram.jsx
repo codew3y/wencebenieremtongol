@@ -29,7 +29,7 @@ const ProjectDiagram = ({
       initial="hidden"
       whileInView="show"
       viewport={{ once: true, margin: "-40px" }}
-      variants={{ show: { transition: { staggerChildren: 0.09 } } }}
+      variants={{ show: { transition: { staggerChildren: 0.07 } } }}
       className="flex w-full items-start justify-between"
     >
       {nodes.map((node, index) => (
