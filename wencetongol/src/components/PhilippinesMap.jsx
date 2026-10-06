@@ -7,12 +7,12 @@ import { EASE_IN_OUT } from "../lib/motion";
  * it inherits the accent from whatever wraps it and swaps with the theme.
  *
  * Coordinates come from a plain lon/lat projection onto the viewBox:
- * x = (lon - 116) * 33.33, y = (21 - lat) * 33.33 — enough vertices to keep the
+ * x = (lon - 116) * 33.33, y = (21 - lat) * 33.33 -- enough vertices to keep the
  * landmarks (Lingayen Gulf, the Bicol arm, Davao Gulf) readable, no more.
  */
 
 const islands = [
-  // Luzon — Ilocos coast, Lingayen Gulf, Bataan, Manila Bay, then the Bicol arm.
+  // Luzon -- Ilocos coast, Lingayen Gulf, Bataan, Manila Bay, then the Bicol arm.
   "M152 82 L170 80 L188 87 L205 83 L217 130 L213 153 L205 160 L185 175 L180 187 L188 208 L192 227 L198 233 L223 235 L228 224 L240 228 L250 242 L262 242 L263 255 L258 262 L270 270 L263 280 L253 270 L247 263 L230 250 L217 243 L197 238 L187 237 L168 242 L155 232 L157 221 L163 211 L150 206 L148 219 L145 207 L132 187 L128 170 L130 153 L145 167 L143 147 L147 113 L153 93 Z",
   // Catanduanes
   "M274 235 L281 232 L280 248 L271 246 Z",
@@ -34,12 +34,12 @@ const islands = [
   "M262 367 L272 362 L287 363 L287 377 L273 382 L263 378 Z",
   // Negros
   "M238 337 L247 350 L244 390 L235 398 L227 388 L227 368 L232 344 Z",
-  // Mindanao — Surigao down the east coast, Davao Gulf, then Zamboanga.
+  // Mindanao -- Surigao down the east coast, Davao Gulf, then Zamboanga.
   "M317 373 L347 413 L345 427 L341 468 L340 491 L320 464 L311 475 L307 505 L306 497 L297 497 L283 492 L268 478 L275 459 L267 453 L268 447 L244 447 L202 470 L198 470 L203 457 L245 413 L259 417 L275 425 L288 418 L303 405 L318 402 Z",
 ];
 
 // Marinduque through the Sulu chain: too small to outline, but the archipelago
-// reads wrong without them. Batanes is left off — it sits so far north of Luzon
+// reads wrong without them. Batanes is left off -- it sits so far north of Luzon
 // that including it would shrink everything else inside the frame.
 const specks = [
   { cx: 200, cy: 253, r: 5 },

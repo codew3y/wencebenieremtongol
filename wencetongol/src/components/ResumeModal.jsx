@@ -1,7 +1,7 @@
 import React from "react";
+import { TbDownload, TbExternalLink, TbX } from "react-icons/tb";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { FiDownload, FiExternalLink, FiX } from "react-icons/fi";
 import CVResume from "../assets/CV/WenceTongol_Resume.pdf";
 import useDialog from "../hooks/useDialog";
 import { EASE_OUT } from "../lib/motion";
@@ -11,7 +11,7 @@ const FILE_NAME = "WenceTongol_Resume.pdf";
 /**
  * Reads the resume in place, so nobody has to download a file to decide whether
  * to keep reading. Download and open-in-tab stay available, because plenty of
- * mobile browsers refuse to render a PDF in an iframe — the noscript-ish
+ * mobile browsers refuse to render a PDF in an iframe -- the noscript-ish
  * fallback inside the frame covers that case.
  */
 const ResumeModal = ({ open, onClose }) => {
@@ -57,7 +57,7 @@ const ResumeModal = ({ open, onClose }) => {
                 rel="noopener noreferrer"
                 className="pressable inline-flex items-center gap-2 rounded-lg border border-line px-3 py-1.5 font-mono text-[11px] text-muted transition-colors hover:border-accent/50 hover:text-accent"
               >
-                <FiExternalLink />
+                <TbExternalLink />
                 <span className="hidden sm:inline">New tab</span>
               </a>
               <a
@@ -65,7 +65,7 @@ const ResumeModal = ({ open, onClose }) => {
                 download={FILE_NAME}
                 className="pressable inline-flex items-center gap-2 rounded-lg bg-accent px-3 py-1.5 font-mono text-[11px] font-semibold text-accent-fg transition-opacity hover:opacity-90"
               >
-                <FiDownload />
+                <TbDownload />
                 <span className="hidden sm:inline">Download</span>
               </a>
               <button
@@ -74,14 +74,14 @@ const ResumeModal = ({ open, onClose }) => {
                 aria-label="Close résumé"
                 className="pressable grid h-8 w-8 place-items-center rounded-lg border border-line text-muted transition-colors hover:border-accent/50 hover:text-accent"
               >
-                <FiX />
+                <TbX />
               </button>
             </div>
 
             <div className="min-h-0 flex-1 bg-canvas-2">
               <iframe
                 src={`${CVResume}#view=FitH`}
-                title="Résumé — Wence Benierem Tongol"
+                title="Résumé - Wence Benierem Tongol"
                 className="h-full w-full"
               >
                 {/* Shown only where inline PDFs are unsupported. */}
@@ -101,7 +101,7 @@ const ResumeModal = ({ open, onClose }) => {
 
             {/* Phone browsers render only the first page of a PDF in an iframe
                 and will not scroll to the second, and the header's controls are
-                icon-only at this size — so small screens get a labelled way out
+                icon-only at this size -- so small screens get a labelled way out
                 to the browser's own viewer, which pages properly. */}
             <a
               href={CVResume}
@@ -109,7 +109,7 @@ const ResumeModal = ({ open, onClose }) => {
               rel="noopener noreferrer"
               className="flex shrink-0 items-center justify-center gap-2 border-t border-line bg-canvas-2 px-4 py-3 font-mono text-xs text-accent md:hidden"
             >
-              <FiExternalLink />
+              <TbExternalLink />
               Open both pages
             </a>
           </motion.div>

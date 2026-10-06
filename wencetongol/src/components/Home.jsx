@@ -6,7 +6,7 @@ import {
   useSpring,
   useTransform,
 } from "framer-motion";
-import { FiArrowRight, FiChevronDown } from "react-icons/fi";
+import { TbArrowRight, TbChevronDown } from "react-icons/tb";
 import useTypewriter from "../hooks/useTypewriter";
 
 /**
@@ -83,7 +83,7 @@ const Home = () => {
   return (
     <section
       id="home"
-      className="mx-auto flex min-h-screen max-w-6xl flex-col justify-center px-6 pt-28 pb-20"
+      className="mx-auto flex min-h-[100dvh] max-w-6xl flex-col justify-center px-6 pt-28 pb-20"
     >
       <div className="grid items-center gap-14 lg:grid-cols-[1.65fr_1fr] lg:gap-14">
         <div>
@@ -138,7 +138,7 @@ const Home = () => {
               className="pressable group inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 font-semibold text-accent-fg transition-opacity hover:opacity-90"
             >
               See the work
-              <FiArrowRight
+              <TbArrowRight
                 size={16}
                 className="transition-transform group-hover:translate-x-0.5"
               />
@@ -296,7 +296,7 @@ const Home = () => {
         aria-label="Scroll to about"
         className="pressable mx-auto mt-10 hidden h-10 w-10 place-items-center rounded-full border border-line text-faint transition-colors hover:border-accent/50 hover:text-accent sm:grid"
       >
-        <FiChevronDown size={18} className="motion-safe:animate-bounce" />
+        <TbChevronDown size={18} className="motion-safe:animate-bounce" />
       </motion.a>
     </section>
   );

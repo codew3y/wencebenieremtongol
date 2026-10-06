@@ -1,17 +1,36 @@
 @import "tailwindcss";
 
+/* Geist, declared by hand rather than via the package's index.css. That entry
+   point pulls every subset it ships -- cyrillic, cyrillic-ext, greek, latin-ext
+   -- and the site is latin-only, so four of those downloads were dead weight on
+   a page whose font loading was already tuned once for PageSpeed. One variable
+   file covers 100-900, so the whole weight range costs a single request. */
+@font-face {
+  font-family: "Geist Variable";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url("../node_modules/@fontsource-variable/geist/files/geist-latin-wght-normal.woff2")
+    format("woff2-variations");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191,
+    U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 /* Class-based dark mode (Tailwind v4 defaults to prefers-color-scheme). */
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
   --font-sans:
-    "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    "Geist Variable", "Geist", ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", sans-serif;
   --font-mono:
     "JetBrains Mono", ui-monospace, SFMono-Regular, "Cascadia Code", Menlo,
     monospace;
 }
 
-/* Light theme — the default. Warm ink rather than blue-grey: the old palette
+/* Light theme -- the default. Warm ink rather than blue-grey: the old palette
    was cool-cast (#f6f8fb, #0b1220), which is the default look of every dev
    template. Warming the neutrals is most of what separates the two. */
 :root {
@@ -27,7 +46,6 @@
   --accent: #0f766e;
   --accent-fg: #ffffff;
   --accent-soft: rgb(15 118 110 / 0.1);
-  --grid: rgb(26 26 24 / 0.05);
   --glow: rgb(15 118 110 / 0.14);
   --edge: rgb(255 255 255 / 0.9);
   --lift: 0 1px 2px rgb(26 26 24 / 0.04), 0 4px 12px -2px rgb(26 26 24 / 0.05);
@@ -48,7 +66,6 @@
   --accent: #2dd4bf;
   --accent-fg: #062b26;
   --accent-soft: rgb(45 212 191 / 0.12);
-  --grid: rgb(255 255 255 / 0.04);
   --glow: rgb(45 212 191 / 0.16);
   --edge: rgb(255 255 255 / 0.06);
   --lift: 0 1px 2px rgb(0 0 0 / 0.4);
@@ -158,30 +175,50 @@ body {
   opacity: 0.035;
 }
 
-/* Blueprint grid used behind the page. */
-.tech-grid {
-  background-image:
-    linear-gradient(to right, var(--grid) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
-  background-size: 56px 56px;
-  mask-image: radial-gradient(
-    ellipse 90% 60% at 50% 0%,
-    #000 35%,
-    transparent 100%
-  );
-  -webkit-mask-image: radial-gradient(
-    ellipse 90% 60% at 50% 0%,
-    #000 35%,
-    transparent 100%
-  );
+
+/* Shape scale. One documented rule for the whole page, applied everywhere:
+   containers round at 16px, things nested inside a container round at 8px, and
+   anything you click is a full pill. Mixing radii without a rule is what makes
+   a layout read as assembled rather than designed. */
+:root {
+  --r-container: 1rem;
+  --r-inner: 0.5rem;
 }
 
-/* Backdrop for the project diagrams: the same blueprint lines as the page, at a
-   tighter pitch and without the page-scale mask — that mask is an ellipse sized
-   for a viewport, so inside a card-sized box it faded the grid to nothing. */
-.diagram-grid {
-  background-image:
-    linear-gradient(to right, var(--grid) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
-  background-size: 22px 22px;
+/* Figures line up in columns when they are tabular, which matters on the
+   dates and metrics that run down the experience and education sections. */
+.font-mono {
+  font-variant-numeric: tabular-nums;
+}
+
+/* `pretty` leaves the last line of a paragraph with company rather than a
+   single orphaned word. Cheap, and it is the difference between type that was
+   set and type that was poured in. */
+p {
+  text-wrap: pretty;
+}
+
+/* The content column clears the left rail. Driven by a custom property that
+   SideNav rewrites when the rail folds, so the page slides with it instead of
+   snapping, and the two can never disagree about how wide the rail currently
+   is. Below lg the rail is a top bar and the column runs full width. */
+.with-rail {
+  /* Default for the first paint; the inline script in index.html overrides it
+     when the visitor last left the rail folded, and SideNav keeps it current
+     after that. Below lg the padding rule never applies, so the value is
+     inert there. */
+  --rail: 15rem;
+}
+
+@media (min-width: 1024px) {
+  .with-rail {
+    padding-left: var(--rail);
+    transition: padding-left 320ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .with-rail {
+    transition: none;
+  }
 }

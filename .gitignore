@@ -1,0 +1,4 @@
+# Local agent skills (installed via `npx skills add`).
+.claude/
+.agents/
+skills-lock.json

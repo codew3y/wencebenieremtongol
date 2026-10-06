@@ -2,7 +2,8 @@ import React from "react";
 import { motion, useReducedMotion, useScroll, useSpring } from "framer-motion";
 
 /**
- * Thin accent bar across the top tracking read position.
+ * Thin accent bar across the top of the content tracking read position.
+ * Offset past the sidebar from lg up so it measures the column it belongs to.
  */
 const ScrollProgress = () => {
   const reduceMotion = useReducedMotion();
@@ -21,7 +22,7 @@ const ScrollProgress = () => {
     <motion.div
       aria-hidden="true"
       style={{ scaleX: reduceMotion ? scrollYProgress : smooth }}
-      className="fixed top-0 left-0 z-[60] h-0.5 w-full origin-left bg-accent"
+      className="fixed top-0 left-0 z-[60] h-0.5 w-full origin-left bg-accent lg:left-60 lg:w-[calc(100%-15rem)]"
     />
   );
 };

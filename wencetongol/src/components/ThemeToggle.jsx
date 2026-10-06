@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
+import { TbMoon, TbSun } from "react-icons/tb";
 import { AnimatePresence, motion } from "framer-motion";
-import { FiMoon, FiSun } from "react-icons/fi";
 import { EASE_OUT } from "../lib/motion";
 
 const STORAGE_KEY = "theme";
@@ -10,7 +10,7 @@ const getInitialTheme = () => {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored === "dark" || stored === "light") return stored;
   } catch {
-    // localStorage can throw in private/blocked contexts — fall through to system.
+    // localStorage can throw in private/blocked contexts -- fall through to system.
   }
   return window.matchMedia("(prefers-color-scheme: dark)").matches
     ? "dark"
@@ -75,7 +75,7 @@ const ThemeToggle = ({ className = "" }) => {
           transition={{ duration: 0.18, ease: EASE_OUT }}
           className="grid place-items-center"
         >
-          {isDark ? <FiMoon size={16} /> : <FiSun size={16} />}
+          {isDark ? <TbMoon size={16} /> : <TbSun size={16} />}
         </motion.span>
       </AnimatePresence>
     </button>

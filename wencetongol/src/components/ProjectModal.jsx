@@ -1,9 +1,8 @@
 import React from "react";
+import { TbArrowUpRight, TbCheck, TbX } from "react-icons/tb";
+import { SiGithub } from "react-icons/si";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { FiArrowUpRight, FiCheck } from "react-icons/fi";
-import { SiGithub } from "react-icons/si";
-import { TbX } from "react-icons/tb";
 import ProjectDiagram from "./ProjectDiagram";
 import ProjectImages from "./ProjectImages";
 import useDialog from "../hooks/useDialog";
@@ -85,7 +84,7 @@ const ProjectModal = ({ project, onClose }) => {
                 {project.images ? (
                   <ProjectImages images={project.images} />
                 ) : (
-                  <div className="overflow-hidden rounded-xl border border-line">
+                  <div className="overflow-hidden rounded-2xl border border-line">
                     <ProjectDiagram
                       {...project.diagram}
                       height="h-[34vh] sm:h-[42vh]"
@@ -96,7 +95,7 @@ const ProjectModal = ({ project, onClose }) => {
 
                 {!project.images && (
                   <p className="mt-3 font-mono text-[10px] leading-relaxed text-faint">
-                    Screenshots withheld — this work runs on client and firm
+                    Screenshots withheld. This work runs on client and firm
                     systems. The diagram shows the request path instead.
                   </p>
                 )}
@@ -113,7 +112,7 @@ const ProjectModal = ({ project, onClose }) => {
                         rel="noopener noreferrer"
                         className="pressable inline-flex items-center gap-2 rounded-lg bg-accent px-4 py-2.5 text-sm font-semibold text-accent-fg transition-opacity hover:opacity-90"
                       >
-                        Visit live site <FiArrowUpRight />
+                        Visit live site <TbArrowUpRight />
                       </a>
                     )}
                     {project.repo && (
@@ -147,7 +146,7 @@ const ProjectModal = ({ project, onClose }) => {
                           key={point}
                           className="flex gap-3 rounded-lg border border-line bg-canvas-2 px-3 py-2.5 text-[13px] leading-relaxed text-muted"
                         >
-                          <FiCheck className="mt-0.5 shrink-0 text-accent" />
+                          <TbCheck className="mt-0.5 shrink-0 text-accent" />
                           <span>{point}</span>
                         </li>
                       ))}

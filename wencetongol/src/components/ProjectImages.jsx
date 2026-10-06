@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
 import { TbChevronLeft, TbChevronRight } from "react-icons/tb";
+import { AnimatePresence, motion } from "framer-motion";
 
 /**
  * The screenshot viewer inside a project's detail dialog: one image at a time,
@@ -28,7 +28,7 @@ const ProjectImages = ({ images }) => {
 
   return (
     <div className="space-y-3">
-      <div className="relative overflow-hidden rounded-xl border border-line bg-canvas-2">
+      <div className="relative overflow-hidden rounded-2xl border border-line bg-canvas-2">
         <AnimatePresence mode="wait">
           <motion.img
             key={images[at].src}
@@ -60,7 +60,7 @@ const ProjectImages = ({ images }) => {
             >
               <TbChevronRight />
             </button>
-            <span className="absolute right-3 bottom-3 rounded-md border border-line bg-canvas/85 px-2 py-1 font-mono text-[10px] text-muted backdrop-blur-sm">
+            <span className="absolute right-3 bottom-3 rounded-lg border border-line bg-canvas/85 px-2 py-1 font-mono text-[10px] text-muted backdrop-blur-sm">
               {at + 1} / {count}
             </span>
           </>
@@ -78,7 +78,7 @@ const ProjectImages = ({ images }) => {
               onClick={() => setAt(index)}
               aria-label={`Screenshot ${index + 1}`}
               aria-current={index === at ? "true" : undefined}
-              className={`h-12 w-20 shrink-0 overflow-hidden rounded-md border transition-colors ${
+              className={`h-12 w-20 shrink-0 overflow-hidden rounded-lg border transition-colors ${
                 index === at
                   ? "border-accent"
                   : "border-line opacity-60 hover:opacity-100"

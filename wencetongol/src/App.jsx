@@ -3,7 +3,7 @@ import { AnimatePresence, motion, MotionConfig } from "framer-motion";
 import { EASE_IN_OUT } from "./lib/motion";
 import ErrorBoundary from "./components/ErrorBoundary";
 import Loader from "./components/Loader";
-import Navbar from "./components/Navbar";
+import SideNav from "./components/SideNav";
 import ScrollProgress from "./components/ScrollProgress";
 import useSmoothAnchors from "./hooks/useSmoothAnchors";
 import Home from "./components/Home";
@@ -28,8 +28,8 @@ const Placeholder = ({ height }) => (
 
 const SectionFailed = ({ id }) => (
   <section id={id} className="mx-auto max-w-6xl px-6 py-20">
-    <p className="rounded-xl border border-line bg-surface px-5 py-4 text-sm text-muted">
-      This section didn't load. Refreshing usually fixes it — or reach me at{" "}
+    <p className="rounded-2xl border border-line bg-surface px-5 py-4 text-sm text-muted">
+      This section didn't load. Refreshing usually fixes it, or reach me at{" "}
       <a
         href="mailto:tongolwey@gmail.com"
         className="text-accent hover:underline"
@@ -43,7 +43,7 @@ const SectionFailed = ({ id }) => (
 
 /**
  * One lazy section: its own chunk, its own error boundary. A section that fails
- * to render — or whose chunk fails to load — leaves the rest of the page alone.
+ * to render, or whose chunk fails to load, leaves the rest of the page alone.
  * The fallback keeps the section's id so the nav and deep links still resolve.
  */
 const LazySection = ({ id, height = "min-h-[60vh]", children }) => (
@@ -125,16 +125,17 @@ function App() {
     <MotionConfig reducedMotion="user">
       {/* No background here: `body` paints the canvas, so the -z-10 backdrop
           below stays visible instead of being covered by this background. */}
-      <div className="relative min-h-screen text-fg">
-        {/* Decorative backdrop: blueprint grid behind the fold. */}
+      <div className="with-rail relative min-h-screen text-fg">
+        {/* Backdrop: grain only. The blueprint grid that used to sit here was
+            ruled lines drawn purely to make the page look designed, which is
+            exactly the decoration that dates a developer portfolio. The grain
+            stays because it does real work -- it breaks the banding that flat
+            colour fields show on a large screen. Fixed, so it does not swim
+            against the page as you scroll. */}
         <div
           aria-hidden="true"
           className="pointer-events-none fixed inset-0 -z-10 overflow-hidden"
         >
-          <div className="tech-grid absolute inset-0" />
-          {/* Grain sits above the grid so it breaks up both the flat canvas and
-              the ruled lines. Fixed with the rest of the backdrop, so it does
-              not swim against the page as you scroll. */}
           <div className="grain absolute inset-0" />
         </div>
 
@@ -160,7 +161,7 @@ function App() {
                 Skip to content
               </a>
 
-              <Navbar />
+              <SideNav />
             </ErrorBoundary>
 
             <main>
@@ -174,14 +175,14 @@ function App() {
                 <About />
               </ErrorBoundary>
 
-              <LazySection id="skills">
-                <Skills />
-              </LazySection>
               <LazySection id="experience">
                 <Experience />
               </LazySection>
               <LazySection id="projects">
                 <Projects />
+              </LazySection>
+              <LazySection id="skills">
+                <Skills />
               </LazySection>
               <LazySection id="education">
                 <Education />
