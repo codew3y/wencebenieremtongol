@@ -7,7 +7,7 @@ const roles = [
   {
     title: "CRM Developer Associate",
     company: "Manentia Enterprise Support PH Inc.",
-    period: "Jun 2026 – Present",
+    period: "Jun 2026 - Present",
     points: [
       "Automate Zoho CRM processes using Deluge scripting and Zoho Writer templates that generate client reports and investment proposals.",
       "Deliver custom MCP connectors on Azure App Service, exposing enterprise systems to AI assistants under per-user identity and audit control.",
@@ -20,12 +20,12 @@ const roles = [
   {
     title: "Information Technology Intern (On-the-Job Training)",
     company: "Manentia Enterprise Support PH Inc.",
-    period: "Feb 2026 – May 2026",
+    period: "Feb 2026 - May 2026",
     points: [
       "Produced and revised Zoho Writer templates driving Financial Planning Report (FPR) and investment proposal generation.",
       "Wrote Deluge functions that mapped CRM records into finished report and proposal documents.",
       "Extended proposal automation across six investment providers, each with its own template and business logic.",
-      "Diagnosed Zoho Writer rendering faults — chart configuration limits, page breaks, and blank pages — through iterative testing.",
+      "Diagnosed Zoho Writer rendering faults through iterative testing: chart configuration limits, page breaks, and blank pages.",
       "Assisted API integration testing, checking authentication, request construction, and returned data.",
     ],
   },
@@ -44,7 +44,7 @@ const Experience = () => {
   const drawn = useSpring(scrollYProgress, { stiffness: 120, damping: 30 });
 
   return (
-    <Section id="experience" label="experience" title="Where I've worked">
+    <Section id="experience" title="Where I've worked">
       <motion.div
         ref={timelineRef}
         variants={stagger(0.07)}
@@ -70,7 +70,7 @@ const Experience = () => {
             variants={fadeUp}
             className={idx === roles.length - 1 ? "" : "mb-10"}
           >
-            <div className="card-edge rounded-xl border border-line bg-surface p-6 transition-[transform,border-color] duration-200 hover:border-accent/40 motion-safe:hover:-translate-y-0.5">
+            <div className="card-edge group/role rounded-2xl border border-line bg-surface p-6 transition-[transform,border-color] duration-200 hover:border-accent/40 motion-safe:hover:-translate-y-0.5">
               <div className="flex flex-col gap-1 md:flex-row md:items-baseline md:justify-between">
                 <div>
                   <h3 className="text-lg font-semibold text-fg">
@@ -83,14 +83,16 @@ const Experience = () => {
                 </span>
               </div>
 
+              {/* No bullet glyph on these rows. A coloured dot in front of
+                  every line is decoration; a hanging rule down the left groups
+                  the points and keeps the text block clean. */}
               <ul className="mt-5 space-y-2.5">
                 {role.points.map((point) => (
                   <li
                     key={point}
-                    className="flex gap-3 text-sm leading-relaxed text-muted"
+                    className="border-l border-line pl-4 text-sm leading-relaxed text-muted transition-colors group-hover/role:border-accent/30"
                   >
-                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
-                    <span>{point}</span>
+                    {point}
                   </li>
                 ))}
               </ul>

@@ -1,52 +1,9 @@
-import React from "react";
-import { motion } from "framer-motion";
-import {
-  SiAnthropic,
-  SiClaude,
-  SiCss3,
-  SiDocker,
-  SiGit,
-  SiGithubactions,
-  SiHtml5,
-  SiJavascript,
-  SiJsonwebtokens,
-  SiMongodb,
-  SiMysql,
-  SiNextdotjs,
-  SiNodedotjs,
-  SiPostgresql,
-  SiPostman,
-  SiPython,
-  SiReact,
-  SiSupabase,
-  SiTailwindcss,
-  SiTypescript,
-  SiVitest,
-  SiZoho,
-} from "react-icons/si";
-import {
-  TbApi,
-  TbBook2,
-  TbBrandAzure,
-  TbBrandOauth,
-  TbBrandPowershell,
-  TbBug,
-  TbChartDots3,
-  TbClipboardText,
-  TbInfinity,
-  TbMessageDots,
-  TbPlugConnected,
-  TbPuzzle,
-  TbShieldSearch,
-  TbSql,
-  TbTargetArrow,
-  TbTerminal2,
-  TbTestPipe,
-  TbUsersGroup,
-  TbWebhook,
-} from "react-icons/tb";
+import React, { useState } from "react";
+import { TbApi, TbBook2, TbBrandAzure, TbBrandOauth, TbBrandPowershell, TbBug, TbChartDots3, TbClipboardText, TbInfinity, TbMessageDots, TbPlugConnected, TbPuzzle, TbShieldSearch, TbSql, TbTargetArrow, TbTerminal2, TbTestPipe, TbUsersGroup, TbWebhook } from "react-icons/tb";
+import { SiAnthropic, SiClaude, SiCss3, SiDocker, SiGit, SiGithubactions, SiHtml5, SiJavascript, SiJsonwebtokens, SiMongodb, SiMysql, SiNextdotjs, SiNodedotjs, SiPostgresql, SiPostman, SiPython, SiReact, SiSupabase, SiTailwindcss, SiTypescript, SiVitest, SiZoho } from "react-icons/si";
+import { AnimatePresence, motion } from "framer-motion";
 import Section from "./Section";
-import { fadeUp, stagger, viewportOnce } from "../lib/motion";
+import { EASE_OUT } from "../lib/motion";
 
 // Brand marks where one exists; otherwise a Tabler glyph that reads as the
 // thing itself (a plug for MCP, a shield-and-magnifier for eDiscovery).
@@ -146,50 +103,108 @@ const groups = [
   },
 ];
 
+// Filtered by category, and grouped inside the result.
+//
+// A flat wall of 46 chips had no structure: rows wrapped wherever they ran out
+// of width, nothing lined up, and nothing told you where one kind of thing
+// ended and the next began. Keeping the rows labelled gives the eye somewhere
+// to land, and the filter still narrows to a single row when you want one.
+const ALL = "All";
+const categories = [ALL].concat(groups.map((group) => group.title));
+
+const Chip = ({ item }) => (
+  <motion.span
+    layout
+    initial={{ opacity: 0, scale: 0.96 }}
+    animate={{ opacity: 1, scale: 1 }}
+    exit={{ opacity: 0, scale: 0.96 }}
+    transition={{ duration: 0.18, ease: EASE_OUT }}
+    className="inline-flex items-center gap-1.5 rounded-lg border border-line bg-canvas-2 px-2.5 py-1 font-mono text-[12px] text-muted transition-colors hover:border-accent/50 hover:text-accent"
+  >
+    <item.Icon aria-hidden="true" className="shrink-0 text-[14px] text-accent" />
+    {item.name}
+  </motion.span>
+);
+
 const Skills = () => {
+  const [filter, setFilter] = useState(ALL);
+
+  const visible =
+    filter === ALL ? groups : groups.filter((group) => group.title === filter);
+  const count = visible.reduce((total, group) => total + group.items.length, 0);
+
   return (
     <Section
       id="skills"
-      label="skills"
       title="Technical stack"
       intro="The languages, platforms, and practices I work with day to day."
     >
-      <motion.div
-        variants={stagger(0.07)}
-        initial="hidden"
-        whileInView="show"
-        viewport={viewportOnce}
-        className="divide-y divide-line border-y border-line"
-      >
-        {groups.map((group) => (
-          <motion.div
-            key={group.title}
-            variants={fadeUp}
-            className="grid gap-3 py-5 md:grid-cols-[200px_1fr] md:gap-8"
-          >
-            <h3 className="font-mono text-sm text-accent">{group.title}</h3>
-            {/* Chips cascade within their row once the row itself arrives. */}
-            <motion.div
-              variants={stagger(0.02)}
-              className="flex flex-wrap gap-2"
-            >
-              {group.items.map((item) => (
-                <motion.span
-                  key={item.name}
-                  variants={fadeUp}
-                  className="inline-flex items-center gap-2 rounded-md border border-line bg-surface px-3 py-1.5 font-mono text-[13px] text-muted transition-colors hover:border-accent/50 hover:text-accent"
-                >
-                  <item.Icon
-                    aria-hidden="true"
-                    className="shrink-0 text-[15px] text-accent"
-                  />
-                  {item.name}
-                </motion.span>
-              ))}
-            </motion.div>
-          </motion.div>
-        ))}
-      </motion.div>
+      {/* No container. The filter row and the count sit between hairlines,
+          which is how Background separates its bands too. */}
+      <div>
+        {/* Toggle buttons rather than tabs: there is one list underneath, not
+            one per category, so aria-pressed describes it honestly where
+            role="tab" would promise a tabpanel that does not exist. */}
+        <div
+          role="group"
+          aria-label="Filter the stack by category"
+          className="flex flex-wrap gap-2"
+        >
+          {categories.map((name) => {
+            const active = name === filter;
+            return (
+              <button
+                key={name}
+                type="button"
+                onClick={() => setFilter(name)}
+                aria-pressed={active}
+                className={
+                  "pressable rounded-full border px-3 py-1.5 font-mono text-xs transition-colors " +
+                  (active
+                    ? "border-accent bg-accent text-accent-fg"
+                    : "border-line text-muted hover:border-accent/50 hover:text-accent")
+                }
+              >
+                {name}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* One labelled row per category. The label column is fixed so every
+            set of chips starts on the same vertical line instead of each row
+            beginning wherever its own label happened to end. */}
+        <motion.div layout className="mt-6">
+          <AnimatePresence mode="popLayout" initial={false}>
+            {visible.map((group) => (
+              <motion.div
+                key={group.title}
+                layout
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.18, ease: EASE_OUT }}
+                className="grid gap-x-8 gap-y-3 border-t border-line py-2.5 md:grid-cols-[12rem_1fr]"
+              >
+                <h3 className="font-mono text-sm text-accent">{group.title}</h3>
+                <div className="flex flex-wrap gap-2">
+                  {group.items.map((item) => (
+                    <Chip key={group.title + "/" + item.name} item={item} />
+                  ))}
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </motion.div>
+
+        <p
+          aria-live="polite"
+          className="border-t border-line pt-3 font-mono text-[11px] text-faint"
+        >
+          {count} {count === 1 ? "entry" : "entries"}
+          {filter === ALL ? " across " + groups.length + " categories" : ""}
+        </p>
+      </div>
     </Section>
   );
 };

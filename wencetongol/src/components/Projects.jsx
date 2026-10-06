@@ -1,22 +1,8 @@
 import React, { useCallback, useState } from "react";
-import { motion } from "framer-motion";
-import { FiArrowUpRight } from "react-icons/fi";
+import { TbArrowUpRight, TbChevronRight, TbArrowsExchange, TbBraces, TbBrandOauth, TbBuildingBank, TbCoins, TbFileCheck, TbFileText, TbPlugConnected, TbServer2, TbTopologyStar3 } from "react-icons/tb";
 import { SiClaude, SiZoho } from "react-icons/si";
-import {
-  TbArrowsExchange,
-  TbBraces,
-  TbBrandOauth,
-  TbBuildingBank,
-  TbFileCheck,
-  TbCoins,
-  TbFileText,
-  TbMaximize,
-  TbPlugConnected,
-  TbServer2,
-  TbTopologyStar3,
-} from "react-icons/tb";
+import { motion } from "framer-motion";
 import Section from "./Section";
-import ProjectDiagram from "./ProjectDiagram";
 import ProjectModal from "./ProjectModal";
 import { fadeUp, stagger, viewportOnce } from "../lib/motion";
 
@@ -39,7 +25,7 @@ const professional = [
     role: "CRM Developer Associate",
     year: "2026",
     summary:
-      "A runnable FIX 4.4 order-routing service connecting an external asset manager to a private bank through the Broadridge/NYFIX hub, built against the bank's Rules of Engagement — pre-trade validation, a persist-before-send pipeline, session recovery, and a tamper-evident audit trail.",
+      "A runnable FIX 4.4 order-routing service connecting an external asset manager to a private bank through the Broadridge/NYFIX hub, built against the bank's Rules of Engagement: pre-trade validation, a persist-before-send pipeline, session recovery, and a tamper-evident audit trail.",
     tech: [
       "Python",
       "FIX 4.4",
@@ -60,7 +46,7 @@ const professional = [
     },
     points: [
       "Engineered a runnable FIX 4.4 order-routing service connecting an external asset manager to a private bank via the Broadridge/NYFIX hub, conforming to the bank's FIX Rules of Engagement with pre-trade validation and a persist-before-send order pipeline.",
-      "Implemented resilience and security — auto-reconnect with Order Status reconciliation, sequence gap-fill recovery, idempotent order handling, mutual-TLS transport, and a tamper-evident SHA-256 hash-chained audit trail.",
+      "Implemented resilience and security: auto-reconnect with Order Status reconciliation, sequence gap-fill recovery, idempotent order handling, mutual-TLS transport, and a tamper-evident SHA-256 hash-chained audit trail.",
       "Evaluated production FIX engines (QuickFIX/J vs quickfix), added outbound rate-limiting and a Prometheus metrics/alerting endpoint, and proved the system end-to-end against a bank/NYFIX simulator with a 58-test automated suite.",
     ],
   },
@@ -71,7 +57,7 @@ const professional = [
     role: "CRM Developer Associate",
     year: "2026",
     summary:
-      "Three Model Context Protocol connectors on Azure that expose enterprise systems to AI assistants under per-user identity and audit control — Microsoft Graph mail search, Purview eDiscovery, and Bexio accounting — each on least-privilege scopes with no long-lived secrets.",
+      "Three Model Context Protocol connectors on Azure that expose enterprise systems to AI assistants under per-user identity and audit control. Microsoft Graph mail search, Purview eDiscovery, and Bexio accounting, each on least-privilege scopes with no long-lived secrets.",
     tech: [
       "Node.js",
       "Microsoft Azure",
@@ -120,7 +106,7 @@ const professional = [
     role: "IT Intern → CRM Developer Associate",
     year: "2026",
     summary:
-      "End-to-end automation of the Financial Planning Report in Zoho: a Writer template driven by a Deluge function that maps CRM client records into a finished, adviser-ready document — extended across two regulatory regimes, each with its own template and business logic.",
+      "End-to-end automation of the Financial Planning Report in Zoho: a Writer template driven by a Deluge function that maps CRM client records into a finished, adviser-ready document, extended across two regulatory regimes, each with its own template and business logic.",
     tech: ["Zoho CRM", "Zoho Writer", "Zoho Deluge", "Document automation"],
     diagram: {
       nodes: [
@@ -132,9 +118,9 @@ const professional = [
       footnote: "two regulatory regimes · conditional sections and pages",
     },
     points: [
-      "Built the Financial Planning Report (FPR) generator end to end — a Zoho Writer template covering report layout, sections, field placement, and conditional pages, driven by a Deluge function that maps Zoho CRM client records into the finished document.",
+      "Built the Financial Planning Report (FPR) generator end to end: a Zoho Writer template covering report layout, sections, field placement, and conditional pages, driven by a Deluge function that maps Zoho CRM client records into the finished document.",
       "Mapped CRM fields to Writer merge fields and validated the output against the existing Excel-based reports, correcting compounding and annual-versus-monthly calculations, and reviewing logs for template and computation faults.",
-      "Generated beta reports across multiple client records rather than a single sample, and worked around Zoho Writer limits — chart configuration constraints and page breaks that produced blank pages.",
+      "Generated beta reports across multiple client records rather than a single sample, and worked around Zoho Writer limits, chart configuration constraints and page breaks that produced blank pages.",
       "Revised retirement analysis and social retirement benefit handling on adviser feedback, separating automated values from those needing manual adviser input, then documented the template and function for handover.",
     ],
   },
@@ -145,7 +131,7 @@ const professional = [
     role: "IT Intern → CRM Developer Associate",
     year: "2026",
     summary:
-      "Automated generation of client investment proposals in Zoho, assembling portfolio structure, holdings, ISIN, KIID and factsheet data out of CRM into adviser-ready output — including multi-currency totals converted back to each holding's own currency rather than the account's.",
+      "Automated generation of client investment proposals in Zoho, assembling portfolio structure, holdings, ISIN, KIID and factsheet data out of CRM into adviser-ready output, including multi-currency totals converted back to each holding's own currency rather than the account's.",
     tech: [
       "Zoho CRM",
       "Zoho Writer",
@@ -163,7 +149,7 @@ const professional = [
       footnote: "portfolio · holdings · property · pension sections",
     },
     points: [
-      "Analysed the investment proposal workflow end to end — portfolio structure, holdings, and the output advisers expect — then mapped the data fields needed to generate it.",
+      "Analysed the investment proposal workflow end to end, covering portfolio structure, holdings, and the output advisers expect, then mapped the data fields needed to generate it.",
       "Mapped investment holdings, ISIN, KIID, and factsheet data across related Zoho CRM modules into the proposal template, so a proposal assembles from records already on file instead of manual re-entry.",
       "Validated the calculations behind the cash, investments, medium-term investments, property, and pension sections against the existing Excel references, correcting compounding and annual-versus-monthly errors.",
       "Fixed multi-currency handling so total asset values convert back to each holding's original currency rather than reporting everything in the account currency, and built multi-currency test cases before sign-off.",
@@ -197,7 +183,7 @@ const personal = [
       { src: BH5, alt: "Booking step three: review and QR downpayment" },
     ],
     points: [
-      "Built a three-step booking flow — barber and service, then date and time, then review and checkout — with each step gated on the one before it.",
+      "Built a three-step booking flow: barber and service, then date and time, then review and checkout, with each step gated on the one before it.",
       "Modelled pricing per barber rather than per service, so the same cut carries a different price and downpayment depending on whose chair it is.",
       "Generated live availability per barber in 15-minute slots, split across morning and afternoon, with service duration and buffers taken off the open times.",
       "Held chairs on a 20% downpayment paid by QR through GCash, Maya, or a bank app, confirmed automatically, with the balance settled at the shop.",
@@ -229,137 +215,100 @@ const personal = [
   },
 ];
 
-const VISIBLE_TAGS = 3;
+// Row per project, with the project's own image sitting at the right-hand end
+// of its row. The 2x3 card grid this replaced ran to two full screens and gave
+// every project identical weight; a list scans in one pass and each row still
+// carries its own picture.
 
-const TechTags = ({ items }) => (
-  <div className="mt-3 flex h-6 gap-2 overflow-hidden">
-    {items.slice(0, VISIBLE_TAGS).map((item) => (
-      <span
-        key={item}
-        className="shrink-0 rounded border border-line bg-surface-2 px-2 py-0.5 font-mono text-[11px] whitespace-nowrap text-faint"
-      >
-        {item}
-      </span>
-    ))}
-    {items.length > VISIBLE_TAGS && (
-      <span className="shrink-0 rounded border border-line px-2 py-0.5 font-mono text-[11px] text-faint">
-        +{items.length - VISIBLE_TAGS}
+const Thumb = ({ project }) => (
+  <span className="hidden h-16 w-28 shrink-0 overflow-hidden rounded-lg border border-line bg-canvas-2 sm:block">
+    {project.images ? (
+      <img
+        src={project.images[0].src}
+        alt={project.images[0].alt}
+        loading="lazy"
+        className="h-full w-full object-cover object-top grayscale transition-[filter,transform] duration-500 group-hover:scale-[1.04] group-hover:grayscale-0 motion-reduce:transition-none"
+      />
+    ) : (
+      // Client work has a generated diagram rather than a screenshot. The full
+      // diagram does not survive being shrunk to this size -- the labels pile
+      // on top of each other -- so the thumbnail keeps only its icons and the
+      // path between them. The labelled version is in the dialog.
+      <span className="flex h-full w-full items-center justify-center gap-1 bg-accent-soft px-2">
+        {project.diagram.nodes.map((node, index) => (
+          <React.Fragment key={node.label}>
+            {index > 0 && (
+              <TbChevronRight className="shrink-0 text-accent/40" size={10} />
+            )}
+            <node.Icon className="shrink-0 text-accent" size={15} />
+          </React.Fragment>
+        ))}
       </span>
     )}
-  </div>
-);
-
-const Cover = ({ project }) => (
-  <div className="relative h-44 shrink-0 overflow-hidden border-b border-line bg-canvas-2">
-    {/* Greyscale at rest so screenshots do not fight the palette; colour and a
-        slow push-in as the card is hovered. */}
-    <img
-      src={project.images[0].src}
-      alt={project.images[0].alt}
-      className="h-full w-full object-cover object-top opacity-90 grayscale transition-[transform,filter,opacity] duration-500 group-hover:scale-[1.03] group-hover:opacity-100 group-hover:grayscale-0 motion-reduce:transition-none"
-    />
-    <span className="pointer-events-none absolute inset-0 bg-gradient-to-t from-canvas-2/70 via-transparent to-transparent" />
-    <span className="pointer-events-none absolute right-3 bottom-3 inline-flex items-center gap-1.5 rounded-md border border-line bg-canvas-2/90 px-2 py-1 font-mono text-[10px] text-muted backdrop-blur-sm transition-colors group-hover:border-accent/50 group-hover:text-accent">
-      <TbMaximize />
-      {project.images.length} shots
-    </span>
-  </div>
+  </span>
 );
 
 const Projects = () => {
   const [active, setActive] = useState(null);
   const close = useCallback(() => setActive(null), []);
 
-  // The whole card is clickable for the mouse; the button inside it is what
-  // keyboards and screen readers use, so the card keeps its heading semantics
-  // instead of collapsing into a role="button".
-  const card = (project) => (
-    <motion.article
-      key={project.name}
-      variants={fadeUp}
-      onClick={() => setActive(project)}
-      className="card-edge pressable group flex cursor-pointer flex-col overflow-hidden rounded-xl border border-line bg-surface transition-[transform,border-color] duration-200 hover:border-accent/40 motion-safe:hover:-translate-y-0.5"
-    >
-      {project.images ? (
-        <Cover project={project} />
-      ) : (
-        <div className="shrink-0 border-b border-line">
-          <ProjectDiagram {...project.diagram} />
-        </div>
-      )}
-
-      <div className="flex flex-1 flex-col p-5">
-        <div className="flex items-baseline justify-between gap-3">
-          <h4 className="line-clamp-2 min-h-12 text-base font-semibold text-fg">
-            {project.name}
-          </h4>
-          <span className="shrink-0 font-mono text-xs whitespace-nowrap text-faint">
-            {project.year ?? project.meta}
+  const row = (project) => (
+    <motion.li key={project.name} variants={fadeUp} className="min-w-0">
+      <button
+        type="button"
+        onClick={() => setActive(project)}
+        className="group flex w-full min-w-0 items-center gap-5 border-t border-line py-4 text-left transition-colors hover:border-accent/40"
+      >
+        <span className="min-w-0 flex-1">
+          <span className="flex items-baseline justify-between gap-3">
+            <span className="min-w-0 text-[1.0625rem] font-semibold tracking-[-0.01em] text-fg transition-colors group-hover:text-accent sm:truncate">
+              {project.name}
+            </span>
+            <span className="shrink-0 font-mono text-xs text-faint">
+              {project.year ?? project.meta}
+            </span>
           </span>
-        </div>
-        <p className="mt-0.5 line-clamp-1 text-sm text-accent">
-          {project.subtitle}
-        </p>
+          <span className="mt-1 block text-sm text-muted sm:truncate">
+            {project.subtitle}
+          </span>
+        </span>
 
-        {/* Clamped so every card in a row ends up the same height regardless
-            of how long the summary runs. */}
-        <p className="mt-2.5 line-clamp-3 min-h-16 text-[13px] leading-relaxed text-muted">
-          {project.summary}
-        </p>
+        <Thumb project={project} />
 
-        <TechTags items={project.tech} />
-
-        <div className="mt-4 flex-1" />
-        <button
-          type="button"
-          onClick={(event) => {
-            event.stopPropagation();
-            setActive(project);
-          }}
-          className="inline-flex items-center gap-1.5 self-start font-mono text-xs text-muted transition-colors group-hover:text-accent"
-        >
-          View details <FiArrowUpRight />
-        </button>
-      </div>
-    </motion.article>
+        <TbArrowUpRight
+          className="shrink-0 text-faint transition-[transform,color] duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-accent"
+          size={16}
+        />
+      </button>
+    </motion.li>
   );
 
   return (
-    <Section id="projects" label="projects" title="Things I've built">
-      <h3 className="font-mono text-xs tracking-[0.2em] text-accent">
-        personal projects
-      </h3>
-
+    <Section id="projects" title="Things I've built">
       <motion.div
-        variants={stagger(0.06)}
+        variants={stagger(0.05)}
         initial="hidden"
         whileInView="show"
         viewport={viewportOnce}
-        className="mt-5 grid gap-6 md:grid-cols-2"
+        className="min-w-0"
       >
-        {personal.map(card)}
-      </motion.div>
-
-      <div className="mt-14 flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between">
         <h3 className="font-mono text-xs tracking-[0.2em] text-accent">
-          MWC Group projects
+          personal projects
         </h3>
-        {/* Says why these carry diagrams where the personal work above carries
-            screenshots. Framed as discretion, which is the point: this work
-            runs on client data. */}
-        <p className="font-mono text-[11px] text-faint">
-          Screenshots withheld — client and firm systems
-        </p>
-      </div>
+        <ul className="mt-3">{personal.map(row)}</ul>
 
-      <motion.div
-        variants={stagger(0.06)}
-        initial="hidden"
-        whileInView="show"
-        viewport={viewportOnce}
-        className="mt-5 grid gap-6 md:grid-cols-2"
-      >
-        {professional.map(card)}
+        <div className="mt-10 flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
+          <h3 className="font-mono text-xs tracking-[0.2em] text-accent">
+            MWC Group projects
+          </h3>
+          {/* Says why these carry diagrams where the personal work above
+              carries screenshots. Framed as discretion, which is the point:
+              this work runs on client data. */}
+          <p className="font-mono text-[11px] text-faint">
+            Screenshots withheld, client and firm systems
+          </p>
+        </div>
+        <ul className="mt-3">{professional.map(row)}</ul>
       </motion.div>
 
       <ProjectModal project={active} onClose={close} />

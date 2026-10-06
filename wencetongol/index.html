@@ -1,14 +1,19 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="no-js">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Wence Tongol — Full-Stack Developer</title>
+
+    <!-- The previous domain still redirects here. Without this, both can be
+         indexed and the ranking signal is split across two URLs. Change this,
+         og:url and sitemap.xml together if the site ever moves. -->
+    <link rel="canonical" href="https://wencetongol.vercel.app/" />
+    <title>Wence Tongol, Full-Stack Developer</title>
     <meta
       name="description"
-      content="Full-stack developer working mainly in TypeScript — Next.js and React interfaces, the APIs that serve them, and the PostgreSQL databases behind both, plus the integrations that connect applications to AI tools."
+      content="Full-stack developer working mainly in TypeScript. Next.js and React interfaces, the APIs that serve them, and the PostgreSQL databases behind both, plus the integrations that connect applications to AI tools."
     />
     <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
     <meta name="theme-color" content="#faf9f7" media="(prefers-color-scheme: light)" />
@@ -16,10 +21,10 @@
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Wence Benierem Tongol" />
     <meta property="og:locale" content="en_PH" />
-    <meta property="og:title" content="Wence Benierem Tongol — Full-Stack Developer" />
+    <meta property="og:title" content="Wence Benierem Tongol, Full-Stack Developer" />
     <meta
       property="og:description"
-      content="CRM automation, MCP connectors on Azure, and REST integrations secured with OAuth 2.0."
+      content="Next.js and React interfaces, the APIs behind them, and the automation that connects both to AI tools."
     />
     <meta property="og:url" content="https://wencetongol.vercel.app/" />
 
@@ -31,20 +36,87 @@
     <meta property="og:image:height" content="630" />
     <meta
       property="og:image:alt"
-      content="Wence Benierem Tongol — CRM Developer, Integrations &amp; Automation"
+      content="Wence Benierem Tongol, Full-Stack Developer"
     />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Wence Benierem Tongol — Full-Stack Developer" />
+    <meta name="twitter:title" content="Wence Benierem Tongol, Full-Stack Developer" />
     <meta
       name="twitter:description"
-      content="CRM automation, MCP connectors on Azure, and REST integrations secured with OAuth 2.0."
+      content="Next.js and React interfaces, the APIs behind them, and the automation that connects both to AI tools."
     />
     <meta name="twitter:image" content="https://wencetongol.vercel.app/og-image.png" />
     <meta
       name="twitter:image:alt"
-      content="Wence Benierem Tongol — CRM Developer, Integrations &amp; Automation"
+      content="Wence Benierem Tongol, Full-Stack Developer"
     />
+
+    <!-- Tells Google that this page IS the person, rather than leaving it to
+         infer the link from body text. sameAs is what ties the name to the
+         accounts that corroborate it. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Wence Benierem Tongol",
+        "alternateName": "Wence Tongol",
+        "url": "https://wencetongol.vercel.app/",
+        "image": "https://wencetongol.vercel.app/og-image.png",
+        "jobTitle": "Full-Stack Developer",
+        "email": "mailto:tongolwey@gmail.com",
+        "worksFor": {
+          "@type": "Organization",
+          "name": "Manentia Enterprise Support PH Inc."
+        },
+        "alumniOf": {
+          "@type": "CollegeOrUniversity",
+          "name": "Pampanga State University"
+        },
+        "address": {
+          "@type": "PostalAddress",
+          "addressRegion": "Pampanga",
+          "addressCountry": "PH"
+        },
+        "knowsAbout": [
+          "TypeScript",
+          "Next.js",
+          "React",
+          "Node.js",
+          "PostgreSQL",
+          "Microsoft Azure",
+          "REST APIs",
+          "OAuth 2.0",
+          "Zoho CRM",
+          "Business process automation"
+        ],
+        "sameAs": [
+          "https://github.com/codew3y",
+          "https://www.linkedin.com/in/wence-tongol-32a968393/"
+        ]
+      }
+    </script>
+
+    <!-- Hides the crawler fallback the moment JavaScript is available, before
+         anything paints, so a visitor never sees it flash. A crawler that does
+         not run JS keeps it and gets real text instead of an empty body. -->
+    <style>
+      .js #seo-fallback { display: none; }
+    </style>
+    <script>
+      document.documentElement.className = "js";
+    </script>
+
+    <!-- Restores the folded state of the left rail before first paint, so the
+         content column does not start at one width and jump to another. -->
+    <script>
+      (function () {
+        try {
+          if (localStorage.getItem("rail-collapsed") === "1") {
+            document.documentElement.style.setProperty("--rail", "4.75rem");
+          }
+        } catch (e) {}
+      })();
+    </script>
 
     <!-- Applies the stored/system theme before first paint so there is no flash. -->
     <script>
@@ -64,6 +136,65 @@
   </head>
   <body>
     <div id="root"></div>
+
+    <!-- Crawler fallback.
+         The app paints everything from JavaScript, so a client that does not
+         run it receives an empty body: no name, no headings, no text. Google
+         does render JS, but on a slower second pass, and most other crawlers
+         and link-preview bots do not render it at all. This block is the same
+         information the page states once it loads, in plain HTML, and it is
+         hidden before first paint wherever JavaScript is available. -->
+    <div id="seo-fallback">
+      <h1>Wence Benierem Tongol</h1>
+      <p><strong>Full-Stack Developer</strong>, Pampanga, Philippines</p>
+
+      <p>
+        Wence Tongol is a full-stack developer working mainly in TypeScript. He
+        builds Next.js and React interfaces, the APIs that serve them, and the
+        PostgreSQL databases behind both, as well as the integrations that
+        connect applications to AI tools.
+      </p>
+
+      <h2>Experience</h2>
+      <p>
+        CRM Developer Associate at Manentia Enterprise Support PH Inc., building
+        business automation: Zoho CRM workflows that turn records into finished
+        client documents, Model Context Protocol connectors on Microsoft Azure,
+        and REST integrations secured with OAuth 2.0.
+      </p>
+
+      <h2>Projects</h2>
+      <ul>
+        <li>BarberHouse, a barbershop booking website</li>
+        <li>VistaVR, a virtual reality eye testing application</li>
+        <li>JB FIX System, a private-bank order-routing connector (FIX 4.4)</li>
+        <li>Enterprise MCP Connectors, identity-aware integrations on Azure</li>
+        <li>Financial Planning Report Automation, CRM-driven document generation</li>
+        <li>Investment Proposal Automation, portfolio proposals from CRM data</li>
+      </ul>
+
+      <h2>Technical stack</h2>
+      <p>
+        JavaScript, TypeScript, Node.js, Python, React, Next.js, Tailwind CSS,
+        PostgreSQL, MySQL, MongoDB, Supabase, Microsoft Azure, OAuth 2.0,
+        Microsoft Graph, Model Context Protocol, REST APIs, Docker, Git,
+        GitHub Actions, Postman, PowerShell.
+      </p>
+
+      <h2>Background</h2>
+      <p>
+        Bachelor of Science in Information Technology, Pampanga State
+        University, 2022 to 2026.
+      </p>
+
+      <h2>Contact</h2>
+      <p>
+        <a href="mailto:tongolwey@gmail.com">tongolwey@gmail.com</a> &middot;
+        <a href="https://github.com/codew3y" rel="me">GitHub</a> &middot;
+        <a href="https://www.linkedin.com/in/wence-tongol-32a968393/" rel="me">LinkedIn</a>
+      </p>
+    </div>
+
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

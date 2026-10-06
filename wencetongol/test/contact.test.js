@@ -109,7 +109,7 @@ test("trims surrounding whitespace off the fields", async () => {
 
 test("uses the subject when given and falls back when not", async () => {
   const withSubject = await call("POST", { ...valid, subject: "Role" });
-  assert.equal(withSubject.sent.body.subject, "Portfolio — Role");
+  assert.equal(withSubject.sent.body.subject, "Portfolio: Role");
 
   const without = await call("POST", valid);
   assert.equal(without.sent.body.subject, "Portfolio message from Jane Cruz");

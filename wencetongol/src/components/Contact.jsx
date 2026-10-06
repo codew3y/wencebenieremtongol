@@ -1,36 +1,28 @@
 import React, { useState } from "react";
+import { TbAlertCircle, TbCheck, TbCornerUpLeft, TbLoader2, TbMail, TbMapPin, TbSend } from "react-icons/tb";
+import { SiFacebook, SiGithub, SiLinkedin } from "react-icons/si";
 import { AnimatePresence, motion } from "framer-motion";
-import { FaFacebookF, FaGithub, FaLinkedinIn } from "react-icons/fa";
-import { HiOutlineMail } from "react-icons/hi";
-import {
-  FiAlertCircle,
-  FiCheck,
-  FiCornerUpLeft,
-  FiLoader,
-  FiMapPin,
-  FiSend,
-} from "react-icons/fi";
 import Section from "./Section";
 import PhilippinesMap from "./PhilippinesMap";
 
 const details = [
   {
-    icon: <HiOutlineMail />,
+    icon: <TbMail />,
     label: "tongolwey@gmail.com",
     href: "mailto:tongolwey@gmail.com",
   },
-  { icon: <FiMapPin />, label: "Pampanga, Philippines", href: null },
+  { icon: <TbMapPin />, label: "Pampanga, Philippines", href: null },
 ];
 
 const socials = [
-  { icon: <FaGithub />, href: "https://github.com/codew3y/", label: "GitHub" },
+  { icon: <SiGithub />, href: "https://github.com/codew3y/", label: "GitHub" },
   {
-    icon: <FaLinkedinIn />,
+    icon: <SiLinkedin />,
     href: "https://www.linkedin.com/in/wence-tongol-32a968393/",
     label: "LinkedIn",
   },
   {
-    icon: <FaFacebookF />,
+    icon: <SiFacebook />,
     href: "https://www.facebook.com/share/1AKQEk1AEq/?mibextid=wwXIfr/",
     label: "Facebook",
   },
@@ -96,7 +88,6 @@ const Contact = () => {
   return (
     <Section
       id="contact"
-      label="contact"
       title="Get in touch"
       intro="Have a question or an opportunity? Send a message and I'll get back to you."
     >
@@ -171,14 +162,10 @@ const Contact = () => {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="card-edge overflow-hidden rounded-2xl border border-line bg-surface"
         >
-          {/* Card header echoes the section headers: mono label, hairline rule. */}
-          <div className="flex items-center gap-4 border-b border-line px-6 py-4 md:px-8">
-            <p className="font-mono text-xs tracking-[0.2em] text-accent">
-              send a message
-            </p>
-            <span className="h-px flex-1 bg-line" />
-          </div>
-
+          {/* No label strip here any more. It mirrored the mono eyebrow every
+              section used to open with, and with those gone it was the only
+              one left on the page -- an echo of something that is no longer
+              there. The section heading already says what this is. */}
           <div className="p-6 md:p-8">
             <AnimatePresence mode="wait" initial={false}>
               {status === "sent" ? (
@@ -191,12 +178,12 @@ const Contact = () => {
                   className="flex flex-col items-center gap-4 py-10 text-center"
                 >
                   <span className="grid h-12 w-12 place-items-center rounded-full border border-accent/40 bg-accent-soft text-xl text-accent">
-                    <FiCheck />
+                    <TbCheck />
                   </span>
                   <div>
                     <p className="font-semibold text-fg">Message sent</p>
                     <p className="mt-1 text-sm text-muted">
-                      Thanks for reaching out — I'll reply to the address you
+                      Thanks for reaching out. I'll reply to the address you
                       gave me.
                     </p>
                   </div>
@@ -205,7 +192,7 @@ const Contact = () => {
                     onClick={() => setStatus("idle")}
                     className="pressable inline-flex items-center gap-2 rounded-lg border border-line px-4 py-2 font-mono text-xs text-muted transition-colors hover:border-accent/50 hover:text-accent"
                   >
-                    <FiCornerUpLeft />
+                    <TbCornerUpLeft />
                     Send another
                   </button>
                 </motion.div>
@@ -306,7 +293,7 @@ const Contact = () => {
                       role="alert"
                       className="flex items-start gap-2 rounded-lg border border-red-400/30 bg-red-400/5 px-4 py-3 text-sm text-red-400"
                     >
-                      <FiAlertCircle className="mt-0.5 shrink-0" />
+                      <TbAlertCircle className="mt-0.5 shrink-0" />
                       {error}
                     </p>
                   )}
@@ -319,12 +306,12 @@ const Contact = () => {
                     >
                       {sending ? (
                         <>
-                          <FiLoader className="animate-spin" />
+                          <TbLoader2 className="animate-spin" />
                           Sending
                         </>
                       ) : (
                         <>
-                          <FiSend className="transition-transform group-hover:-translate-y-px group-hover:translate-x-px" />
+                          <TbSend className="transition-transform group-hover:-translate-y-px group-hover:translate-x-px" />
                           Send message
                         </>
                       )}

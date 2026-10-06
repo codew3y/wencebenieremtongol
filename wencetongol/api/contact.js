@@ -135,11 +135,11 @@ export default async function handler(req, res) {
   if (await overRateLimit(req)) {
     return res
       .status(429)
-      .json({ error: "That's a few messages in a row — try again in an hour." });
+      .json({ error: "That's a few messages in a row. Try again in an hour." });
   }
 
   const subject = fields.subject
-    ? `Portfolio — ${fields.subject}`
+    ? `Portfolio: ${fields.subject}`
     : `Portfolio message from ${fields.name}`;
   const lines = [
     `From: ${fields.name} <${fields.email}>`,

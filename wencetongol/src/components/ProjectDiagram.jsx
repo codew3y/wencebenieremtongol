@@ -1,11 +1,11 @@
 import React from "react";
-import { motion } from "framer-motion";
 import { TbChevronRight } from "react-icons/tb";
+import { motion } from "framer-motion";
 
 /**
  * Stands in for a screenshot on the client work, which cannot be shown: it draws
  * the request path instead of the interface. Built from the site's own tokens
- * rather than a raster, so it stays sharp at any size and follows the theme —
+ * rather than a raster, so it stays sharp at any size and follows the theme --
  * and nothing that touches client or firm data goes into it.
  *
  * Laid out as a column with the footnote in normal flow rather than absolutely
@@ -21,7 +21,7 @@ const ProjectDiagram = ({
   large = false,
 }) => (
   <div
-    className={`diagram-grid flex w-full flex-col items-center justify-center overflow-hidden bg-canvas-2 px-3 py-4 sm:px-5 ${
+    className={`flex w-full flex-col items-center justify-center overflow-hidden bg-canvas-2 px-3 py-4 sm:px-5 ${
       large ? "gap-5" : "gap-3"
     } ${height}`}
   >
