@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import {
   TbBriefcase,
+  TbFileText,
   TbFolders,
   TbLayoutSidebarLeftCollapse,
   TbLayoutSidebarLeftExpand,
@@ -11,8 +12,10 @@ import {
   TbUser,
   TbX,
 } from "react-icons/tb";
+import { SiGithub, SiLinkedin } from "react-icons/si";
 import { AnimatePresence, motion } from "framer-motion";
 import PokeCounter from "./PokeCounter";
+import ResumeModal from "./ResumeModal";
 import ThemeToggle from "./ThemeToggle";
 import { EASE_OUT } from "../lib/motion";
 import { readPokes, writePokes } from "../lib/pokes";
@@ -28,6 +31,19 @@ const links = [
   { name: "Stack", href: "#skills", Icon: TbStack2 },
   { name: "Background", href: "#education", Icon: TbSchool },
   { name: "Contact", href: "#contact", Icon: TbMail },
+];
+
+// Same three the Contact section lists, in the same order. Kept as plain hrefs
+// rather than imported from Contact.jsx so the rail does not pull a lazy
+// section's module into the first chunk just to read an address.
+const socials = [
+  { label: "GitHub", href: "https://github.com/codew3y/", Icon: SiGithub },
+  {
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/in/wence-tongol-32a968393/",
+    Icon: SiLinkedin,
+  },
+  { label: "Email", href: "mailto:tongolwey@gmail.com", Icon: TbMail },
 ];
 
 const STORAGE_KEY = "rail-collapsed";
@@ -61,6 +77,7 @@ const SideNav = () => {
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState("");
   const [pokes, setPokes] = useState(readPokes);
+  const [resumeOpen, setResumeOpen] = useState(false);
   const [folded, setFolded] = useState(() => {
     try {
       return localStorage.getItem(STORAGE_KEY) === "1";
@@ -269,6 +286,67 @@ const SideNav = () => {
               );
             })}
           </ul>
+
+          {/* Résumé and the profiles. These are actions, not destinations --
+              one opens a dialog, the rest leave the site -- so they sit below
+              the list behind a hairline rather than becoming more sections.
+
+              Dropped entirely when the rail folds: four more icons in a strip
+              that is already six tall would turn the fold into a longer column
+              rather than a simpler one, and every one of them is still in the
+              Contact section. */}
+          <AnimatePresence initial={false}>
+            {!folded && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                // Entering, it waits for the rail to finish widening; leaving,
+                // it goes first so nothing is caught mid-collapse.
+                transition={{
+                  duration: 0.18,
+                  ease: EASE_OUT,
+                  delay: folded ? 0 : 0.14,
+                }}
+                className="mt-3 border-t border-line pt-3"
+              >
+                <button
+                  type="button"
+                  onClick={() => setResumeOpen(true)}
+                  className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 font-mono text-[13px] whitespace-nowrap text-muted transition-colors hover:bg-surface-2 hover:text-accent"
+                >
+                  <TbFileText size={17} aria-hidden="true" className="shrink-0" />
+                  Résumé
+                </button>
+
+                {/* px-1.5, not px-3: these glyphs sit in 32px boxes, so the
+                    link padding above would push the first one past the icon
+                    column the whole rail reads down. */}
+                <ul className="mt-1 flex items-center gap-1 px-1.5">
+                  {socials.map((social) => (
+                    <li key={social.label}>
+                      <a
+                        href={social.href}
+                        aria-label={social.label}
+                        title={social.label}
+                        target={
+                          social.href.startsWith("mailto:") ? undefined : "_blank"
+                        }
+                        rel={
+                          social.href.startsWith("mailto:")
+                            ? undefined
+                            : "noopener noreferrer"
+                        }
+                        className="pressable grid h-8 w-8 place-items-center rounded-lg text-faint transition-colors hover:bg-surface-2 hover:text-accent"
+                      >
+                        <social.Icon size={15} aria-hidden="true" />
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </nav>
 
         <div
@@ -325,9 +403,25 @@ const SideNav = () => {
                 </a>
               </li>
             ))}
+            {/* The drawer has no folded state, so the résumé is simply here. */}
+            <li>
+              <button
+                type="button"
+                onClick={() => {
+                  setOpen(false);
+                  setResumeOpen(true);
+                }}
+                className="flex items-center gap-3 py-2 transition-colors hover:text-accent"
+              >
+                <TbFileText size={16} aria-hidden="true" />
+                Résumé
+              </button>
+            </li>
           </ul>
         )}
       </header>
+
+      <ResumeModal open={resumeOpen} onClose={() => setResumeOpen(false)} />
     </>
   );
 };

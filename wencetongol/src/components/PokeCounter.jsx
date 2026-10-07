@@ -4,7 +4,12 @@ import { AnimatePresence, motion } from "framer-motion";
 import { EASE_OUT } from "../lib/motion";
 
 /**
- * The rail's "pokes this month" button. Press it and the number goes up.
+ * The rail's poke tally and the button that moves it.
+ *
+ * The count is a reading, the pill is the control: keeping them separate is
+ * why this is laid out as a label with a button beside it rather than one
+ * large clickable block, which gave no clue where to press.
+ *
  * Reading and writing the tally lives in lib/pokes.js.
  */
 
@@ -19,12 +24,10 @@ const PokeCounter = ({ count, onPoke, folded }) => {
     onPoke();
   };
 
-  const label = `Poke. ${count} ${count === 1 ? "poke" : "pokes"} this month.`;
-
   const hand = (
     <motion.span
       key={nudge}
-      initial={nudge === 0 ? false : { rotate: -18, scale: 1.15 }}
+      initial={nudge === 0 ? false : { rotate: -20, scale: 1.2 }}
       animate={{ rotate: 0, scale: 1 }}
       transition={{ duration: 0.35, ease: EASE_OUT }}
       className="grid shrink-0 place-items-center"
@@ -35,20 +38,21 @@ const PokeCounter = ({ count, onPoke, folded }) => {
     </motion.span>
   );
 
-  // The number swaps rather than ticks: at this size a count-up would be a
-  // blur, where a single character lifting into place reads clearly.
+  // The number swaps rather than ticks: a count-up at this size would be a
+  // blur, where a value lifting into place reads clearly. Grouped with commas
+  // so it stays readable if it ever runs long.
   const number = (
-    <span className="relative inline-grid h-4 min-w-[1ch] place-items-center overflow-hidden">
+    <span className="relative inline-grid h-5 place-items-center overflow-hidden">
       <AnimatePresence initial={false} mode="wait">
         <motion.span
           key={count}
-          initial={{ y: 10, opacity: 0 }}
+          initial={{ y: 14, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          exit={{ y: -10, opacity: 0 }}
+          exit={{ y: -14, opacity: 0 }}
           transition={{ duration: 0.18, ease: EASE_OUT }}
-          className="tabular-nums text-fg"
+          className="text-sm font-semibold tabular-nums text-fg"
         >
-          {count}
+          {count.toLocaleString()}
         </motion.span>
       </AnimatePresence>
     </span>
@@ -56,32 +60,40 @@ const PokeCounter = ({ count, onPoke, folded }) => {
 
   if (folded) {
     return (
-      <button
-        type="button"
-        onClick={press}
-        title={`${count} pokes this month`}
-        aria-label={label}
-        className="pressable flex w-full flex-col items-center gap-1 rounded-lg py-1 font-mono text-[11px] text-faint transition-colors hover:text-fg"
-      >
-        {hand}
+      <div className="flex flex-col items-center gap-1.5">
+        <button
+          type="button"
+          onClick={press}
+          aria-label={`Poke. ${count} this month.`}
+          title={`${count.toLocaleString()} pokes this month`}
+          className="pressable card-edge grid h-9 w-9 place-items-center rounded-full border border-line bg-surface transition-colors hover:border-accent/50"
+        >
+          {hand}
+        </button>
         {number}
-      </button>
+      </div>
     );
   }
 
   return (
-    <button
-      type="button"
-      onClick={press}
-      aria-label={label}
-      className="pressable group flex w-full items-center gap-2 rounded-lg py-1 font-mono text-[11px] text-faint transition-colors hover:text-fg"
-    >
-      {hand}
-      {number}
-      <span className="transition-colors group-hover:text-muted">
-        pokes this month
-      </span>
-    </button>
+    <div className="flex items-center justify-between gap-2">
+      <div className="min-w-0">
+        <p className="font-mono text-[11px] whitespace-nowrap text-faint">
+          Pokes this month
+        </p>
+        {number}
+      </div>
+
+      <button
+        type="button"
+        onClick={press}
+        aria-label={`Poke. ${count} pokes this month.`}
+        className="pressable card-edge inline-flex shrink-0 items-center gap-1.5 rounded-full border border-line bg-surface py-1.5 pr-3 pl-2.5 font-mono text-xs font-semibold text-fg transition-colors hover:border-accent/50 hover:text-accent"
+      >
+        {hand}
+        Poke
+      </button>
+    </div>
   );
 };
 
