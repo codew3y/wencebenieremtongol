@@ -11,8 +11,11 @@ import {
   TbUser,
   TbX,
 } from "react-icons/tb";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import PokeCounter from "./PokeCounter";
 import ThemeToggle from "./ThemeToggle";
+import { EASE_OUT } from "../lib/motion";
+import { readPokes, writePokes } from "../lib/pokes";
 
 // Order mirrors the page. The ids stay as they are so existing deep links
 // (/#skills, /#education) and anything pointing at them keep resolving; only
@@ -57,6 +60,7 @@ const SideNav = () => {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState("");
+  const [pokes, setPokes] = useState(readPokes);
   const [folded, setFolded] = useState(() => {
     try {
       return localStorage.getItem(STORAGE_KEY) === "1";
@@ -65,6 +69,14 @@ const SideNav = () => {
       return false;
     }
   });
+
+  const poke = useCallback(() => {
+    setPokes((current) => {
+      const next = current + 1;
+      writePokes(next);
+      return next;
+    });
+  }, []);
 
   // Publish the rail width to the page wrapper, and remember the choice.
   useEffect(() => {
@@ -165,11 +177,22 @@ const SideNav = () => {
             aria-expanded={folded ? "false" : "true"}
             className="pressable grid h-8 w-8 place-items-center rounded-lg text-faint transition-colors hover:bg-surface-2 hover:text-accent"
           >
-            {folded ? (
-              <TbLayoutSidebarLeftExpand size={17} />
-            ) : (
-              <TbLayoutSidebarLeftCollapse size={17} />
-            )}
+            <AnimatePresence initial={false} mode="wait">
+              <motion.span
+                key={folded ? "expand" : "collapse"}
+                initial={{ rotate: -90, opacity: 0 }}
+                animate={{ rotate: 0, opacity: 1 }}
+                exit={{ rotate: 90, opacity: 0 }}
+                transition={{ duration: 0.18, ease: EASE_OUT }}
+                className="grid place-items-center"
+              >
+                {folded ? (
+                  <TbLayoutSidebarLeftExpand size={17} />
+                ) : (
+                  <TbLayoutSidebarLeftCollapse size={17} />
+                )}
+              </motion.span>
+            </AnimatePresence>
           </button>
         </div>
 
@@ -208,11 +231,27 @@ const SideNav = () => {
                       aria-hidden="true"
                       className="relative shrink-0"
                     />
-                    {/* Kept in the tree when folded, so the link still has an
-                        accessible name rather than relying on a title. */}
-                    <span className={folded ? "sr-only" : "relative truncate"}>
+                    {/* The label is always in the tree so the link keeps an
+                        accessible name; folded, it collapses to zero width and
+                        fades rather than disappearing in one frame. */}
+                    <motion.span
+                      animate={{
+                        opacity: folded ? 0 : 1,
+                        width: folded ? 0 : "auto",
+                      }}
+                      transition={{
+                        duration: 0.22,
+                        ease: EASE_OUT,
+                        // Widening, the label waits for the rail to make room;
+                        // narrowing, it leaves first so nothing is clipped.
+                        delay: folded ? 0 : 0.12,
+                      }}
+                      className={`relative overflow-hidden whitespace-nowrap ${
+                        folded ? "pointer-events-none" : ""
+                      }`}
+                    >
                       {link.name}
-                    </span>
+                    </motion.span>
 
                     {/* Folded, the label has nowhere to sit, so it appears
                         beside the rail on hover. Pointer-events off so it can
@@ -232,7 +271,12 @@ const SideNav = () => {
           </ul>
         </nav>
 
-        {/* The theme toggle is all that lives down here now. */}
+        <div
+          className={`shrink-0 pb-2 ${folded ? "px-3" : "px-6"}`}
+        >
+          <PokeCounter count={pokes} onPoke={poke} folded={folded} />
+        </div>
+
         <div
           className={`flex shrink-0 items-center border-t border-line py-4 ${
             folded ? "justify-center px-3" : "px-6"
