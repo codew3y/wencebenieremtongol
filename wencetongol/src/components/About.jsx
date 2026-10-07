@@ -17,6 +17,7 @@ const ROW_STAGGER = 0.075;
 // separate facts panel went: it listed the same things twice, one of them a
 // column away from the other.
 const meta = [
+  { key: "also known as", value: "Weywey" },
   { key: "current role", value: "CRM Developer Associate" },
   { key: "company", value: "Manentia Enterprise Support PH Inc." },
   { key: "focus", value: "Full-stack development & automation" },
