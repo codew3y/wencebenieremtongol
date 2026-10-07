@@ -30,43 +30,48 @@
     monospace;
 }
 
-/* Light theme -- the default. Warm ink rather than blue-grey: the old palette
-   was cool-cast (#f6f8fb, #0b1220), which is the default look of every dev
-   template. Warming the neutrals is most of what separates the two. */
+/* Light theme -- the default.
+   
+   Zinc neutrals with an electric-blue accent. The neutrals were warm stone for
+   a long time, which fought every cool accent put on top of them; they are
+   cool now, so the base and the accent finally belong to the same palette.
+   Every pair clears WCAG AA: fg 16.97:1, muted 7.41:1, faint 5.69:1 and the
+   accent 6.42:1 on the light canvas, with the dark side at 16.59, 7.76, 5.45
+   and 7.83. */
 :root {
-  --canvas: #faf9f7;
+  --canvas: #fafafa;
   --canvas-2: #ffffff;
   --surface: #ffffff;
-  --surface-2: #f2f1ee;
-  --line: #e5e3de;
-  --line-strong: #c8c5bd;
-  --fg: #1a1a18;
-  --muted: #57534e;
-  --faint: #6b6660;
-  --accent: #0f766e;
+  --surface-2: #f4f4f5;
+  --line: #e4e4e7;
+  --line-strong: #c7c7cc;
+  --fg: #18181b;
+  --muted: #52525b;
+  --faint: #63636d;
+  --accent: #1d4ed8;
   --accent-fg: #ffffff;
-  --accent-soft: rgb(15 118 110 / 0.1);
-  --glow: rgb(15 118 110 / 0.14);
+  --accent-soft: rgb(29 78 216 / 0.08);
+  --glow: rgb(29 78 216 / 0.12);
   --edge: rgb(255 255 255 / 0.9);
-  --lift: 0 1px 2px rgb(26 26 24 / 0.04), 0 4px 12px -2px rgb(26 26 24 / 0.05);
+  --lift: 0 1px 2px rgb(24 24 27 / 0.04), 0 4px 12px -2px rgb(24 24 27 / 0.05);
   --lift-hover:
-    0 2px 4px rgb(26 26 24 / 0.05), 0 12px 28px -6px rgb(26 26 24 / 0.1);
+    0 2px 4px rgb(24 24 27 / 0.05), 0 12px 28px -6px rgb(24 24 27 / 0.1);
 }
 
 .dark {
-  --canvas: #0a0a0a;
-  --canvas-2: #101011;
+  --canvas: #09090b;
+  --canvas-2: #101013;
   --surface: rgb(255 255 255 / 0.035);
   --surface-2: rgb(255 255 255 / 0.07);
   --line: rgb(255 255 255 / 0.09);
   --line-strong: rgb(255 255 255 / 0.18);
-  --fg: #ededeb;
-  --muted: #a3a09b;
-  --faint: #86827c;
-  --accent: #2dd4bf;
-  --accent-fg: #062b26;
-  --accent-soft: rgb(45 212 191 / 0.12);
-  --glow: rgb(45 212 191 / 0.16);
+  --fg: #eaeaef;
+  --muted: #a1a1aa;
+  --faint: #85858f;
+  --accent: #60a5fa;
+  --accent-fg: #07203f;
+  --accent-soft: rgb(96 165 250 / 0.14);
+  --glow: rgb(96 165 250 / 0.16);
   --edge: rgb(255 255 255 / 0.06);
   --lift: 0 1px 2px rgb(0 0 0 / 0.4);
   --lift-hover: 0 2px 6px rgb(0 0 0 / 0.5), 0 16px 32px -12px rgb(0 0 0 / 0.6);
@@ -202,11 +207,12 @@ p {
    SideNav rewrites when the rail folds, so the page slides with it instead of
    snapping, and the two can never disagree about how wide the rail currently
    is. Below lg the rail is a top bar and the column runs full width. */
-.with-rail {
-  /* Default for the first paint; the inline script in index.html overrides it
+:root {
+  /* Default for the first paint. The inline script in index.html overrides it
      when the visitor last left the rail folded, and SideNav keeps it current
-     after that. Below lg the padding rule never applies, so the value is
-     inert there. */
+     after that -- both write to documentElement's style attribute, which
+     outranks this rule. Below lg the padding rule never applies, so the value
+     is inert there. */
   --rail: 15rem;
 }
 
