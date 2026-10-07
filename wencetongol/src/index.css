@@ -222,3 +222,15 @@ p {
     transition: none;
   }
 }
+
+/* Brand marks in their own colours. The value arrives as a custom property on
+   the icon, so a single class covers every brand without a class per hex.
+   Black marks (Next.js, JWT, Anthropic) carry a second value because pure
+   black disappears against the dark theme. */
+.brand-icon {
+  color: var(--brand);
+}
+
+.dark .brand-icon {
+  color: var(--brand-dark, var(--brand));
+}

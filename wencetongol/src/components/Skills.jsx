@@ -11,38 +11,38 @@ const groups = [
   {
     title: "Languages",
     items: [
-      { name: "JavaScript", Icon: SiJavascript },
-      { name: "TypeScript", Icon: SiTypescript },
-      { name: "Node.js", Icon: SiNodedotjs },
-      { name: "Python", Icon: SiPython },
-      { name: "Zoho Deluge", Icon: SiZoho },
-      { name: "HTML", Icon: SiHtml5 },
-      { name: "CSS", Icon: SiCss3 },
+      { name: "JavaScript", Icon: SiJavascript, color: "#F7DF1E" },
+      { name: "TypeScript", Icon: SiTypescript, color: "#3178C6" },
+      { name: "Node.js", Icon: SiNodedotjs, color: "#5FA04E" },
+      { name: "Python", Icon: SiPython, color: "#3776AB" },
+      { name: "Zoho Deluge", Icon: SiZoho, color: "#E42527" },
+      { name: "HTML", Icon: SiHtml5, color: "#E34F26" },
+      { name: "CSS", Icon: SiCss3, color: "#663399" },
       { name: "SQL", Icon: TbSql },
     ],
   },
   {
     title: "Frontend",
     items: [
-      { name: "ReactJS", Icon: SiReact },
-      { name: "Next.js", Icon: SiNextdotjs },
-      { name: "Tailwind CSS", Icon: SiTailwindcss },
+      { name: "ReactJS", Icon: SiReact, color: "#61DAFB" },
+      { name: "Next.js", Icon: SiNextdotjs, color: "#000000", colorDark: "#ededeb" },
+      { name: "Tailwind CSS", Icon: SiTailwindcss, color: "#06B6D4" },
     ],
   },
   {
     title: "Cloud & Identity",
     items: [
-      { name: "Microsoft Azure", Icon: TbBrandAzure },
+      { name: "Microsoft Azure", Icon: TbBrandAzure, color: "#0078D4" },
       { name: "OAuth 2.0", Icon: TbBrandOauth },
-      { name: "JSON Web Tokens (JWT)", Icon: SiJsonwebtokens },
+      { name: "JSON Web Tokens (JWT)", Icon: SiJsonwebtokens, color: "#000000", colorDark: "#ededeb" },
     ],
   },
   {
     title: "Platforms & APIs",
     items: [
-      { name: "Zoho CRM", Icon: SiZoho },
-      { name: "Zoho Writer", Icon: SiZoho },
-      { name: "Zoho Flow", Icon: SiZoho },
+      { name: "Zoho CRM", Icon: SiZoho, color: "#E42527" },
+      { name: "Zoho Writer", Icon: SiZoho, color: "#E42527" },
+      { name: "Zoho Flow", Icon: SiZoho, color: "#E42527" },
       { name: "Microsoft Graph", Icon: TbChartDots3 },
       { name: "Microsoft Purview eDiscovery", Icon: TbShieldSearch },
       { name: "Model Context Protocol", Icon: TbPlugConnected },
@@ -53,24 +53,24 @@ const groups = [
   {
     title: "Databases",
     items: [
-      { name: "MySQL", Icon: SiMysql },
-      { name: "MongoDB", Icon: SiMongodb },
-      { name: "PostgreSQL", Icon: SiPostgresql },
-      { name: "Supabase", Icon: SiSupabase },
+      { name: "MySQL", Icon: SiMysql, color: "#4479A1" },
+      { name: "MongoDB", Icon: SiMongodb, color: "#47A248" },
+      { name: "PostgreSQL", Icon: SiPostgresql, color: "#4169E1" },
+      { name: "Supabase", Icon: SiSupabase, color: "#3FCF8E" },
       // No Neon mark in this react-icons version; Neon is serverless Postgres,
       // so the Postgres elephant is the honest stand-in.
-      { name: "Neon", Icon: SiPostgresql },
+      { name: "Neon", Icon: SiPostgresql, color: "#4169E1" },
     ],
   },
   {
     title: "Testing & Tooling",
     items: [
-      { name: "Postman", Icon: SiPostman },
-      { name: "PowerShell", Icon: TbBrandPowershell },
-      { name: "Docker", Icon: SiDocker },
-      { name: "Git", Icon: SiGit },
-      { name: "GitHub Actions", Icon: SiGithubactions },
-      { name: "Vitest", Icon: SiVitest },
+      { name: "Postman", Icon: SiPostman, color: "#FF6C37" },
+      { name: "PowerShell", Icon: TbBrandPowershell, color: "#5391FE" },
+      { name: "Docker", Icon: SiDocker, color: "#2496ED" },
+      { name: "Git", Icon: SiGit, color: "#F03C2E" },
+      { name: "GitHub Actions", Icon: SiGithubactions, color: "#2088FF" },
+      { name: "Vitest", Icon: SiVitest, color: "#00FF74" },
     ],
   },
   {
@@ -87,9 +87,9 @@ const groups = [
   {
     title: "AI Tooling",
     items: [
-      { name: "Claude", Icon: SiClaude },
+      { name: "Claude", Icon: SiClaude, color: "#D97757" },
       { name: "Claude Code", Icon: TbTerminal2 },
-      { name: "Claude Cowork", Icon: SiAnthropic },
+      { name: "Claude Cowork", Icon: SiAnthropic, color: "#191919", colorDark: "#ededeb" },
     ],
   },
   {
@@ -121,7 +121,19 @@ const Chip = ({ item }) => (
     transition={{ duration: 0.18, ease: EASE_OUT }}
     className="inline-flex items-center gap-1.5 rounded-lg border border-line bg-canvas-2 px-2.5 py-1 font-mono text-[12px] text-muted transition-colors hover:border-accent/50 hover:text-accent"
   >
-    <item.Icon aria-hidden="true" className="shrink-0 text-[14px] text-accent" />
+    {/* Brand marks keep their own colour; the conceptual Tabler glyphs, which
+        have no brand behind them, stay on the accent. */}
+    <item.Icon
+      aria-hidden="true"
+      className={
+        "shrink-0 text-[14px] " + (item.color ? "brand-icon" : "text-accent")
+      }
+      style={
+        item.color
+          ? { "--brand": item.color, "--brand-dark": item.colorDark }
+          : undefined
+      }
+    />
     {item.name}
   </motion.span>
 );
