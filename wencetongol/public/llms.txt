@@ -1,0 +1,59 @@
+# Wence Benierem Tongol
+
+> Full-stack developer in Pampanga, Philippines, working mainly in TypeScript.
+> Builds Next.js and React interfaces, the APIs that serve them, the PostgreSQL
+> databases behind both, and the integrations that connect applications to AI
+> tools. Also goes by Weywey Tongol.
+
+This is the personal portfolio of Wence Benierem Tongol (also known as Weywey
+Tongol, or Weywey). It is a single page; the links below are sections of it.
+
+The site is a client-rendered React application. A complete plain-HTML summary
+of every section is present in the initial response inside `#seo-fallback`, so
+the content is readable without executing JavaScript.
+
+Currently a CRM Developer Associate at Manentia Enterprise Support PH Inc.,
+building business automation: Zoho CRM workflows that turn records into
+finished client documents, Model Context Protocol connectors on Microsoft
+Azure, and REST integrations secured with OAuth 2.0.
+
+## Sections
+
+- [About](https://wencetongol.vercel.app/#about): Who he is, what the work is, and a link to the résumé.
+- [Experience](https://wencetongol.vercel.app/#experience): Professional roles and what was built in each.
+- [Projects](https://wencetongol.vercel.app/#projects): Six selected projects, with the stack and the problem each solved.
+- [Stack](https://wencetongol.vercel.app/#skills): Technologies grouped by category — languages, frameworks, databases, platforms and APIs, tooling.
+- [Background](https://wencetongol.vercel.app/#education): Education and certifications.
+- [Contact](https://wencetongol.vercel.app/#contact): Email and profiles.
+
+## Projects
+
+- JB FIX System (2026): Private-bank order-routing connector speaking FIX 4.4.
+- Enterprise MCP Connectors (2026): Identity-aware Model Context Protocol integrations on Microsoft Azure — MWC Mail Search, MWC Purview eDiscovery, BexioMCP.
+- Financial Planning Report Automation (2026): CRM-driven document generation in Zoho.
+- Investment Proposal Automation (2026): Portfolio proposals generated from CRM holdings data.
+- [BarberHouse](https://github.com/codew3y/barber-shop-system) (2026): Barbershop booking website.
+- VistaVR: Virtual reality eye testing application.
+
+## Technical stack
+
+JavaScript, TypeScript, Node.js, Python, React, Next.js, Tailwind CSS,
+PostgreSQL, MySQL, MongoDB, Supabase, Microsoft Azure, OAuth 2.0, Microsoft
+Graph, Model Context Protocol, REST APIs, Docker, Git, GitHub Actions, Postman,
+PowerShell.
+
+## Background
+
+Bachelor of Science in Information Technology, Pampanga State University,
+2022 to 2026.
+
+## Contact
+
+- [Email](mailto:tongolwey@gmail.com): tongolwey@gmail.com
+- [GitHub](https://github.com/codew3y): Source for the public projects, including this site.
+- [LinkedIn](https://www.linkedin.com/in/wence-tongol-32a968393/): Professional profile.
+
+## Optional
+
+- [Sitemap](https://wencetongol.vercel.app/sitemap.xml): The site is one page, so this lists a single URL.
+- [robots.txt](https://wencetongol.vercel.app/robots.txt): Everything is public and crawlable.
