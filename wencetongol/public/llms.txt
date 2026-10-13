@@ -32,6 +32,7 @@ Azure, and REST integrations secured with OAuth 2.0.
 - Enterprise MCP Connectors (2026): Identity-aware Model Context Protocol integrations on Microsoft Azure — MWC Mail Search, MWC Purview eDiscovery, BexioMCP.
 - Financial Planning Report Automation (2026): CRM-driven document generation in Zoho.
 - Investment Proposal Automation (2026): Portfolio proposals generated from CRM holdings data.
+- [TechSelect](https://techselect.vercel.app) (2026): Job board for software, web and automation work, with semantic matching on pgvector. [Source](https://github.com/codew3y/niche-job-board).
 - [BarberHouse](https://github.com/codew3y/barber-shop-system) (2026): Barbershop booking website.
 - VistaVR: Virtual reality eye testing application.
 
