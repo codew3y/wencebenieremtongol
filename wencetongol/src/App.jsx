@@ -68,6 +68,12 @@ function App() {
   // reads as intentional rather than a flash. The race is a safety net: if
   // fonts.ready never settles, the site still opens.
   //
+  // The beat is 200ms, not the 800 it was. The hero h1 is this page's LCP
+  // element, so every millisecond the loader holds is added to LCP directly --
+  // measured cold, that hold plus the old 800ms fade put LCP at 3.8s against
+  // a 2.5s threshold. Fonts are the thing actually worth waiting for; the rest
+  // was padding.
+  //
   // Both timers are skipped entirely while the tab is hidden. A background tab
   // has its timers throttled -- to once a minute once it has been hidden a
   // while -- so these two could hold the loader up for minutes on a link
@@ -97,7 +103,7 @@ function App() {
       fonts,
       new Promise((resolve) => setTimeout(resolve, 2500)),
     ]).then(() => {
-      if (!cancelled) hold = setTimeout(open, 800);
+      if (!cancelled) hold = setTimeout(open, 200);
     });
 
     return () => {
@@ -149,7 +155,7 @@ function App() {
             // blank, which is worse than the loader it replaced.
             initial={openedHidden ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, ease: EASE_IN_OUT }}
+            transition={{ duration: 0.4, ease: EASE_IN_OUT }}
           >
             <ErrorBoundary name="chrome">
               <ScrollProgress />

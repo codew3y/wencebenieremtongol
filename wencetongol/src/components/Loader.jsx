@@ -28,7 +28,7 @@ const Loader = () => {
       className="fixed inset-0 z-[100] flex items-center bg-canvas"
       initial={{ opacity: 1 }}
       exit={{ opacity: 0, y: -24 }}
-      transition={{ duration: 0.7, ease: EASE_IN_OUT }}
+      transition={{ duration: 0.45, ease: EASE_IN_OUT }}
     >
       <span className="sr-only">Loading</span>
 
@@ -42,7 +42,7 @@ const Loader = () => {
           <motion.h1
             initial={reduceMotion ? { opacity: 0 } : { y: "110%" }}
             animate={reduceMotion ? { opacity: 1 } : { y: "0%" }}
-            transition={{ duration: 0.9, ease: EASE_OUT, delay: 0.1 }}
+            transition={{ duration: 0.45, ease: EASE_OUT, delay: 0.05 }}
             className="text-[13vw] leading-[0.85] font-semibold tracking-[-0.045em] text-fg sm:text-[9vw]"
           >
             {WORD}
@@ -50,19 +50,23 @@ const Loader = () => {
         </div>
 
         {/* The rule is the only progress indication, and it is honest about
-            being decorative: it draws once, at the pace of the hold. */}
+            being decorative: it draws once, at the pace of the hold.
+
+            The whole intro is timed to complete inside ~650ms, because the
+            hold it used to play against is now 200ms. Choreography longer than
+            the hold is choreography nobody sees. */}
         <motion.div
           aria-hidden="true"
           initial={{ scaleX: 0 }}
           animate={{ scaleX: 1 }}
-          transition={{ duration: 1.6, ease: EASE_IN_OUT, delay: 0.3 }}
+          transition={{ duration: 0.5, ease: EASE_IN_OUT, delay: 0.15 }}
           className="mt-6 h-px w-full origin-center bg-accent"
         />
 
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, ease: EASE_OUT, delay: 0.7 }}
+          transition={{ duration: 0.3, ease: EASE_OUT, delay: 0.3 }}
           className="mt-5 font-mono text-xs tracking-[0.18em] text-faint uppercase"
         >
           Full-stack developer
