@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   TbBriefcase,
   TbFileText,
@@ -18,7 +18,7 @@ import PokeCounter from "./PokeCounter";
 import ResumeModal from "./ResumeModal";
 import ThemeToggle from "./ThemeToggle";
 import { EASE_OUT } from "../lib/motion";
-import { readPokes, writePokes } from "../lib/pokes";
+import { fetchPokes, readPokes, sendPoke, writePokes } from "../lib/pokes";
 
 // Order mirrors the page. The ids stay as they are so existing deep links
 // (/#skills, /#education) and anything pointing at them keep resolving; only
@@ -87,11 +87,39 @@ const SideNav = () => {
     }
   });
 
+  // True once the endpoint has answered with a real figure. Until then the
+  // rail is showing this browser's own tally, and a poke has to keep writing it
+  // so the fallback stays correct on a deploy with no store behind it.
+  const shared = useRef(false);
+
+  // Ask for the shared count once. The local tally is what renders until this
+  // answers, so the rail never shows a 0 that then jumps.
+  useEffect(() => {
+    let cancelled = false;
+    fetchPokes().then((count) => {
+      if (cancelled || count === null) return;
+      shared.current = true;
+      setPokes(count);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const poke = useCallback(() => {
+    // Move the number now and reconcile after: a counter that waits on a round
+    // trip before it budges feels broken, and the press is the whole point.
     setPokes((current) => {
       const next = current + 1;
-      writePokes(next);
+      if (!shared.current) writePokes(next);
       return next;
+    });
+
+    sendPoke().then((count) => {
+      if (count === null) return;
+      shared.current = true;
+      // The server's figure wins -- it has everyone else's pokes in it.
+      setPokes(count);
     });
   }, []);
 

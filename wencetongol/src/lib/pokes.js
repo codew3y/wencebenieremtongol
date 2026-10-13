@@ -1,10 +1,13 @@
-// The theme-toggle tally behind the rail's "pokes this month" line.
+// The shared poke tally behind the rail's "pokes this month" line.
 //
-// It lives in this browser's localStorage, so it is the visitor's own count
-// rather than a shared one: a global tally would need a store behind it, and
-// there is no reason to stand one up for a joke. The month is saved alongside
-// the number so the label stays honest -- a count from September is not this
-// month's, and starts again rather than quietly becoming an all-time total.
+// The real counter lives in Redis behind /api/pokes, so the number is the same
+// for everybody rather than one per browser. localStorage is kept only as the
+// fallback for a deploy with no store configured, and as the first thing shown
+// while the network round trip is in flight -- a rail that renders "0" and then
+// jumps to the real figure reads as a bug.
+//
+// The month is saved alongside the number for the same reason the server keys
+// by month: a count from September is not this month's.
 
 const STORAGE_KEY = "pokes";
 
@@ -32,3 +35,26 @@ export const writePokes = (count) => {
     // Not persisting is survivable; the number still moves this session.
   }
 };
+
+// Resolves to the shared count, or null when there is no store behind the
+// endpoint and the caller should keep using its own tally.
+const ask = async (method) => {
+  try {
+    const response = await fetch("/api/pokes", {
+      method,
+      cache: "no-store",
+      headers: { Accept: "application/json" },
+    });
+    if (!response.ok && response.status !== 429) return null;
+    const data = await response.json();
+    return data.configured && typeof data.count === "number"
+      ? data.count
+      : null;
+  } catch {
+    // Offline, blocked, or running from `vite preview` with no functions.
+    return null;
+  }
+};
+
+export const fetchPokes = () => ask("GET");
+export const sendPoke = () => ask("POST");
