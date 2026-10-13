@@ -11,6 +11,11 @@ import BH2 from "../assets/img/projectsimg/BH2.webp";
 import BH3 from "../assets/img/projectsimg/BH3.webp";
 import BH4 from "../assets/img/projectsimg/BH4.webp";
 import BH5 from "../assets/img/projectsimg/BH5.webp";
+import TS1 from "../assets/img/projectsimg/TS1.webp";
+import TS2 from "../assets/img/projectsimg/TS2.webp";
+import TS3 from "../assets/img/projectsimg/TS3.webp";
+import TS4 from "../assets/img/projectsimg/TS4.webp";
+import TS5 from "../assets/img/projectsimg/TS5.webp";
 import VR1 from "../assets/img/projectsimg/VR1.webp";
 import VR2 from "../assets/img/projectsimg/VR2.webp";
 import VR3 from "../assets/img/projectsimg/VR3.webp";
@@ -159,6 +164,42 @@ const professional = [
 ];
 
 const personal = [
+  {
+    name: "TechSelect",
+    subtitle: "Job Board for Software, Web and Automation Work",
+    category: "Full-stack web development",
+    role: "Developer",
+    year: "2026",
+    summary:
+      "A job board where freelancers are judged on evidence rather than keywords: an external portfolio, a GitHub, or project write-ups in the app. Matching runs semantically in both directions, so a brief finds developers and a developer finds briefs. Anyone may list; clients decide who to hire.",
+    tech: [
+      "Next.js 16",
+      "TypeScript",
+      "Tailwind CSS",
+      "Supabase",
+      "PostgreSQL",
+      "pgvector",
+      "Drizzle ORM",
+      "Zod",
+      "Vitest",
+    ],
+    images: [
+      { src: TS1, alt: "The TechSelect landing page, with an example match" },
+      { src: TS2, alt: "Browsing jobs, with search and filters" },
+      { src: TS3, alt: "Browsing developers, each with rate and skills" },
+      { src: TS4, alt: "A public developer profile" },
+      { src: TS5, alt: "The developer dashboard and its match feed" },
+    ],
+    points: [
+      "Modelled the domain as 20 Postgres tables behind 42 row-level security policies, treating RLS as the authorization boundary rather than the middleware, so a bypassed route still cannot read rows it does not own.",
+      "Built semantic matching on pgvector with Gemini embeddings and re-ranking, scored against a hand-labelled evaluation set so a change to the pipeline can be shown to help rather than assumed to.",
+      "Moved ranking out of the request path entirely: a re-rank measured 238 seconds against a 300-second serverless cap, so rankings are precomputed hourly by a GitHub Action and a page with no cached ranking says so instead of waiting.",
+      "Made every optional integration degrade to an honest empty state rather than an error, and shipped a health endpoint that reports not just which keys are set but whether the service-role key actually works — a gap that had hidden a fortnight of silently failed email.",
+      "Removed the publish gate that required a bio and either a portfolio or two projects: thin profiles now rank badly rather than being refused a hearing, and a test asserts the old constraint stays absent so it cannot return by accident.",
+    ],
+    link: "https://techselect.vercel.app",
+    repo: "https://github.com/codew3y/niche-job-board",
+  },
   {
     name: "BarberHouse",
     subtitle: "Barbershop Booking Website",
