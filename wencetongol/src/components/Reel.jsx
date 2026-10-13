@@ -1,228 +1,217 @@
 import React, { useEffect, useRef, useState } from "react";
+import { TbPlayerPause, TbPlayerPlay } from "react-icons/tb";
+import { REEL_VERSION } from "../lib/reel-version";
 
-/**
- * The hero reel, in the right column.
- *
- * Two cuts exist, one per theme, and the hard part is the swap. Remounting the
- * <video> when the theme changes -- or keying it on the theme -- drops the
- * element, restarts the new file at zero and shows a frame of nothing in
- * between. The theme toggle sits a few hundred pixels from this panel, so that
- * jump is the first thing anyone would notice.
- *
- * So both cuts are mounted and stacked, and the theme only decides which one
- * is opaque. Before the fade begins the incoming video is seeked to the
- * outgoing one's position and started, so the two are showing the same moment
- * of the same reel and the cross-fade reads as the picture recolouring rather
- * than as one video replacing another.
- *
- * Costs are kept down by loading nothing until the panel is near the viewport,
- * by only ever playing the visible cut, and by not fetching the second cut at
- * all until the theme has actually changed once.
- */
-
-const CUTS = {
-  light: {
-    poster: "/videos/light/poster.png",
-    webm: "/videos/light/ads.webm",
-    mp4: "/videos/light/ads.mp4",
-  },
-  dark: {
-    poster: "/videos/dark/poster.png",
-    webm: "/videos/dark/ads.webm",
-    mp4: "/videos/dark/ads.mp4",
-  },
-};
-
-const FADE_MS = 420;
-
-// The theme as the page actually expresses it. ThemeToggle writes both the
-// class and colorScheme on <html> but fires no event, so this reads it
-// directly and watches it with a MutationObserver.
-const readTheme = () => {
-  if (typeof document === "undefined") return "dark";
-  const root = document.documentElement;
-  if (root.classList.contains("dark")) return "dark";
-  const scheme = root.style.colorScheme;
-  if (scheme === "dark" || scheme === "light") return scheme;
-  return window.matchMedia?.("(prefers-color-scheme: dark)").matches
-    ? "dark"
-    : "light";
-};
-
-const prefersReducedMotion = () =>
-  typeof window !== "undefined" &&
-  Boolean(window.matchMedia?.("(prefers-reduced-motion: reduce)").matches);
+const CUTS = ["light", "dark"];
+const FADE_MS = 240;
+const readTheme = () =>
+  document.documentElement.classList.contains("dark") ? "dark" : "light";
+const reducedMotion = () =>
+  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 const Reel = () => {
+  const filmVersion = REEL_VERSION;
   const holder = useRef(null);
-  const lightRef = useRef(null);
-  const darkRef = useRef(null);
-
+  const videos = useRef({});
+  const shownRef = useRef(readTheme());
   const [theme, setTheme] = useState(readTheme);
-  const [reduce, setReduce] = useState(prefersReducedMotion);
-  // A browser with no observer has no way to be clever about this, so it
-  // simply loads; deciding that at init avoids a second render.
+  const [shown, setShown] = useState(readTheme);
+  const [readyTheme, setReadyTheme] = useState(null);
+  const [reduce, setReduce] = useState(reducedMotion);
   const [armed, setArmed] = useState(
     () => typeof IntersectionObserver === "undefined",
   );
-  // The second cut is only fetched once the visitor has toggled, so anyone who
-  // never touches the theme downloads one video rather than two.
-  const [loaded, setLoaded] = useState(() => ({ [readTheme()]: true }));
+  const [visible, setVisible] = useState(
+    () => typeof IntersectionObserver === "undefined",
+  );
+  const [hidden, setHidden] = useState(() => document.hidden);
+  const [playing, setPlaying] = useState(true);
 
-  const refFor = (cut) => (cut === "dark" ? darkRef : lightRef);
-
-  // Follow the page's theme. Marking the new cut as loaded happens here, in
-  // the observer's callback, rather than in an effect reacting to `theme` --
-  // same result, without a second render pass chasing the first.
   useEffect(() => {
     const update = () => {
       const next = readTheme();
       setTheme(next);
-      setLoaded((current) =>
-        current[next] ? current : { ...current, [next]: true },
-      );
     };
     const observer = new MutationObserver(update);
     observer.observe(document.documentElement, {
       attributes: true,
-      attributeFilter: ["class", "style"],
+      attributeFilter: ["class"],
     });
-    const media = window.matchMedia("(prefers-color-scheme: dark)");
-    media.addEventListener("change", update);
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const motion = () => setReduce(media.matches);
+    const visibility = () => setHidden(document.hidden);
+    media.addEventListener("change", motion);
+    document.addEventListener("visibilitychange", visibility);
     return () => {
       observer.disconnect();
-      media.removeEventListener("change", update);
+      media.removeEventListener("change", motion);
+      document.removeEventListener("visibilitychange", visibility);
     };
   }, []);
 
   useEffect(() => {
-    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const update = () => setReduce(media.matches);
-    media.addEventListener("change", update);
-    return () => media.removeEventListener("change", update);
-  }, []);
-
-  // Load only when the panel is near the screen, and play only while it is on
-  // it. A looping video in a scrolled-past hero is a decoded frame every 33ms
-  // for nobody.
-  useEffect(() => {
-    if (reduce) return undefined;
     const node = holder.current;
-    if (!node || typeof IntersectionObserver === "undefined") return undefined;
-
-    const observer = new IntersectionObserver(
+    if (!node) return undefined;
+    if (typeof IntersectionObserver === "undefined") return undefined;
+    const nearby = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) setArmed(true);
-        const element = (theme === "dark" ? darkRef : lightRef).current;
-        if (!element) return;
-        if (entry.isIntersecting) {
-          // A refused play() is normal; the poster stays and nothing breaks.
-          element.play().catch(() => {});
-        } else {
-          element.pause();
-        }
       },
       { rootMargin: "200px" },
     );
+    const onscreen = new IntersectionObserver(
+      ([entry]) => setVisible(entry.isIntersecting),
+      { threshold: 0.1 },
+    );
+    nearby.observe(node);
+    onscreen.observe(node);
+    return () => {
+      nearby.disconnect();
+      onscreen.disconnect();
+    };
+  }, []);
 
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, [reduce, theme]);
-
-  // The swap: match the incoming cut to the outgoing one's position and start
-  // it, so the fade happens between two videos showing the same moment.
   useEffect(() => {
     if (!armed || reduce) return undefined;
-
-    const incoming = (theme === "dark" ? darkRef : lightRef).current;
-    const outgoing = (theme === "dark" ? lightRef : darkRef).current;
+    const incoming = videos.current[theme];
+    const outgoing = videos.current[shownRef.current];
     if (!incoming) return undefined;
-
-    if (outgoing && !outgoing.paused) {
-      const at = outgoing.currentTime;
-      try {
-        if (Number.isFinite(at)) incoming.currentTime = at;
-      } catch {
-        // Seeking past what is buffered throws; zero is still a valid frame
-        // of the same reel, so the fade is still between two matching cuts.
+    // Warm both lightweight cuts near the viewport for a prompt theme switch.
+    // Inserting sources into mounted videos needs explicit resource selection.
+    for (const cut of CUTS) {
+      const video = videos.current[cut];
+      if (video && video.dataset.loaded !== filmVersion) {
+        video.dataset.loaded = filmVersion;
+        video.load();
       }
     }
+    let cancelled = false;
+    const cleanup = [];
+    const waitFor = (event) =>
+      new Promise((resolve) => {
+        const handler = () => {
+          incoming.removeEventListener(event, handler);
+          resolve();
+        };
+        incoming.addEventListener(event, handler, { once: true });
+        cleanup.push(() => incoming.removeEventListener(event, handler));
+      });
+    const sync = async () => {
+      if (incoming.readyState < 1) await waitFor("loadedmetadata");
+      if (cancelled) return;
+      const time = outgoing?.currentTime || 0;
+      if (
+        Number.isFinite(incoming.duration) &&
+        Math.abs(incoming.currentTime - time) > 0.08
+      ) {
+        const seeked = waitFor("seeked");
+        incoming.currentTime = time % incoming.duration;
+        await seeked;
+      }
+      if (cancelled) return;
+      if (incoming.readyState < 3) await waitFor("canplay");
+      if (!cancelled) {
+        shownRef.current = theme;
+        setShown(theme);
+        setReadyTheme(theme);
+      }
+    };
+    sync().catch(() => {});
+    return () => {
+      cancelled = true;
+      cleanup.forEach((remove) => remove());
+    };
+  }, [theme, armed, reduce, filmVersion]);
 
-    incoming.play().catch(() => {});
-
-    // The outgoing cut keeps playing until the fade is over, so there is never
-    // a frozen frame showing underneath the one coming in.
-    const stop = setTimeout(() => {
-      if (outgoing && outgoing !== incoming) outgoing.pause();
-    }, FADE_MS);
-
+  useEffect(() => {
+    const active = videos.current[shown];
+    const inactive = videos.current[shown === "dark" ? "light" : "dark"];
+    if (!active) return undefined;
+    if (reduce || !playing || !visible || hidden) {
+      active.pause();
+      inactive?.pause();
+      return undefined;
+    }
+    active.play().catch(() => {});
+    const stop = setTimeout(() => inactive?.pause(), FADE_MS);
     return () => clearTimeout(stop);
-  }, [theme, armed, reduce, loaded]);
-
-  if (reduce) {
-    return (
-      <div className="card-edge overflow-hidden rounded-[var(--r-container)] border border-line bg-canvas-2">
-        <img
-          src={CUTS[theme].poster}
-          alt="Wence Tongol, full-stack developer. A still from the portfolio reel."
-          width={1920}
-          height={1080}
-          className="block w-full"
-        />
-      </div>
-    );
-  }
+  }, [shown, readyTheme, reduce, playing, visible, hidden, armed, filmVersion]);
 
   return (
     <div
       ref={holder}
-      className="card-edge relative isolate overflow-hidden rounded-[var(--r-container)] border border-line bg-canvas-2"
+      onDragStart={(event) => event.preventDefault()}
+      className="card-edge relative select-none overflow-hidden rounded-[var(--r-container)] border border-line bg-canvas-2"
     >
-      {/* Holds the 16:9 box, so the column never reflows between poster and
-          video or during the swap. */}
-      <div className="relative aspect-video w-full">
-        {Object.keys(CUTS).map((cut) => (
-          <video
-            key={cut}
-            ref={refFor(cut)}
-            muted
-            loop
-            playsInline
-            preload="none"
-            // No browser chrome of any kind. Chrome floats a
-            // picture-in-picture button over a playing video on hover and Edge
-            // adds its "enhance video" menu beside it; both appear without
-            // `controls` ever being set, and both sit on top of a reel that is
-            // meant to read as part of the page rather than as a media player.
-            // The attributes refuse each feature, and pointer-events:none means
-            // the hover that summons them never reaches the element.
-            disablePictureInPicture
-            disableRemotePlayback
-            controlsList="nodownload nofullscreen noremoteplayback noplaybackrate"
-            x-webkit-airplay="deny"
-            poster={CUTS[cut].poster}
-            aria-hidden={cut !== theme}
-            aria-label={
-              cut === theme
-                ? "A looping reel of the portfolio: the work, the projects and the stack"
-                : undefined
-            }
-            style={{ transitionDuration: `${FADE_MS}ms` }}
-            className={`pointer-events-none absolute inset-0 h-full w-full object-cover transition-opacity ease-[cubic-bezier(0.22,1,0.36,1)] ${
-              cut === theme ? "opacity-100" : "opacity-0"
-            }`}
-          >
-            {armed && loaded[cut] && (
-              <>
-                <source src={CUTS[cut].webm} type="video/webm" />
-                <source src={CUTS[cut].mp4} type="video/mp4" />
-              </>
-            )}
-          </video>
-        ))}
+      <div className="relative isolate aspect-video w-full">
+        {/* The requested theme appears immediately while a new cut seeks. */}
+        <img
+          src={`/videos/${theme}/poster-${filmVersion}.png`}
+          alt="Wence Tongol, full-stack developer. Portfolio motion film."
+          aria-hidden={!reduce && readyTheme === theme}
+          draggable={false}
+          width={1920}
+          height={1080}
+          className="pointer-events-none absolute inset-0 block h-full w-full select-none"
+        />
+        {!reduce &&
+          CUTS.map((cut) => (
+            <video
+              key={`${cut}-${filmVersion}`}
+              ref={(node) => {
+                videos.current[cut] = node;
+              }}
+              draggable={false}
+              muted
+              loop
+              playsInline
+              preload={armed ? "auto" : "none"}
+              disablePictureInPicture
+              disableRemotePlayback
+              controlsList="nodownload nofullscreen noremoteplayback noplaybackrate"
+              x-webkit-airplay="deny"
+              poster={`/videos/${cut}/poster-${filmVersion}.png`}
+              aria-hidden={cut !== shown}
+              aria-label={
+                cut === shown
+                  ? "A 30-second motion film: Wence Tongol, web products, enterprise integrations and VistaVR"
+                  : undefined
+              }
+              style={{
+                opacity:
+                  cut === theme && cut === shown && readyTheme === theme
+                    ? 1
+                    : 0,
+                transition: `opacity ${FADE_MS}ms ease`,
+              }}
+              className="pointer-events-none absolute inset-0 h-full w-full object-cover select-none"
+            >
+              {armed && (
+                <>
+                  <source
+                    src={`/videos/${cut}/film-${filmVersion}.webm`}
+                    type="video/webm"
+                  />
+                  <source
+                    src={`/videos/${cut}/film-${filmVersion}.mp4`}
+                    type="video/mp4"
+                  />
+                </>
+              )}
+            </video>
+          ))}
       </div>
+      {!reduce && (
+        <button
+          type="button"
+          onClick={() => setPlaying((value) => !value)}
+          aria-label={playing ? "Pause portfolio film" : "Play portfolio film"}
+          className="pressable absolute top-3 right-3 z-10 grid h-7 w-7 place-items-center rounded-full border border-line bg-canvas-2/90 text-muted transition-colors hover:border-accent hover:text-accent"
+        >
+          {playing ? <TbPlayerPause size={13} /> : <TbPlayerPlay size={13} />}
+        </button>
+      )}
     </div>
   );
 };
-
 export default Reel;

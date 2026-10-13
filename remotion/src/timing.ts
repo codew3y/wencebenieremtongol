@@ -1,16 +1,14 @@
-// All timings in frames at 30 fps. Total 1200 frames = 40 s.
 export const FPS = 30;
 export const WIDTH = 1920;
 export const HEIGHT = 1080;
-
+export const TOTAL_FRAMES = 900;
 export const SCENES = {
-  intro: { from: 0, duration: 150 }, // 0–5 s
-  positioning: { from: 150, duration: 120 }, // 5–9 s
-  stack: { from: 270, duration: 180 }, // 9–15 s
-  projects: { from: 450, duration: 600 }, // 15–35 s (3 × 200)
-  cta: { from: 1050, duration: 150 }, // 35–40 s
+  intro: { from: 0, duration: 120 },
+  blueprint: { from: 120, duration: 120 },
+  techselect: { from: 240, duration: 150 },
+  barberhouse: { from: 390, duration: 150 },
+  systems: { from: 540, duration: 150 },
+  vista: { from: 690, duration: 90 },
+  outro: { from: 780, duration: 120 },
 };
-
-export const PROJECT_DURATION = 200;
-export const EXIT_FRAMES = 12; // every scene leaves with a 0.4 s rise + fade
-export const TOTAL_FRAMES = 1200;
+export const EXIT_FRAMES = 12;

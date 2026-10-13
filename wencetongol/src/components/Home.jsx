@@ -45,11 +45,9 @@ const Home = () => {
       id="home"
       className="mx-auto flex min-h-[100dvh] max-w-6xl flex-col justify-center px-6 pt-24 pb-16"
     >
-      {/* Closer to even than the 1.65:1 it was. The reel needs real width to
-          stay readable, and the statement survives the narrower measure better
-          than the video survives being shrunk. */}
-      <div className="grid items-center gap-14 lg:grid-cols-[1fr_1.05fr] lg:gap-12">
-        <div>
+      {/* Reserve more width for the film so its product previews stay legible. */}
+      <div className="grid items-start gap-14 lg:grid-cols-[0.9fr_1.2fr] lg:gap-10">
+        <div className="flex flex-col lg:self-stretch">
           <motion.p
             variants={rise}
             initial="hidden"
@@ -67,7 +65,7 @@ const Home = () => {
             initial="hidden"
             animate="show"
             custom={1}
-            className="mt-6 text-[2rem] leading-[1.08] font-semibold tracking-[-0.03em] text-balance text-fg sm:text-[2.5rem] lg:text-[3rem]"
+            className="mt-6 text-[2rem] leading-[1.08] font-semibold tracking-[-0.03em] text-balance text-fg sm:text-[2.5rem] lg:text-[2.65rem]"
           >
             I build scalable web applications
             <br />
@@ -113,64 +111,65 @@ const Home = () => {
               About me
             </a>
           </motion.div>
+          {/* Keep the prompt left, aligned with the bottom of the right column. */}
+          <p
+            aria-hidden="true"
+            className="mt-6 flex items-center gap-2 font-mono text-[11px] text-faint lg:mt-auto lg:pt-6"
+          >
+            <span className="text-accent">$</span>
+            <span>{typed}</span>
+            <span
+              className={`inline-block h-3 w-1.5 translate-y-px bg-accent ${
+                done ? "motion-safe:animate-pulse" : ""
+              }`}
+            />
+          </p>
         </div>
 
         {/* The object on the right. It replaced a drawn bank card, which looked
             like something but told a visitor nothing. Three counts instead,
-            every one of them checkable. Gone below lg, where it would only
-            squeeze the statement. */}
-        <div className="hidden lg:block">
+            every one of them checkable. The film stays visible on mobile; the extra
+            statistics appear when the two-column layout has room. */}
+        <div className="flex flex-col lg:self-stretch">
           {/* The reel heads the column: it is the thing that moves, so it goes
               where the eye lands after the statement, with the fixed facts
               settling underneath it. */}
           <Reel />
 
-          {/* What the numbers are attached to. Without it the three counts
+          <div className="hidden lg:mt-auto lg:block">
+            {/* What the numbers are attached to. Without it the three counts
               arrive with nothing introducing them. */}
-          <p className="mt-5 font-mono text-xs tracking-[0.18em] text-accent uppercase">
-            Currently
-          </p>
-          <p className="mt-3 text-lg leading-snug font-semibold tracking-[-0.01em] text-fg">
-            CRM Developer Associate
-          </p>
-          <p className="mt-1 text-sm text-muted">
-            Manentia Enterprise Support PH Inc.
-          </p>
+            <p className="mt-5 font-mono text-xs tracking-[0.18em] text-accent uppercase">
+              Currently
+            </p>
+            <p className="mt-3 text-lg leading-snug font-semibold tracking-[-0.01em] text-fg">
+              CRM Developer Associate
+            </p>
+            <p className="mt-1 text-sm text-muted">
+              Manentia Enterprise Support PH Inc.
+            </p>
 
-          <dl className="mt-5 grid grid-cols-3 gap-px border-y border-line">
-            {STATS.map((stat, index) => (
-              <div key={stat.label} className="py-4">
-                <dt className="sr-only">{stat.label}</dt>
-                <dd>
-                  {/* The figure is read from the sr-only copy; the roll beside
+            <dl className="mt-5 grid grid-cols-3 gap-px border-y border-line">
+              {STATS.map((stat, index) => (
+                <div key={stat.label} className="py-4">
+                  <dt className="sr-only">{stat.label}</dt>
+                  <dd>
+                    {/* The figure is read from the sr-only copy; the roll beside
                       it is decoration and is hidden from assistive tech. */}
-                  <span className="sr-only">{stat.value}</span>
-                  <span className="block text-3xl leading-none font-semibold tracking-[-0.03em] text-fg">
-                    <Odometer value={stat.value} delay={index * 0.12} />
-                  </span>
-                  <span className="mt-2.5 block font-mono text-[10px] tracking-[0.14em] text-faint uppercase">
-                    {stat.label}
-                  </span>
-                </dd>
-              </div>
-            ))}
-          </dl>
+                    <span className="sr-only">{stat.value}</span>
+                    <span className="block text-3xl leading-none font-semibold tracking-[-0.03em] text-fg">
+                      <Odometer value={stat.value} delay={index * 0.12} />
+                    </span>
+                    <span className="mt-2.5 block font-mono text-[10px] tracking-[0.14em] text-faint uppercase">
+                      {stat.label}
+                    </span>
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </div>
         </div>
       </div>
-
-      {/* The prompt keeps its place on the page, just not on the card. */}
-      <p
-        aria-hidden="true"
-        className="mt-14 flex items-center gap-2 font-mono text-[11px] text-faint"
-      >
-        <span className="text-accent">$</span>
-        <span>{typed}</span>
-        <span
-          className={`inline-block h-3 w-1.5 translate-y-px bg-accent ${
-            done ? "motion-safe:animate-pulse" : ""
-          }`}
-        />
-      </p>
 
       {/* A landing screen should say there is more below it. */}
       <motion.a

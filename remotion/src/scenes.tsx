@@ -1,391 +1,453 @@
-import React from 'react';
-import { AbsoluteFill, Sequence, interpolate, useCurrentFrame } from 'remotion';
+import React from "react";
 import {
-  PERSON,
-  POSITIONING_LINES,
-  POSITIONING_ACCENT,
-  PROJECTS,
-  Project,
-  STACK_HEADING,
-  STACK_SUB,
-} from './content';
-import { STACK_ICONS } from './icons';
+  AbsoluteFill,
+  Img,
+  interpolate,
+  staticFile,
+  useCurrentFrame,
+} from "remotion";
 import {
-  BrowserFrame,
-  Chip,
-  EASE_IN_OUT,
-  Eyebrow,
-  Headline,
-  PhoneFrame,
-  SceneShell,
-  ShotCycle,
-  WordReveal,
+  Core,
   ease,
-} from './primitives';
-import { FONT_MONO, FONT_SANS, Tokens } from './theme';
-import { PROJECT_DURATION, SCENES } from './timing';
+  headline,
+  Label,
+  Reveal,
+  Scene,
+  settle,
+} from "./primitives";
+import { FONT_MONO, Tokens } from "./theme";
+import { PROJECTS } from "./content";
+import { ProjectUI } from "./ProjectUI";
+import { TOTAL_FRAMES } from "./timing";
 
-const PAD_X = 180;
+type Props = { t: Tokens };
+const title = (t: Tokens, size = 154): React.CSSProperties => ({
+  ...headline,
+  color: t.fg,
+  fontSize: size,
+});
 
-/* 1 · Intro, 0–5 s ---------------------------------------------------------- */
-export const Intro: React.FC<{ t: Tokens }> = ({ t }) => {
-  const frame = useCurrentFrame();
-  const rule = ease(frame, 58, 30, 0, 1, EASE_IN_OUT);
-  const loc = ease(frame, 72, 18);
+export const Identity: React.FC<
+  Props & { closing?: boolean; globalFrame: number }
+> = ({ t, closing = false, globalFrame }) => {
+  const f = useCurrentFrame();
+  const extra = closing
+    ? ease(f, 0, 16) * (1 - ease(f, 65, 40))
+    : ease(f, 12, 24) * (1 - ease(f, 92, 24));
+  const out = closing ? 0 : ease(f, 110, 10);
   return (
-    <SceneShell duration={SCENES.intro.duration}>
-      <AbsoluteFill style={{ padding: `0 ${PAD_X}px`, justifyContent: 'center' }}>
-        <Eyebrow text={PERSON.title} t={t} start={10} framesPerChar={2} size={26} />
-        <WordReveal
-          text={PERSON.name}
-          start={30}
-          stagger={5}
-          style={{ ...Headline, fontSize: 184, color: t.fg, marginTop: 28 }}
-        />
+    <AbsoluteFill style={{ opacity: 1 - out }}>
+      <div style={{ position: "absolute", left: 116, top: 233 }}>
+        <Label t={t} style={{ color: t.accent, marginBottom: 38 }}>
+          Full-stack developer
+        </Label>
+        <div style={title(t, 214)}>
+          Wence
+          <br />
+          Tongol<span style={{ color: t.accent }}>.</span>
+        </div>
         <div
           style={{
-            marginTop: 44,
-            height: 1,
-            width: 1200 * rule,
+            marginTop: 45,
+            width: 680,
+            height: 2,
             background: t.lineStrong,
           }}
         />
-        <div
-          style={{
-            marginTop: 28,
-            display: 'flex',
-            alignItems: 'center',
-            gap: 16,
-            opacity: loc,
-            transform: `translateY(${(1 - loc) * 12}px)`,
-            fontFamily: FONT_MONO,
-            fontSize: 22,
-            letterSpacing: '0.28em',
-            textTransform: 'uppercase',
-            color: t.muted,
-          }}
-        >
-          <div style={{ width: 10, height: 10, background: t.accent }} />
-          {PERSON.location}
-        </div>
-      </AbsoluteFill>
-    </SceneShell>
-  );
-};
-
-/* 2 · Positioning, 5–9 s ---------------------------------------------------- */
-export const Positioning: React.FC<{ t: Tokens }> = ({ t }) => (
-  <SceneShell duration={SCENES.positioning.duration}>
-    <AbsoluteFill style={{ padding: `0 ${PAD_X}px`, justifyContent: 'center' }}>
-      <Eyebrow text="What I build" t={t} start={2} framesPerChar={2} />
-      <WordReveal
-        text={POSITIONING_LINES}
-        start={12}
-        stagger={2}
-        accentWords={POSITIONING_ACCENT}
-        accent={t.accent}
-        style={{ ...Headline, fontSize: 88, lineHeight: 1.1, color: t.fg, marginTop: 36, maxWidth: 1440 }}
-      />
-    </AbsoluteFill>
-  </SceneShell>
-);
-
-/* 3 · Tech stack, 9–15 s ---------------------------------------------------- */
-export const Stack: React.FC<{ t: Tokens }> = ({ t }) => {
-  const frame = useCurrentFrame();
-  const cols = 4;
-  const cell = { w: 212, h: 168 };
-  const sub = ease(frame, 30, 18);
-  return (
-    <SceneShell duration={SCENES.stack.duration}>
-      <AbsoluteFill
-        style={{
-          padding: `0 ${PAD_X}px`,
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}
-      >
-        <div style={{ width: 560 }}>
-          <Eyebrow text="Stack" t={t} start={2} />
-          <WordReveal
-            text={STACK_HEADING}
-            start={10}
-            stagger={4}
-            style={{ ...Headline, fontSize: 96, color: t.fg, marginTop: 28 }}
-          />
-          <div
-            style={{
-              fontFamily: FONT_SANS,
-              fontSize: 30,
-              lineHeight: 1.45,
-              color: t.muted,
-              marginTop: 28,
-              opacity: sub,
-              transform: `translateY(${(1 - sub) * 14}px)`,
-            }}
-          >
-            {STACK_SUB}
-          </div>
-        </div>
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: `repeat(${cols}, ${cell.w}px)`,
-            borderTop: `1px solid ${t.line}`,
-            borderLeft: `1px solid ${t.line}`,
-          }}
-        >
-          {STACK_ICONS.map((ic, i) => {
-            const r = Math.floor(i / cols);
-            const c = i % cols;
-            const p = ease(frame, 16 + (r + c) * 4, 20);
-            // A single accent wave runs across the grid once everything is in.
-            const wave = interpolate(frame - 95 - (r + c) * 5, [0, 8, 22], [0, 1, 0], {
-              extrapolateLeft: 'clamp',
-              extrapolateRight: 'clamp',
-            });
-            return (
-              <div
-                key={ic.label}
-                style={{
-                  width: cell.w,
-                  height: cell.h,
-                  borderRight: `1px solid ${t.line}`,
-                  borderBottom: `1px solid ${t.line}`,
-                  boxShadow: `inset 0 0 0 999px ${t.accentSoft.replace(/[\d.]+\)$/, (m) => `${(parseFloat(m) * wave).toFixed(3)})`)}`,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: 18,
-                }}
-              >
-                <div
-                  style={{
-                    opacity: p,
-                    transform: `translateY(${(1 - p) * 18}px) scale(${0.9 + 0.1 * p})`,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    gap: 18,
-                  }}
-                >
-                  <svg viewBox="0 0 24 24" width={52} height={52} aria-label={ic.source}>
-                    <path d={ic.path} fill={wave > 0.5 ? t.accent : t.fg} />
-                  </svg>
-                  <div
-                    style={{
-                      fontFamily: FONT_MONO,
-                      fontSize: 16,
-                      color: t.muted,
-                      textAlign: 'center',
-                      lineHeight: 1.3,
-                      maxWidth: cell.w - 24,
-                    }}
-                  >
-                    {ic.label}
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </AbsoluteFill>
-    </SceneShell>
-  );
-};
-
-/* 4 · Projects, 15–35 s ----------------------------------------------------- */
-const ProjectSlide: React.FC<{ t: Tokens; p: Project; index: number }> = ({ t, p, index }) => {
-  const frame = useCurrentFrame();
-  const dev = ease(frame, 4, 26);
-  const chipsIn = (i: number) => ease(frame, 30 + i * 3, 16);
-  const hold = 62;
-  const browser = { w: 980, h: 612 };
-  const phone = { w: 960, h: 480 };
-  const device =
-    p.device === 'browser' ? (
-      <BrowserFrame t={t} url={p.url} width={browser.w} height={browser.h}>
-        <ShotCycle shots={p.shots} start={0} hold={hold} bg={t.surface2} />
-      </BrowserFrame>
-    ) : (
-      <PhoneFrame t={t} width={phone.w} height={phone.h}>
-        <ShotCycle shots={p.shots} start={0} hold={hold} bg="#000" />
-      </PhoneFrame>
-    );
-
-  return (
-    <SceneShell duration={PROJECT_DURATION}>
-      <AbsoluteFill
-        style={{
-          padding: `0 ${PAD_X - 40}px 0 ${PAD_X}px`,
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}
-      >
-        <div style={{ width: 540 }}>
-          <Eyebrow
-            text={`0${index + 1} / 0${PROJECTS.length} · ${p.meta}`}
-            t={t}
-            start={0}
-            framesPerChar={1}
-            cursor={false}
-          />
-          <WordReveal
-            text={p.name}
-            start={6}
-            style={{ ...Headline, fontSize: 92, color: t.fg, marginTop: 26 }}
-          />
-          <WordReveal
-            text={p.subtitle}
-            start={14}
-            stagger={2}
-            style={{ fontFamily: FONT_SANS, fontSize: 34, lineHeight: 1.3, color: t.muted, marginTop: 22, fontWeight: 400 }}
-          />
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginTop: 40 }}>
-            {p.tech.map((label, i) => (
-              <Chip
-                key={label}
-                label={label}
-                t={t}
-                style={{ opacity: chipsIn(i), transform: `translateY(${(1 - chipsIn(i)) * 10}px)` }}
-              />
-            ))}
-          </div>
-          <div
-            style={{
-              marginTop: 40,
-              fontFamily: FONT_MONO,
-              fontSize: 18,
-              letterSpacing: '0.2em',
-              textTransform: 'uppercase',
-              color: t.faint,
-              opacity: ease(frame, 44, 16),
-            }}
-          >
-            {p.category}
-          </div>
-        </div>
-        <div
-          style={{
-            opacity: dev,
-            transform: `translateX(${(1 - dev) * 120}px)`,
-            position: 'relative',
-          }}
-        >
-          {device}
-          {/* screenshot progress: one segment per shot */}
-          <div style={{ display: 'flex', gap: 8, marginTop: 24, justifyContent: 'center' }}>
-            {p.shots.map((s, i) => {
-              const on = frame >= i * hold - 8 && frame < (i + 1) * hold - 8;
-              return (
-                <div
-                  key={s.src}
-                  style={{ width: on ? 40 : 16, height: 4, background: on ? t.accent : t.lineStrong }}
-                />
-              );
-            })}
-          </div>
-        </div>
-      </AbsoluteFill>
-    </SceneShell>
-  );
-};
-
-export const Projects: React.FC<{ t: Tokens }> = ({ t }) => (
-  <AbsoluteFill>
-    {PROJECTS.map((p, i) => (
-      <Sequence key={p.name} from={i * PROJECT_DURATION} durationInFrames={PROJECT_DURATION}>
-        <ProjectSlide t={t} p={p} index={i} />
-      </Sequence>
-    ))}
-  </AbsoluteFill>
-);
-
-/* 5 · CTA, 35–40 s ---------------------------------------------------------- */
-export const Cta: React.FC<{ t: Tokens }> = ({ t }) => {
-  const frame = useCurrentFrame();
-  const pill = ease(frame, 30, 20);
-  // Pointer glides to the link and presses it, as on the site's buttons (scale 0.97).
-  const px = interpolate(frame, [50, 78], [1500, 1060], {
-    extrapolateLeft: 'clamp',
-    extrapolateRight: 'clamp',
-    easing: EASE_IN_OUT,
-  });
-  const py = interpolate(frame, [50, 78], [980, 742], {
-    extrapolateLeft: 'clamp',
-    extrapolateRight: 'clamp',
-    easing: EASE_IN_OUT,
-  });
-  const press = interpolate(frame, [82, 86, 92], [1, 0.97, 1], {
-    extrapolateLeft: 'clamp',
-    extrapolateRight: 'clamp',
-  });
-  const pointerOpacity = ease(frame, 48, 8);
-  // Everything fades to the bare canvas so frame 1199 → frame 0 loops cleanly.
-  const out = ease(frame, 128, 22, 0, 1, EASE_IN_OUT);
-
-  return (
-    <AbsoluteFill style={{ opacity: 1 - out, alignItems: 'center', justifyContent: 'center' }}>
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <Eyebrow text={PERSON.title} t={t} start={0} framesPerChar={1} />
-        <WordReveal
-          text={PERSON.name}
-          start={8}
-          stagger={5}
-          style={{ ...Headline, fontSize: 150, color: t.fg, marginTop: 26, justifyContent: 'center' }}
-        />
-        <div
-          style={{
-            marginTop: 26,
-            fontFamily: FONT_MONO,
-            fontSize: 22,
-            letterSpacing: '0.28em',
-            textTransform: 'uppercase',
-            color: t.muted,
-            opacity: ease(frame, 22, 16),
-          }}
-        >
-          {PERSON.location}
-        </div>
-        <div
-          style={{
-            marginTop: 56,
-            opacity: pill,
-            transform: `translateY(${(1 - pill) * 16}px) scale(${press})`,
-            background: t.accent,
-            color: t.accentFg,
-            fontFamily: FONT_MONO,
-            fontWeight: 500,
-            fontSize: 34,
-            padding: '22px 40px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 18,
-          }}
-        >
-          {PERSON.url}
-          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke={t.accentFg} strokeWidth={2.2}>
-            <path d="M7 17L17 7M9 7h8v8" strokeLinecap="square" />
-          </svg>
-        </div>
+        <Label t={t} style={{ marginTop: 28 }}>
+          Pampanga, Philippines
+        </Label>
       </div>
-      <svg
-        width="40"
-        height="40"
-        viewBox="0 0 24 24"
-        style={{ position: 'absolute', left: px, top: py, opacity: pointerOpacity }}
+      <div style={{ position: "absolute", right: 116, top: 164 }}>
+        <Core t={t} phase={globalFrame / (TOTAL_FRAMES - 1)} />
+      </div>
+      <div
+        style={{
+          position: "absolute",
+          right: 142,
+          top: 837,
+          color: t.accent,
+          fontFamily: FONT_MONO,
+          fontSize: 30,
+          opacity: extra,
+        }}
       >
+        {closing
+          ? "Have an idea? Let’s build it. ↗"
+          : "Interfaces. Systems. Possibilities."}
+      </div>
+    </AbsoluteFill>
+  );
+};
+
+export const Blueprint: React.FC<Props> = ({ t }) => {
+  const f = useCurrentFrame();
+  const nodes = ["Idea", "Interface", "API", "Data"];
+  return (
+    <Scene duration={120}>
+      <div style={{ position: "absolute", left: 116, top: 196 }}>
+        <Reveal>
+          <Label t={t}>From the first sketch</Label>
+        </Reveal>
+        <Reveal delay={5} style={{ ...title(t, 156), marginTop: 34 }}>
+          Make it <span style={{ color: t.accent }}>real.</span>
+        </Reveal>
+      </div>
+      <svg width="1920" height="1080" style={{ position: "absolute" }}>
+        <path d="M295 654H1610" stroke={t.lineStrong} strokeWidth="3" />
         <path
-          d="M4 2l15 9.5-6.6 1.2 3.9 7.4-2.7 1.4-3.9-7.4L4 18.5z"
-          fill={t.fg}
-          stroke={t.bg}
-          strokeWidth={1.2}
-          strokeLinejoin="round"
+          d="M295 654H1610"
+          stroke={t.accent}
+          strokeWidth="4"
+          pathLength="1"
+          strokeDasharray="1"
+          strokeDashoffset={1 - ease(f, 20, 60)}
+        />
+        <circle
+          cx={interpolate(f, [20, 80], [295, 1610], {
+            extrapolateLeft: "clamp",
+            extrapolateRight: "clamp",
+          })}
+          cy="654"
+          r="9"
+          fill={t.accent}
         />
       </svg>
-    </AbsoluteFill>
+      {nodes.map((n, i) => {
+        const p = settle(f, 12 + i * 12);
+        return (
+          <div
+            key={n}
+            style={{
+              position: "absolute",
+              left: 116 + i * 440,
+              top: 548,
+              width: 355,
+              height: 212,
+              background: i === 0 ? t.accent : t.surface,
+              border: `2px solid ${i === 0 ? t.accent : t.lineStrong}`,
+              borderRadius: 24,
+              padding: 32,
+              boxSizing: "border-box",
+              opacity: Math.min(1, p),
+              transform: `translateY(${(1 - p) * 90}px) scale(${0.92 + p * 0.08})`,
+            }}
+          >
+            <Label t={t} style={{ color: i === 0 ? t.accentFg : t.accent }}>
+              0{i + 1}
+            </Label>
+            <div
+              style={{
+                ...title(t, 58),
+                color: i === 0 ? t.accentFg : t.fg,
+                marginTop: 31,
+                letterSpacing: "-0.045em",
+              }}
+            >
+              {n}
+            </div>
+          </div>
+        );
+      })}
+      <Reveal delay={60} style={{ position: "absolute", left: 116, top: 823 }}>
+        <Label t={t}>Thoughtful interfaces. Connected systems.</Label>
+      </Reveal>
+    </Scene>
+  );
+};
+
+export const Product: React.FC<Props & { index: 0 | 1 }> = ({ t, index }) => {
+  const f = useCurrentFrame();
+  const project = PROJECTS[index];
+  const isJobs = index === 0;
+  const appear = settle(f, 8);
+  return (
+    <Scene duration={150}>
+      <div style={{ position: "absolute", left: 116, top: 194, width: 540 }}>
+        <Reveal>
+          <Label t={t} style={{ color: t.accent }}>
+            Selected work / 0{index + 1}
+          </Label>
+        </Reveal>
+        <Reveal delay={4} style={{ ...title(t, 96), marginTop: 34 }}>
+          {project.name}
+        </Reveal>
+        <Reveal
+          delay={10}
+          style={{
+            ...title(t, 60),
+            lineHeight: 1.1,
+            marginTop: 36,
+            letterSpacing: "-0.04em",
+            color: t.muted,
+          }}
+        >
+          {isJobs ? (
+            <>
+              Good work.
+              <br />
+              Better matches.
+            </>
+          ) : (
+            <>
+              Less waiting.
+              <br />
+              More fresh cuts.
+            </>
+          )}
+        </Reveal>
+        <Reveal delay={25} style={{ marginTop: 38 }}>
+          <Label t={t} style={{ fontSize: 22 }}>
+            {isJobs
+              ? "Next.js · Supabase · AI matching"
+              : "Next.js · TypeScript · Booking"}
+          </Label>
+        </Reveal>
+      </div>
+      <div
+        style={{
+          position: "absolute",
+          left: 704,
+          top: 194,
+          width: 1100,
+          height: 720,
+          boxSizing: "border-box",
+          display: "flex",
+          flexDirection: "column",
+          transform: "none",
+          perspective: "none",
+          opacity: Math.min(1, appear),
+          borderRadius: 24,
+          overflow: "hidden",
+          border: `2px solid ${t.lineStrong}`,
+          background: t.frame,
+          boxShadow: t.shadow,
+        }}
+      >
+        <div
+          style={{
+            height: 54,
+            flex: "0 0 54px",
+            boxSizing: "border-box",
+            display: "flex",
+            alignItems: "center",
+            gap: 9,
+            padding: "0 24px",
+            background: t.frameBar,
+          }}
+        >
+          {[0, 1, 2].map((n) => (
+            <span
+              key={n}
+              style={{
+                width: 11,
+                height: 11,
+                borderRadius: "50%",
+                background: t.dot,
+              }}
+            />
+          ))}
+          <span
+            style={{
+              fontFamily: FONT_MONO,
+              fontSize: 22,
+              color: t.muted,
+              marginLeft: 22,
+            }}
+          >
+            {project.url}
+          </span>
+        </div>
+        <div
+          style={{
+            position: "relative",
+            flex: 1,
+            minHeight: 0,
+            overflow: "hidden",
+          }}
+        >
+          <ProjectUI t={t} index={index} />
+        </div>
+      </div>
+      <Reveal
+        delay={36}
+        style={{
+          position: "absolute",
+          left: 116,
+          bottom: 167,
+          width: 540,
+          borderTop: `2px solid ${t.lineStrong}`,
+          paddingTop: 25,
+        }}
+      >
+        <Label t={t}>
+          {isJobs
+            ? "Evidence over keywords."
+            : "Pick a barber. Find your time."}
+        </Label>
+      </Reveal>
+    </Scene>
+  );
+};
+
+export const Systems: React.FC<Props> = ({ t }) => {
+  const f = useCurrentFrame();
+  const nodes = [
+    { icon: "✦", name: "AI assistant", sub: "Claude" },
+    { icon: "{ }", name: "MCP connector", sub: "Azure · Entra ID" },
+    { icon: "↗", name: "Enterprise APIs", sub: "Graph · Purview · Bexio" },
+  ];
+  return (
+    <Scene duration={150}>
+      <div style={{ position: "absolute", left: 116, top: 175 }}>
+        <Reveal>
+          <Label t={t} style={{ color: t.accent }}>
+            Beyond the interface
+          </Label>
+        </Reveal>
+        <Reveal delay={6} style={{ ...title(t, 138), marginTop: 34 }}>
+          Everything, <span style={{ color: t.accent }}>connected.</span>
+        </Reveal>
+      </div>
+      <svg width="1920" height="1080" style={{ position: "absolute" }}>
+        {[0, 1].map((i) => (
+          <g key={i}>
+            <path
+              d={`M${520 + i * 590} 648H${707 + i * 590}`}
+              stroke={t.lineStrong}
+              strokeWidth="3"
+            />
+            {[0, 1, 2].map((j) => (
+              <circle
+                key={j}
+                cx={520 + i * 590 + ((f * 3 + j * 62) % 187)}
+                cy="648"
+                r="6"
+                fill={t.accent}
+                opacity={ease(f, 30 + i * 18, 15)}
+              />
+            ))}
+          </g>
+        ))}
+      </svg>
+      {nodes.map((node, i) => (
+        <Reveal
+          key={node.name}
+          delay={15 + i * 12}
+          style={{
+            position: "absolute",
+            left: 116 + i * 590,
+            top: 466,
+            width: 500,
+            height: 320,
+            boxSizing: "border-box",
+            border: `2px solid ${t.lineStrong}`,
+            background: t.surface,
+            borderRadius: 24,
+            padding: 38,
+          }}
+        >
+          <div
+            style={{
+              fontFamily: FONT_MONO,
+              color: t.accent,
+              fontSize: 72,
+              height: 92,
+            }}
+          >
+            {node.icon}
+          </div>
+          <div
+            style={{ ...title(t, 48), letterSpacing: "-0.04em", marginTop: 19 }}
+          >
+            {node.name}
+          </div>
+          <Label t={t} style={{ marginTop: 27, fontSize: 23 }}>
+            {node.sub}
+          </Label>
+        </Reveal>
+      ))}
+      <Reveal delay={65} style={{ position: "absolute", left: 116, top: 845 }}>
+        <Label t={t}>Per-user identity. Least privilege. Audit trails.</Label>
+      </Reveal>
+    </Scene>
+  );
+};
+
+export const Vista: React.FC<Props> = ({ t }) => {
+  const f = useCurrentFrame();
+  const p = settle(f, 4);
+  return (
+    <Scene duration={90}>
+      <div style={{ position: "absolute", left: 116, top: 222 }}>
+        <Reveal>
+          <Label t={t} style={{ color: t.accent }}>
+            A different perspective
+          </Label>
+        </Reveal>
+        <Reveal delay={5} style={{ ...title(t, 132), marginTop: 40 }}>
+          Vista<span style={{ color: t.accent }}>VR</span>
+        </Reveal>
+        <Reveal
+          delay={10}
+          style={{
+            ...title(t, 65),
+            color: t.muted,
+            lineHeight: 1.1,
+            marginTop: 39,
+          }}
+        >
+          Eye testing.
+          <br />
+          Another dimension.
+        </Reveal>
+        <Reveal delay={17} style={{ marginTop: 46 }}>
+          <Label t={t}>Unity · C# · Capstone project</Label>
+        </Reveal>
+      </div>
+      <div
+        style={{
+          position: "absolute",
+          left: 754,
+          top: 239,
+          width: 1050,
+          height: 524,
+          borderRadius: 140,
+          border: `3px solid ${t.accent}`,
+          padding: 20,
+          boxSizing: "border-box",
+          background: t.surface2,
+          transform: "none",
+          perspective: "none",
+          opacity: Math.min(1, p),
+          boxShadow: t.shadow,
+        }}
+      >
+        <div
+          style={{
+            width: "100%",
+            height: "100%",
+            overflow: "hidden",
+            borderRadius: 120,
+            position: "relative",
+            background: "#000",
+          }}
+        >
+          <Img
+            src={staticFile("shots/VR2.webp")}
+            style={{ width: "100%", height: "100%", objectFit: "contain" }}
+          />
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              border: `2px solid ${t.accent}`,
+              borderRadius: 120,
+              opacity: 0.45,
+            }}
+          />
+        </div>
+      </div>
+    </Scene>
   );
 };
