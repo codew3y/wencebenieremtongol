@@ -2,6 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { TbArrowRight, TbChevronDown } from "react-icons/tb";
 import Odometer from "./Odometer";
+import Reel from "./Reel";
 import useTypewriter from "../hooks/useTypewriter";
 
 /**
@@ -42,9 +43,12 @@ const Home = () => {
   return (
     <section
       id="home"
-      className="mx-auto flex min-h-[100dvh] max-w-6xl flex-col justify-center px-6 pt-28 pb-20"
+      className="mx-auto flex min-h-[100dvh] max-w-6xl flex-col justify-center px-6 pt-24 pb-16"
     >
-      <div className="grid items-center gap-14 lg:grid-cols-[1.65fr_1fr] lg:gap-14">
+      {/* Closer to even than the 1.65:1 it was. The reel needs real width to
+          stay readable, and the statement survives the narrower measure better
+          than the video survives being shrunk. */}
+      <div className="grid items-center gap-14 lg:grid-cols-[1fr_1.05fr] lg:gap-12">
         <div>
           <motion.p
             variants={rise}
@@ -116,9 +120,14 @@ const Home = () => {
             every one of them checkable. Gone below lg, where it would only
             squeeze the statement. */}
         <div className="hidden lg:block">
+          {/* The reel heads the column: it is the thing that moves, so it goes
+              where the eye lands after the statement, with the fixed facts
+              settling underneath it. */}
+          <Reel />
+
           {/* What the numbers are attached to. Without it the three counts
               arrive with nothing introducing them. */}
-          <p className="font-mono text-xs tracking-[0.18em] text-accent uppercase">
+          <p className="mt-5 font-mono text-xs tracking-[0.18em] text-accent uppercase">
             Currently
           </p>
           <p className="mt-3 text-lg leading-snug font-semibold tracking-[-0.01em] text-fg">
@@ -128,9 +137,9 @@ const Home = () => {
             Manentia Enterprise Support PH Inc.
           </p>
 
-          <dl className="mt-7 grid grid-cols-3 gap-px border-y border-line">
+          <dl className="mt-5 grid grid-cols-3 gap-px border-y border-line">
             {STATS.map((stat, index) => (
-              <div key={stat.label} className="py-5">
+              <div key={stat.label} className="py-4">
                 <dt className="sr-only">{stat.label}</dt>
                 <dd>
                   {/* The figure is read from the sr-only copy; the roll beside
@@ -171,7 +180,7 @@ const Home = () => {
         custom={5}
         href="#about"
         aria-label="Scroll to about"
-        className="pressable mx-auto mt-10 hidden h-10 w-10 place-items-center rounded-full border border-line text-faint transition-colors hover:border-accent/50 hover:text-accent sm:grid"
+        className="pressable mx-auto mt-5 hidden h-10 w-10 place-items-center rounded-full border border-line text-faint transition-colors hover:border-accent/50 hover:text-accent sm:grid"
       >
         <TbChevronDown size={18} className="motion-safe:animate-bounce" />
       </motion.a>
