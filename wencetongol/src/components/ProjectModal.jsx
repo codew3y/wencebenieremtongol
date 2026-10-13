@@ -127,6 +127,25 @@ const ProjectModal = ({ project, onClose }) => {
                     )}
                   </div>
                 )}
+
+                {/* The stack sits under the media and the links, not at the
+                    foot of the prose. The right column scrolls on its own, so
+                    anything parked at its end is only reached by reading every
+                    bullet first -- and the stack is the thing people scan for.
+                    Here it is visible the moment the dialog opens. */}
+                <section className="mt-5 space-y-2">
+                  <Heading>Technologies &amp; tools</Heading>
+                  <div className="flex flex-wrap gap-2">
+                    {project.tech.map((item) => (
+                      <span
+                        key={item}
+                        className="rounded border border-line bg-surface-2 px-2 py-1 font-mono text-[11px] text-muted"
+                      >
+                        {item}
+                      </span>
+                    ))}
+                  </div>
+                </section>
               </div>
 
               <div className="min-w-0 space-y-5 md:max-h-[62vh] md:overflow-y-auto md:pr-1">
@@ -175,19 +194,6 @@ const ProjectModal = ({ project, onClose }) => {
                   </section>
                 )}
 
-                <section className="space-y-2">
-                  <Heading>Technologies &amp; tools</Heading>
-                  <div className="flex flex-wrap gap-2">
-                    {project.tech.map((item) => (
-                      <span
-                        key={item}
-                        className="rounded border border-line bg-surface-2 px-2 py-1 font-mono text-[11px] text-muted"
-                      >
-                        {item}
-                      </span>
-                    ))}
-                  </div>
-                </section>
               </div>
             </div>
           </motion.div>
