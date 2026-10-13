@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { TbArrowRight, TbChevronDown } from "react-icons/tb";
+import Odometer from "./Odometer";
 import useTypewriter from "../hooks/useTypewriter";
 
 /**
@@ -128,12 +129,15 @@ const Home = () => {
           </p>
 
           <dl className="mt-7 grid grid-cols-3 gap-px border-y border-line">
-            {STATS.map((stat) => (
+            {STATS.map((stat, index) => (
               <div key={stat.label} className="py-5">
                 <dt className="sr-only">{stat.label}</dt>
                 <dd>
+                  {/* The figure is read from the sr-only copy; the roll beside
+                      it is decoration and is hidden from assistive tech. */}
+                  <span className="sr-only">{stat.value}</span>
                   <span className="block text-3xl leading-none font-semibold tracking-[-0.03em] text-fg">
-                    {stat.value}
+                    <Odometer value={stat.value} delay={index * 0.12} />
                   </span>
                   <span className="mt-2.5 block font-mono text-[10px] tracking-[0.14em] text-faint uppercase">
                     {stat.label}

@@ -68,11 +68,11 @@ function App() {
   // reads as intentional rather than a flash. The race is a safety net: if
   // fonts.ready never settles, the site still opens.
   //
-  // The beat is 200ms, not the 800 it was. The hero h1 is this page's LCP
-  // element, so every millisecond the loader holds is added to LCP directly --
-  // measured cold, that hold plus the old 800ms fade put LCP at 3.8s against
-  // a 2.5s threshold. Fonts are the thing actually worth waiting for; the rest
-  // was padding.
+  // The beat is 1200ms. It was 800, then 200 to pull LCP down, and is now
+  // longer again by choice: the hero h1 is this page's LCP element, so every
+  // millisecond here lands on LCP directly, and this one is a deliberate trade
+  // of about a second of that budget for an intro that can be read. The fade
+  // either side stays short so the cost is the hold and nothing else.
   //
   // Both timers are skipped entirely while the tab is hidden. A background tab
   // has its timers throttled -- to once a minute once it has been hidden a
@@ -103,7 +103,7 @@ function App() {
       fonts,
       new Promise((resolve) => setTimeout(resolve, 2500)),
     ]).then(() => {
-      if (!cancelled) hold = setTimeout(open, 200);
+      if (!cancelled) hold = setTimeout(open, 1200);
     });
 
     return () => {
