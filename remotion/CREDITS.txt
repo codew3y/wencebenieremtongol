@@ -1,0 +1,44 @@
+Hero reel: credits and licences
+Drafted by Claude for Wey, 13 October 2026.
+
+FONTS
+- Geist (variable, latin subset), by Vercel
+  Licence: SIL Open Font License 1.1
+  Source: https://github.com/vercel/geist-font
+  Obtained via npm: @fontsource-variable/geist 5.3.0
+- JetBrains Mono (400 and 500, latin subset), by JetBrains
+  Licence: SIL Open Font License 1.1
+  Source: https://github.com/JetBrains/JetBrainsMono
+  Obtained via npm: @fontsource/jetbrains-mono 5.3.0
+Both are embedded in the rendered video and bundled in source/public/fonts/.
+The OFL allows embedding and redistribution as long as the fonts are not sold on their own.
+
+ICONS
+- Simple Icons 16.35.0, https://simpleicons.org
+  Licence: CC0 1.0 Universal (public domain dedication)
+  Used: TypeScript, JavaScript, React, Next.js, Node.js, Tailwind CSS,
+  PostgreSQL, Supabase, Python, Docker, Zoho, Model Context Protocol,
+  Claude, GitHub Actions, Vitest, Postman.
+  Note: CC0 covers the SVG files. The logos are still trademarks of their
+  owners. They appear here only to name tools Wey uses, which is how Simple
+  Icons expects them to be used. Check each brand's guidelines before using
+  them in other ways.
+- The arrow and pointer glyphs are original SVG paths drawn for this project.
+
+SCREENSHOTS
+- TechSelect, BarberHouse and VistaVR screenshots are Wey's own project
+  screenshots, taken from his portfolio repository
+  (github.com/codew3y/wencebenieremtongol, src/assets/img/projectsimg/).
+
+STOCK FOOTAGE, MUSIC AND IMAGES
+- None. No third-party stock assets are used.
+
+SOFTWARE
+- Remotion 4.0.535 (https://remotion.dev). Free for individuals and
+  companies of up to 3 people; larger companies need a company licence.
+  See https://remotion.dev/license.
+- FFmpeg (x264 and libvpx-vp9), used for the final encodes.
+
+MOTION REFERENCE
+- Pacing and transition style were studied from the hero videos on
+  francisemilcortez.xyz. No layout, text or footage from that site was used.

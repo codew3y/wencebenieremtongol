@@ -1,0 +1,27 @@
+{
+  "name": "wence-hero-ad",
+  "private": true,
+  "description": "Remotion source for the wencetongol.vercel.app hero reel (light and dark).",
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "render:dark": "remotion render src/index.ts HeroAd-dark out/dark/master.mp4 --codec=h264 --crf=10",
+    "render:light": "remotion render src/index.ts HeroAd-light out/light/master.mp4 --codec=h264 --crf=10",
+    "poster:dark": "remotion still src/index.ts HeroAd-dark out/dark/poster.png --frame=100",
+    "poster:light": "remotion still src/index.ts HeroAd-light out/light/poster.png --frame=100",
+    "contrast": "node scripts/contrast.mjs"
+  },
+  "dependencies": {
+    "@fontsource-variable/geist": "^5.3.0",
+    "@fontsource/jetbrains-mono": "^5.3.0",
+    "@remotion/cli": "4.0.535",
+    "@remotion/fonts": "4.0.535",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "remotion": "4.0.535",
+    "simple-icons": "^16.35.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "typescript": "^7.0.2"
+  }
+}
