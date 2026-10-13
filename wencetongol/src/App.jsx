@@ -4,7 +4,6 @@ import { EASE_IN_OUT } from "./lib/motion";
 import ErrorBoundary from "./components/ErrorBoundary";
 import Loader from "./components/Loader";
 import SideNav from "./components/SideNav";
-import ScrollProgress from "./components/ScrollProgress";
 import useSmoothAnchors from "./hooks/useSmoothAnchors";
 import Home from "./components/Home";
 import About from "./components/About";
@@ -158,8 +157,6 @@ function App() {
             transition={{ duration: 0.4, ease: EASE_IN_OUT }}
           >
             <ErrorBoundary name="chrome">
-              <ScrollProgress />
-
               <a
                 href="#home"
                 className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[70] focus:rounded-lg focus:bg-accent focus:px-4 focus:py-2 focus:font-semibold focus:text-accent-fg"
