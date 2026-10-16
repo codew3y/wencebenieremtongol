@@ -14,8 +14,6 @@ import BH5 from "../assets/img/projectsimg/BH5.webp";
 import TS1 from "../assets/img/projectsimg/TS1.webp";
 import TS2 from "../assets/img/projectsimg/TS2.webp";
 import TS3 from "../assets/img/projectsimg/TS3.webp";
-import TS4 from "../assets/img/projectsimg/TS4.webp";
-import TS5 from "../assets/img/projectsimg/TS5.webp";
 import VR1 from "../assets/img/projectsimg/VR1.webp";
 import VR2 from "../assets/img/projectsimg/VR2.webp";
 import VR3 from "../assets/img/projectsimg/VR3.webp";
@@ -184,11 +182,9 @@ const personal = [
       "Vitest",
     ],
     images: [
-      { src: TS1, alt: "The TechSelect landing page, with an example match" },
-      { src: TS2, alt: "Browsing jobs, with search and filters" },
-      { src: TS3, alt: "Browsing developers, each with rate and skills" },
-      { src: TS4, alt: "A public developer profile" },
-      { src: TS5, alt: "The developer dashboard and its match feed" },
+      { src: TS1, alt: "The TechSelect landing page" },
+      { src: TS2, alt: "How matching works, end to end" },
+      { src: TS3, alt: "What the board is for, and who it is for" },
     ],
     points: [
       "Modelled the domain as 20 Postgres tables behind 42 row-level security policies, treating RLS as the authorization boundary rather than the middleware, so a bypassed route still cannot read rows it does not own.",
@@ -218,10 +214,10 @@ const personal = [
     ],
     images: [
       { src: BH1, alt: "BarberHouse landing page" },
-      { src: BH2, alt: "Service menu priced per barber" },
-      { src: BH3, alt: "Booking step one: barber and service" },
-      { src: BH4, alt: "Booking step two: calendar and open slots" },
-      { src: BH5, alt: "Booking step three: review and QR downpayment" },
+      { src: BH2, alt: "The menu, priced per barber" },
+      { src: BH3, alt: "The three barbers, each bookable directly" },
+      { src: BH4, alt: "Booking step one: barber and service" },
+      { src: BH5, alt: "House rules: deposit, free moves and the grace period" },
     ],
     points: [
       "Built a three-step booking flow: barber and service, then date and time, then review and checkout, with each step gated on the one before it.",

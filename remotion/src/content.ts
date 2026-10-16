@@ -11,7 +11,7 @@ export const PROJECTS: Project[] = [
     url: "techselect.vercel.app",
     shots: [
       { src: "shots/TS1.webp", alt: "TechSelect landing page" },
-      { src: "shots/TS2.webp", alt: "Job search and filters" },
+      { src: "shots/TS2.webp", alt: "How matching works, end to end" },
     ],
   },
   {
@@ -19,7 +19,7 @@ export const PROJECTS: Project[] = [
     url: "barberhouseph.vercel.app",
     shots: [
       { src: "shots/BH1.webp", alt: "BarberHouse landing page" },
-      { src: "shots/BH3.webp", alt: "Selecting a barber and service" },
+      { src: "shots/BH3.webp", alt: "The three barbers, each bookable directly" },
     ],
   },
 ];
