@@ -17,7 +17,6 @@ import {
 } from "./primitives";
 import { FONT_MONO, Tokens } from "./theme";
 import { PROJECTS } from "./content";
-import { ProjectUI } from "./ProjectUI";
 import { TOTAL_FRAMES } from "./timing";
 
 type Props = { t: Tokens };
@@ -160,6 +159,10 @@ export const Product: React.FC<Props & { index: 0 | 1 }> = ({ t, index }) => {
   const f = useCurrentFrame();
   const project = PROJECTS[index];
   const isJobs = index === 0;
+  // The dark film wants the site's dark cut where there is one; a light
+  // screenshot in the dark film reads as a hole punched in the frame.
+  const shot =
+    t.bg === "#101013" ? (project.landingDark ?? project.landing) : project.landing;
   const appear = settle(f, 8);
   return (
     <Scene duration={150}>
@@ -266,7 +269,27 @@ export const Product: React.FC<Props & { index: 0 | 1 }> = ({ t, index }) => {
             overflow: "hidden",
           }}
         >
-          <ProjectUI t={t} index={index} />
+          {/* The real landing page, not a drawing of one. The scene used to
+              render ProjectUI, a hand-built approximation of each app; both
+              sites have since been redesigned and the drawing no longer
+              matched either. A screenshot cannot drift.
+
+              Cover from the top: the shot is 16:9 and this viewport is a
+              little squarer, so the crop comes off the bottom of the page
+              rather than the masthead. A slow push keeps it from reading as
+              a dead still in a film. */}
+          <Img
+            src={staticFile(shot.src)}
+            alt={shot.alt}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              objectPosition: "top center",
+              transform: `scale(${1 + (f / 150) * 0.04})`,
+              transformOrigin: "top center",
+            }}
+          />
         </div>
       </div>
       <Reveal
