@@ -3,6 +3,9 @@ import { TbPlayerPause, TbPlayerPlay } from "react-icons/tb";
 import { REEL_VERSION } from "../lib/reel-version";
 
 const CUTS = ["light", "dark"];
+// Module scope on purpose: StrictMode mounts twice in development, and a
+// per-instance ref would let each mount print the same advice again.
+const warned = new Set();
 const FADE_MS = 240;
 const readTheme = () =>
   document.documentElement.classList.contains("dark") ? "dark" : "light";
@@ -26,6 +29,15 @@ const Reel = () => {
   );
   const [hidden, setHidden] = useState(() => document.hidden);
   const [playing, setPlaying] = useState(true);
+  // Which version failed to decode, rather than a bare boolean: a new render
+  // means new filenames, and storing the version means the next one starts
+  // clean without an effect to reset it.
+  //
+  // The poster underneath is already the fallback -- a cut only fades in once
+  // it reaches canplay -- so this exists to say so out loud, not to change
+  // what is drawn.
+  const [failedVersion, setFailedVersion] = useState(null);
+  const failed = failedVersion === filmVersion;
 
   useEffect(() => {
     const update = () => {
@@ -48,6 +60,39 @@ const Reel = () => {
       document.removeEventListener("visibilitychange", visibility);
     };
   }, []);
+
+  // A failed cut used to be completely silent: play() rejections are swallowed
+  // and <video> does not throw. The poster simply stayed up, which looks
+  // identical to a film that is merely paused.
+  //
+  // The usual cause in development is a stale tab asking for a previous
+  // REEL_VERSION. Vite answers an unknown path with index.html and a 200, so
+  // the element receives an HTML document, cannot decode it, and gives up --
+  // reported here as MEDIA_ERR_SRC_NOT_SUPPORTED rather than as a 404.
+  const reportFailure = (cut) => (event) => {
+    setFailedVersion(filmVersion);
+
+    // The event fires once per failed source, so without this the same advice
+    // is printed twice for one broken cut.
+    const seen = `${cut}-${filmVersion}`;
+    if (warned.has(seen)) return;
+    warned.add(seen);
+
+    // MEDIA_ERR_* is only populated once a source was selected and then went
+    // wrong. When every <source> is rejected outright the element reports no
+    // error at all, and that absence is itself the signal: nothing playable
+    // was found at either URL.
+    const code = event.currentTarget?.error?.code ?? 0;
+    const reason =
+      code === 2
+        ? "network error"
+        : code === 3
+          ? "decode error"
+          : "no playable source. In development this usually means a stale tab is asking for a previous REEL_VERSION: the dev server answers an unknown path with index.html and a 200, so the element is handed HTML. Hard reload, or restart the dev server";
+    console.warn(
+      `[reel] the ${cut} cut did not load -- ${reason}. Expected /videos/${cut}/film-${filmVersion}.webm`,
+    );
+  };
 
   useEffect(() => {
     const node = holder.current;
@@ -162,6 +207,7 @@ const Reel = () => {
                 videos.current[cut] = node;
               }}
               draggable={false}
+              onError={reportFailure(cut)}
               muted
               loop
               playsInline
@@ -201,7 +247,7 @@ const Reel = () => {
             </video>
           ))}
       </div>
-      {!reduce && (
+      {!reduce && !failed && (
         <button
           type="button"
           onClick={() => setPlaying((value) => !value)}
