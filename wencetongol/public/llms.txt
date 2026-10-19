@@ -38,10 +38,11 @@ Azure, and REST integrations secured with OAuth 2.0.
 
 ## Technical stack
 
-JavaScript, TypeScript, Node.js, Python, React, Next.js, Tailwind CSS,
-PostgreSQL, MySQL, MongoDB, Supabase, Microsoft Azure, OAuth 2.0, Microsoft
-Graph, Model Context Protocol, REST APIs, Docker, Git, GitHub Actions, Postman,
-PowerShell.
+JavaScript, TypeScript, Node.js, Python, Zoho Deluge, React, Next.js,
+Tailwind CSS, PostgreSQL, MySQL, Supabase, Neon, Microsoft Azure,
+OAuth 2.0, Microsoft Entra ID, Zoho, Microsoft Graph, Microsoft Purview
+eDiscovery, Model Context Protocol, REST APIs, Webhooks, Vercel, Docker, Git,
+GitHub, Postman, PowerShell, Vitest, Claude, Codex.
 
 ## Background
 

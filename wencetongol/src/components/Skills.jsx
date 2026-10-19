@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { TbApi, TbBook2, TbBrandAzure, TbBrandOauth, TbBrandPowershell, TbBug, TbChartDots3, TbClipboardText, TbInfinity, TbMessageDots, TbPlugConnected, TbPuzzle, TbShieldSearch, TbSql, TbTargetArrow, TbTerminal2, TbTestPipe, TbUsersGroup, TbWebhook } from "react-icons/tb";
-import { SiAnthropic, SiClaude, SiCss3, SiDocker, SiGit, SiGithubactions, SiHtml5, SiJavascript, SiJsonwebtokens, SiMongodb, SiMysql, SiNextdotjs, SiNodedotjs, SiPostgresql, SiPostman, SiPython, SiReact, SiSupabase, SiTailwindcss, SiTypescript, SiVitest, SiZoho } from "react-icons/si";
+import { TbApi, TbBrandAzure, TbBrandOauth, TbBrandPowershell, TbChartDots3, TbPlugConnected, TbShieldLock, TbShieldSearch, TbSql, TbWebhook } from "react-icons/tb";
+import { SiClaude, SiCss3, SiDocker, SiGit, SiGithub, SiHtml5, SiJavascript, SiJsonwebtokens, SiMysql, SiNextdotjs, SiNodedotjs, SiOpenai, SiPostgresql, SiPostman, SiPython, SiReact, SiSupabase, SiTailwindcss, SiTypescript, SiVercel, SiVitest, SiZoho } from "react-icons/si";
 import { AnimatePresence, motion } from "framer-motion";
 import Section from "./Section";
 import { EASE_OUT } from "../lib/motion";
@@ -33,6 +33,7 @@ const groups = [
     title: "Cloud & Identity",
     items: [
       { name: "Microsoft Azure", Icon: TbBrandAzure, color: "#0078D4" },
+      { name: "Microsoft Entra ID", Icon: TbShieldLock },
       { name: "OAuth 2.0", Icon: TbBrandOauth },
       { name: "JSON Web Tokens (JWT)", Icon: SiJsonwebtokens, color: "#000000", colorDark: "#ededeb" },
     ],
@@ -40,21 +41,19 @@ const groups = [
   {
     title: "Platforms & APIs",
     items: [
-      { name: "Zoho CRM", Icon: SiZoho, color: "#E42527" },
-      { name: "Zoho Writer", Icon: SiZoho, color: "#E42527" },
-      { name: "Zoho Flow", Icon: SiZoho, color: "#E42527" },
+      { name: "Zoho", Icon: SiZoho, color: "#E42527" },
       { name: "Microsoft Graph", Icon: TbChartDots3 },
       { name: "Microsoft Purview eDiscovery", Icon: TbShieldSearch },
       { name: "Model Context Protocol", Icon: TbPlugConnected },
       { name: "REST APIs", Icon: TbApi },
       { name: "Webhooks", Icon: TbWebhook },
+      { name: "Vercel", Icon: SiVercel, color: "#000000", colorDark: "#ededeb" },
     ],
   },
   {
     title: "Databases",
     items: [
       { name: "MySQL", Icon: SiMysql, color: "#4479A1" },
-      { name: "MongoDB", Icon: SiMongodb, color: "#47A248" },
       { name: "PostgreSQL", Icon: SiPostgresql, color: "#4169E1" },
       { name: "Supabase", Icon: SiSupabase, color: "#3FCF8E" },
       // No Neon mark in this react-icons version; Neon is serverless Postgres,
@@ -69,36 +68,15 @@ const groups = [
       { name: "PowerShell", Icon: TbBrandPowershell, color: "#5391FE" },
       { name: "Docker", Icon: SiDocker, color: "#2496ED" },
       { name: "Git", Icon: SiGit, color: "#F03C2E" },
-      { name: "GitHub Actions", Icon: SiGithubactions, color: "#2088FF" },
+      { name: "GitHub", Icon: SiGithub, color: "#181717", colorDark: "#ededeb" },
       { name: "Vitest", Icon: SiVitest, color: "#00FF74" },
-    ],
-  },
-  {
-    title: "Practices",
-    items: [
-      { name: "REST integration", Icon: TbApi },
-      { name: "Automated testing", Icon: TbTestPipe },
-      { name: "CI/CD", Icon: TbInfinity },
-      { name: "Audit logging", Icon: TbClipboardText },
-      { name: "Documentation", Icon: TbBook2 },
-      { name: "Incident troubleshooting", Icon: TbBug },
     ],
   },
   {
     title: "AI Tooling",
     items: [
       { name: "Claude", Icon: SiClaude, color: "#D97757" },
-      { name: "Claude Code", Icon: TbTerminal2 },
-      { name: "Claude Cowork", Icon: SiAnthropic, color: "#191919", colorDark: "#ededeb" },
-    ],
-  },
-  {
-    title: "Strengths",
-    items: [
-      { name: "Analytical problem solving", Icon: TbPuzzle },
-      { name: "Ownership", Icon: TbTargetArrow },
-      { name: "Collaboration", Icon: TbUsersGroup },
-      { name: "Clear written communication", Icon: TbMessageDots },
+      { name: "Codex", Icon: SiOpenai, color: "#000000", colorDark: "#ededeb" },
     ],
   },
 ];
@@ -149,7 +127,7 @@ const Skills = () => {
     <Section
       id="skills"
       title="Technical stack"
-      intro="The languages, platforms, and practices I work with day to day."
+      intro="The languages, platforms and tools I work with day to day."
     >
       {/* No container. The filter row and the count sit between hairlines,
           which is how Background separates its bands too. */}
