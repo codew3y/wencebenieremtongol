@@ -28,7 +28,14 @@ const Reel = () => {
     () => typeof IntersectionObserver === "undefined",
   );
   const [hidden, setHidden] = useState(() => document.hidden);
+  // What the visitor asked for.
   const [playing, setPlaying] = useState(true);
+  // What the element is actually doing. These are not the same thing:
+  // a browser that requires a gesture refuses the opening play(), so the
+  // film sits on its poster while `playing` still says true. The button
+  // then offers to pause something that was never running, the first tap
+  // does nothing visible, and the film looks broken.
+  const [running, setRunning] = useState(false);
   // Which version failed to decode, rather than a bare boolean: a new render
   // means new filenames, and storing the version means the next one starts
   // clean without an effect to reset it.
@@ -36,6 +43,8 @@ const Reel = () => {
   // The poster underneath is already the fallback -- a cut only fades in once
   // it reaches canplay -- so this exists to say so out loud, not to change
   // what is drawn.
+  // Cuts whose WebM failed to decode, and which should retry on H.264.
+  const [h264Only, setH264Only] = useState([]);
   const [failedVersion, setFailedVersion] = useState(null);
   const failed = failedVersion === filmVersion;
 
@@ -70,6 +79,26 @@ const Reel = () => {
   // the element receives an HTML document, cannot decode it, and gives up --
   // reported here as MEDIA_ERR_SRC_NOT_SUPPORTED rather than as a 404.
   const reportFailure = (cut) => (event) => {
+    // A <source> that gets skipped fires its own error, and React bubbles it
+    // up to this handler on the <video>. That is not a failure -- it is the
+    // fallback working, and the next source is about to play. Only an error
+    // raised by the element itself means every candidate is exhausted.
+    if (event.target !== event.currentTarget) return;
+
+    const code = event.currentTarget?.error?.code ?? 0;
+
+    // A decode error means a source was chosen and then could not be played --
+    // most often VP9 on a machine with no VP9 decoder. Drop the WebM for this
+    // cut and let it reload on H.264 alone, which is the one codec every
+    // browser that ships video can handle. Only the first failure retries; if
+    // H.264 fails too there is nothing further to try.
+    if (code === 3 && !h264Only.includes(cut)) {
+      setH264Only((current) =>
+        current.includes(cut) ? current : [...current, cut],
+      );
+      return;
+    }
+
     setFailedVersion(filmVersion);
 
     // The event fires once per failed source, so without this the same advice
@@ -82,7 +111,6 @@ const Reel = () => {
     // wrong. When every <source> is rejected outright the element reports no
     // error at all, and that absence is itself the signal: nothing playable
     // was found at either URL.
-    const code = event.currentTarget?.error?.code ?? 0;
     const reason =
       code === 2
         ? "network error"
@@ -90,9 +118,23 @@ const Reel = () => {
           ? "decode error"
           : "no playable source. In development this usually means a stale tab is asking for a previous REEL_VERSION: the dev server answers an unknown path with index.html and a 200, so the element is handed HTML. Hard reload, or restart the dev server";
     console.warn(
-      `[reel] the ${cut} cut did not load -- ${reason}. Expected /videos/${cut}/film-${filmVersion}.webm`,
+      `[reel] the ${cut} cut did not load -- ${reason}. Tried ` +
+        `/videos/${cut}/film-${filmVersion}.` +
+        `${h264Only.includes(cut) ? "mp4" : "webm and .mp4"}`,
     );
   };
+
+  // Re-run source selection for a cut that has just dropped its WebM.
+  // Removing the element from the tree is not enough: a <video> that has
+  // already failed keeps its error until load() is called again.
+  useEffect(() => {
+    for (const cut of h264Only) {
+      const video = videos.current[cut];
+      if (!video) continue;
+      video.dataset.loaded = `${filmVersion}-h264`;
+      video.load();
+    }
+  }, [h264Only, filmVersion]);
 
   useEffect(() => {
     const node = holder.current;
@@ -168,6 +210,29 @@ const Reel = () => {
     };
   }, [theme, armed, reduce, filmVersion]);
 
+  // Autoplay is refused on plenty of devices: iOS in Low Power Mode, Safari's
+  // per-site setting, any tab the visitor has not interacted with. The
+  // attribute and the effect both ask, and when both are refused the film sits
+  // on its poster until someone finds the button.
+  //
+  // Browsers lift the restriction on the first real interaction anywhere on
+  // the page, so that is taken as the cue to start. The listener removes
+  // itself once it has fired, and never overrides a visitor who chose pause.
+  useEffect(() => {
+    if (reduce || running || !playing) return undefined;
+    const start = () => {
+      const active = videos.current[shown];
+      if (active && active.paused) active.play().catch(() => {});
+    };
+    const events = ["pointerdown", "touchstart", "keydown", "wheel"];
+    for (const name of events) {
+      document.addEventListener(name, start, { once: true, passive: true });
+    }
+    return () => {
+      for (const name of events) document.removeEventListener(name, start);
+    };
+  }, [reduce, running, playing, shown]);
+
   useEffect(() => {
     const active = videos.current[shown];
     const inactive = videos.current[shown === "dark" ? "light" : "dark"];
@@ -208,6 +273,9 @@ const Reel = () => {
               }}
               draggable={false}
               onError={reportFailure(cut)}
+              onPlay={() => cut === shown && setRunning(true)}
+              onPause={() => cut === shown && setRunning(false)}
+              autoPlay
               muted
               loop
               playsInline
@@ -234,14 +302,31 @@ const Reel = () => {
             >
               {armed && (
                 <>
-                  <source
-                    src={`/videos/${cut}/film-${filmVersion}.webm`}
-                    type="video/webm"
-                  />
+                  {/* The codec, not just the container. Asked only about
+                      "video/webm" a browser answers on the container alone,
+                      selects this source, and discovers it has no VP9 decoder
+                      only once decoding begins -- at which point the MP4
+                      below is no longer a candidate and the film freezes on
+                      its poster. Naming vp9 lets it decline honestly and fall
+                      through. */}
+                  {/* H.264 first, deliberately. A browser is asked what it
+                      can play and answers on capability, not on whether the
+                      decoder actually works: this film froze on a machine that
+                      reported "probably" for VP9 and then raised a decode
+                      error on every frame. There is no way to tell those
+                      machines apart in advance, so the universally decodable
+                      codec goes first and VP9 is only a fallback. It costs
+                      about half a megabyte against never failing. */}
                   <source
                     src={`/videos/${cut}/film-${filmVersion}.mp4`}
-                    type="video/mp4"
+                    type='video/mp4; codecs="avc1.64001F"'
                   />
+                  {!h264Only.includes(cut) && (
+                    <source
+                      src={`/videos/${cut}/film-${filmVersion}.webm`}
+                      type='video/webm; codecs="vp9"'
+                    />
+                  )}
                 </>
               )}
             </video>
@@ -250,11 +335,20 @@ const Reel = () => {
       {!reduce && !failed && (
         <button
           type="button"
-          onClick={() => setPlaying((value) => !value)}
-          aria-label={playing ? "Pause portfolio film" : "Play portfolio film"}
+          onClick={() => {
+            // Drive the element directly and synchronously: by the time an
+            // effect runs, the gesture has expired and iOS rejects play().
+            const active = videos.current[shown];
+            const next = !running;
+            setPlaying(next);
+            if (!active) return;
+            if (next) active.play().catch(() => {});
+            else active.pause();
+          }}
+          aria-label={running ? "Pause portfolio film" : "Play portfolio film"}
           className="pressable absolute top-3 right-3 z-10 grid h-7 w-7 place-items-center rounded-full border border-line bg-canvas-2/90 text-muted transition-colors hover:border-accent hover:text-accent"
         >
-          {playing ? <TbPlayerPause size={13} /> : <TbPlayerPlay size={13} />}
+          {running ? <TbPlayerPause size={13} /> : <TbPlayerPlay size={13} />}
         </button>
       )}
     </div>
