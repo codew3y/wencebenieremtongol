@@ -97,11 +97,18 @@ const SideNav = () => {
       if (!cancelled && count !== null) setPokes(count);
     });
     // Anything pressed and not yet sent goes out on the way off the page.
+    // A backgrounded tab counts: on mobile it is usually the only notice
+    // given, as pagehide may never fire before the tab is discarded.
     const leaving = () => flushPokes();
+    const backgrounded = () => {
+      if (document.visibilityState === "hidden") flushPokes();
+    };
     window.addEventListener("pagehide", leaving);
+    document.addEventListener("visibilitychange", backgrounded);
     return () => {
       cancelled = true;
       window.removeEventListener("pagehide", leaving);
+      document.removeEventListener("visibilitychange", backgrounded);
       flushPokes();
     };
   }, []);
@@ -111,7 +118,15 @@ const SideNav = () => {
     // feel broken, and spamming it should feel like spamming it -- the presses
     // are batched behind the scenes and the real total lands a moment later.
     setPokes((current) => (current === null ? 1 : current + 1));
-    pokeOnce((total) => setPokes(total));
+    // Never downwards. A shared tally only ever climbs, so the larger of what
+    // is on screen and what the server just said is always the better answer --
+    // and it is what stops a reply that overtook a newer one from undoing
+    // presses the visitor has already watched land.
+    pokeOnce((total) =>
+      setPokes((current) =>
+        current === null ? total : Math.max(current, total),
+      ),
+    );
   }, []);
 
   // Publish the rail width to the page wrapper, and remember the choice.

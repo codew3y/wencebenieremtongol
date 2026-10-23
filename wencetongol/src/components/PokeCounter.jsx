@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { TbHandFinger } from "react-icons/tb";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { EASE_OUT } from "../lib/motion";
 
 /**
@@ -47,20 +47,28 @@ const PokeCounter = ({ count, onPoke, folded }) => {
   // The number swaps rather than ticks: a count-up at this size would be a
   // blur, where a value lifting into place reads clearly. Grouped with commas
   // so it stays readable if it ever runs long.
+  //
+  // Deliberately not wrapped in AnimatePresence. With mode="wait" each value
+  // had to finish leaving before the next could arrive, so at 0.18s a swap the
+  // display could not keep up with a spammed button: it stalled and stopped
+  // redrawing entirely, while the tally behind it carried on. Pokes were
+  // counted correctly and the rail simply stopped saying so -- it read 494
+  // while the counter, and the button's own label, were already at 517.
+  //
+  // Remounting on the key alone has no exit to wait for, so the current value
+  // is always what is on screen, however fast it changes, and still lifts into
+  // place when it changes at a readable pace.
   const number = (
     <span className="relative inline-grid h-5 place-items-center overflow-hidden">
-      <AnimatePresence initial={false} mode="wait">
-        <motion.span
-          key={shown}
-          initial={{ y: 14, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: -14, opacity: 0 }}
-          transition={{ duration: 0.18, ease: EASE_OUT }}
-          className="text-sm font-semibold tabular-nums text-fg"
-        >
-          {shown}
-        </motion.span>
-      </AnimatePresence>
+      <motion.span
+        key={shown}
+        initial={{ y: 14, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.18, ease: EASE_OUT }}
+        className="text-sm font-semibold tabular-nums text-fg"
+      >
+        {shown}
+      </motion.span>
     </span>
   );
 
