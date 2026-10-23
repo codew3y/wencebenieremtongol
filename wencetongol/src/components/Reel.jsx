@@ -263,7 +263,7 @@ const Reel = () => {
       <div className="relative isolate aspect-video w-full">
         {/* The requested theme appears immediately while a new cut seeks. */}
         <img
-          src={`/videos/${theme}/poster-${filmVersion}.webp`}
+          src={`/videos/${theme}/poster-${filmVersion}.jpg`}
           alt="Wence Tongol, full-stack developer. Portfolio motion film."
           aria-hidden={!reduce && readyTheme === theme}
           draggable={false}
@@ -291,7 +291,7 @@ const Reel = () => {
               disableRemotePlayback
               controlsList="nodownload nofullscreen noremoteplayback noplaybackrate"
               x-webkit-airplay="deny"
-              poster={`/videos/${cut}/poster-${filmVersion}.webp`}
+              poster={`/videos/${cut}/poster-${filmVersion}.jpg`}
               aria-hidden={cut !== shown}
               aria-label={
                 cut === shown

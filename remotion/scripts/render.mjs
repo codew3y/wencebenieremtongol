@@ -68,12 +68,19 @@ for (const theme of requested ? [requested] : ["light", "dark"]) {
       }
     },
   });
+  // JPEG, not PNG. The poster is a photographic frame of the film and the
+  // hero's LCP element: as a png it was over half a megabyte and the slowest
+  // thing on the page, where the same frame as a jpeg is about 80 KB.
+  // Remotion writes it directly, so nothing has to convert it afterwards --
+  // the ffmpeg it bundles has only png and mjpeg encoders, with no webp.
   await renderStill({
     ...browserOptions,
     serveUrl,
     composition,
     frame: 0,
-    output: `${dir}/poster.png`,
+    imageFormat: "jpeg",
+    jpegQuality: 82,
+    output: `${dir}/poster.jpg`,
   });
   console.log(`${theme}: encoding browser delivery files`);
   const input = [
