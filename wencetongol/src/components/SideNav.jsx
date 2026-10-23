@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   TbBriefcase,
   TbFileText,
@@ -18,7 +18,7 @@ import PokeCounter from "./PokeCounter";
 import ResumeModal from "./ResumeModal";
 import ThemeToggle from "./ThemeToggle";
 import { EASE_OUT } from "../lib/motion";
-import { fetchPokes, readPokes, sendPoke, writePokes } from "../lib/pokes";
+import { fetchPokes, flushPokes, pokeOnce } from "../lib/pokes";
 
 // Order mirrors the page. The ids stay as they are so existing deep links
 // (/#skills, /#education) and anything pointing at them keep resolving; only
@@ -76,7 +76,11 @@ const SideNav = () => {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState("");
-  const [pokes, setPokes] = useState(readPokes);
+  // null until the shared total arrives. Seeding from this browser meant the
+  // rail showed one number and then another a moment later -- 0 in a private
+  // window, a stale tally in a normal one -- so it shows nothing until it
+  // knows.
+  const [pokes, setPokes] = useState(null);
   const [resumeOpen, setResumeOpen] = useState(false);
   const [folded, setFolded] = useState(() => {
     try {
@@ -87,40 +91,27 @@ const SideNav = () => {
     }
   });
 
-  // True once the endpoint has answered with a real figure. Until then the
-  // rail is showing this browser's own tally, and a poke has to keep writing it
-  // so the fallback stays correct on a deploy with no store behind it.
-  const shared = useRef(false);
-
-  // Ask for the shared count once. The local tally is what renders until this
-  // answers, so the rail never shows a 0 that then jumps.
   useEffect(() => {
     let cancelled = false;
     fetchPokes().then((count) => {
-      if (cancelled || count === null) return;
-      shared.current = true;
-      setPokes(count);
+      if (!cancelled && count !== null) setPokes(count);
     });
+    // Anything pressed and not yet sent goes out on the way off the page.
+    const leaving = () => flushPokes();
+    window.addEventListener("pagehide", leaving);
     return () => {
       cancelled = true;
+      window.removeEventListener("pagehide", leaving);
+      flushPokes();
     };
   }, []);
 
   const poke = useCallback(() => {
-    // Move the number now and reconcile after: a counter that waits on a round
-    // trip before it budges feels broken, and the press is the whole point.
-    setPokes((current) => {
-      const next = current + 1;
-      if (!shared.current) writePokes(next);
-      return next;
-    });
-
-    sendPoke().then((count) => {
-      if (count === null) return;
-      shared.current = true;
-      // The server's figure wins -- it has everyone else's pokes in it.
-      setPokes(count);
-    });
+    // The number moves on the press. Waiting for a round trip makes the button
+    // feel broken, and spamming it should feel like spamming it -- the presses
+    // are batched behind the scenes and the real total lands a moment later.
+    setPokes((current) => (current === null ? 1 : current + 1));
+    pokeOnce((total) => setPokes(total));
   }, []);
 
   // Publish the rail width to the page wrapper, and remember the choice.

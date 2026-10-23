@@ -26,6 +26,11 @@ globalThis.fetch = async (url) => {
     store.set(key, next);
     return { ok: true, json: async () => ({ result: next }) };
   }
+  if (command === "incrby") {
+    const next = (store.get(key) ?? 0) + Number(arg);
+    store.set(key, next);
+    return { ok: true, json: async () => ({ result: next }) };
+  }
   if (command === "get") {
     return { ok: true, json: async () => ({ result: store.get(key) ?? 0 }) };
   }
@@ -35,7 +40,7 @@ globalThis.fetch = async (url) => {
   return { ok: true, json: async () => ({ result: 0 }) };
 };
 
-const call = async (method, ip = "198.51.100.7") => {
+const call = async (method, ip = "198.51.100.7", body = undefined) => {
   const captured = { status: 0, body: null };
   const res = {
     setHeader() {},
@@ -48,7 +53,7 @@ const call = async (method, ip = "198.51.100.7") => {
       return this;
     },
   };
-  await handler({ method, headers: { "x-forwarded-for": ip } }, res);
+  await handler({ method, headers: { "x-forwarded-for": ip }, body }, res);
   return captured;
 };
 
@@ -109,4 +114,35 @@ test("a fast human burst is never refused", async () => {
     assert.equal(r.status, 200, `click ${i + 1} was refused`);
     assert.equal(r.body.limited, undefined);
   }
+});
+
+test("a burst of presses can be sent as one increment", async () => {
+  // The client batches presses so spamming the button is not a request per
+  // press. Twelve clicks must land as twelve, in one call.
+  const before = (await call("GET", "198.51.100.1")).body.count;
+  const r = await call("POST", "198.51.100.1", { by: 12 });
+  assert.equal(r.status, 200);
+  assert.equal(r.body.count, before + 12);
+});
+
+test("a batch is capped, and a missing or junk count means one", async () => {
+  const start = (await call("GET", "198.51.100.2")).body.count;
+  // Over the cap is clamped rather than trusted.
+  const big = await call("POST", "198.51.100.2", { by: 5000 });
+  assert.equal(big.body.count, start + 50);
+  // No body at all is a single press, which is what a plain POST means.
+  const bare = await call("POST", "198.51.100.2");
+  assert.equal(bare.body.count, start + 51);
+  // So is nonsense.
+  const junk = await call("POST", "198.51.100.2", { by: "banana" });
+  assert.equal(junk.body.count, start + 52);
+  // And so is a negative, which must never walk the counter backwards.
+  const neg = await call("POST", "198.51.100.2", { by: -40 });
+  assert.equal(neg.body.count, start + 53);
+});
+
+test("a text body is accepted, as sendBeacon delivers it", async () => {
+  const start = (await call("GET", "198.51.100.3")).body.count;
+  const r = await call("POST", "198.51.100.3", JSON.stringify({ by: 4 }));
+  assert.equal(r.body.count, start + 4);
 });

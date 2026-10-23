@@ -14,6 +14,12 @@ import { EASE_OUT } from "../lib/motion";
  */
 
 const PokeCounter = ({ count, onPoke, folded }) => {
+  // null means the shared total has not arrived yet. A dash rather than a zero:
+  // zero is a number, and showing it before the real one lands is how the rail
+  // came to flicker between 0 and the true figure.
+  const known = typeof count === "number";
+  const shown = known ? count.toLocaleString() : "—";
+  const label = known ? `${count} pokes this month` : "counting pokes";
   // Drives the hand's nudge. Keyed off a counter rather than a boolean so a
   // fast second press restarts the motion instead of being swallowed by the
   // one still running.
@@ -45,14 +51,14 @@ const PokeCounter = ({ count, onPoke, folded }) => {
     <span className="relative inline-grid h-5 place-items-center overflow-hidden">
       <AnimatePresence initial={false} mode="wait">
         <motion.span
-          key={count}
+          key={shown}
           initial={{ y: 14, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: -14, opacity: 0 }}
           transition={{ duration: 0.18, ease: EASE_OUT }}
           className="text-sm font-semibold tabular-nums text-fg"
         >
-          {count.toLocaleString()}
+          {shown}
         </motion.span>
       </AnimatePresence>
     </span>
@@ -64,8 +70,8 @@ const PokeCounter = ({ count, onPoke, folded }) => {
         <button
           type="button"
           onClick={press}
-          aria-label={`Poke. ${count} this month.`}
-          title={`${count.toLocaleString()} pokes this month`}
+          aria-label={`Poke. ${label}.`}
+          title={label}
           className="pressable card-edge grid h-9 w-9 place-items-center rounded-full border border-line bg-surface transition-colors hover:border-accent/50"
         >
           {hand}
@@ -87,7 +93,7 @@ const PokeCounter = ({ count, onPoke, folded }) => {
       <button
         type="button"
         onClick={press}
-        aria-label={`Poke. ${count} pokes this month.`}
+        aria-label={`Poke. ${label}.`}
         className="pressable card-edge inline-flex shrink-0 items-center gap-1.5 rounded-full border border-line bg-surface py-1.5 pr-3 pl-2.5 font-mono text-xs font-semibold text-fg transition-colors hover:border-accent/50 hover:text-accent"
       >
         {hand}

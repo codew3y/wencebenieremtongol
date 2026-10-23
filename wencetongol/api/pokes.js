@@ -54,6 +54,18 @@ const MAX_PER_WINDOW = 1200;
 
 const monthKey = () => `pokes:${new Date().toISOString().slice(0, 7)}`;
 
+// Vercel parses JSON bodies for us, but a beacon sent with sendBeacon arrives
+// as text, so both shapes are accepted.
+const readBody = (req) => {
+  if (!req.body) return {};
+  if (typeof req.body === "object") return req.body;
+  try {
+    return JSON.parse(req.body);
+  } catch {
+    return {};
+  }
+};
+
 async function redis(command) {
   const response = await fetch(`${REDIS_URL}/${command}`, {
     headers: { Authorization: `Bearer ${REDIS_TOKEN}` },
@@ -118,7 +130,11 @@ export default async function handler(req, res) {
       return res.status(429).json({ configured: true, count, limited: true });
     }
 
-    const count = await redis(`incr/${key}`);
+    // A burst of clicks arrives as one request carrying how many. Clicking is
+    // meant to be spammable, and a round trip per press is both laggy for the
+    // visitor and a command per press against the store's quota.
+    const by = Math.min(Math.max(Number(readBody(req).by) || 1, 1), 50);
+    const count = await redis(`incrby/${key}/${by}`);
     // Only the first write of the month needs the expiry; setting it on every
     // poke would push the window out and keep the key alive indefinitely.
     if (count === 1) await redis(`expire/${key}/${KEY_TTL_SECONDS}`);
