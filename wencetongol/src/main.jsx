@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { IconContext } from "react-icons";
 import App from "./App";
 
 // Self-hosted fonts, latin subset only. Loading these from fonts.googleapis.com
@@ -17,8 +18,23 @@ import "@fontsource/jetbrains-mono/latin-600.css";
 
 import "./index.css";
 
+// Every icon here is decorative: each one sits beside its own label, or inside
+// a control that carries an aria-label of its own. react-icons renders
+// role="img" with no name unless you give it one, which leaves an unnamed
+// image in the accessibility tree for every icon on the page -- harmless to a
+// screen reader, which skips them, but it is what Lighthouse means by an
+// accessibility tree that is not well-formed, and an agent reading the tree
+// sees a page littered with anonymous images.
+//
+// Setting it here rather than at each call site means the next icon someone
+// adds is correct by default. An icon that genuinely needs a name can still
+// pass its own aria-label or title, which takes precedence.
+const iconDefaults = { attr: { "aria-hidden": "true", focusable: "false" } };
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <App />
+    <IconContext.Provider value={iconDefaults}>
+      <App />
+    </IconContext.Provider>
   </React.StrictMode>
 );

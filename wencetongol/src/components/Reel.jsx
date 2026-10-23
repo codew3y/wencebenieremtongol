@@ -44,6 +44,9 @@ const Reel = () => {
   // it reaches canplay -- so this exists to say so out loud, not to change
   // what is drawn.
   // Cuts whose WebM failed to decode, and which should retry on H.264.
+  // Cuts whose files should exist in the tree. The second only joins once the
+  // visitor has switched theme, so the first load fetches one film, not two.
+  const [wanted, setWanted] = useState(() => [readTheme()]);
   const [h264Only, setH264Only] = useState([]);
   const [failedVersion, setFailedVersion] = useState(null);
   const failed = failedVersion === filmVersion;
@@ -52,6 +55,9 @@ const Reel = () => {
     const update = () => {
       const next = readTheme();
       setTheme(next);
+      setWanted((current) =>
+        current.includes(next) ? current : [...current, next],
+      );
     };
     const observer = new MutationObserver(update);
     observer.observe(document.documentElement, {
@@ -163,14 +169,15 @@ const Reel = () => {
     const incoming = videos.current[theme];
     const outgoing = videos.current[shownRef.current];
     if (!incoming) return undefined;
-    // Warm both lightweight cuts near the viewport for a prompt theme switch.
-    // Inserting sources into mounted videos needs explicit resource selection.
-    for (const cut of CUTS) {
-      const video = videos.current[cut];
-      if (video && video.dataset.loaded !== filmVersion) {
-        video.dataset.loaded = filmVersion;
-        video.load();
-      }
+    // Only the cut being shown. Warming both doubled the page: a visitor
+    // downloaded two films and two posters to watch one of them, which on this
+    // page was more bytes than everything else put together. The other cut is
+    // fetched when the theme actually changes, which costs a beat on the first
+    // switch and nothing at all for the visitors who never switch.
+    const video = videos.current[theme];
+    if (video && video.dataset.loaded !== filmVersion) {
+      video.dataset.loaded = filmVersion;
+      video.load();
     }
     let cancelled = false;
     const cleanup = [];
@@ -256,7 +263,7 @@ const Reel = () => {
       <div className="relative isolate aspect-video w-full">
         {/* The requested theme appears immediately while a new cut seeks. */}
         <img
-          src={`/videos/${theme}/poster-${filmVersion}.png`}
+          src={`/videos/${theme}/poster-${filmVersion}.webp`}
           alt="Wence Tongol, full-stack developer. Portfolio motion film."
           aria-hidden={!reduce && readyTheme === theme}
           draggable={false}
@@ -279,12 +286,12 @@ const Reel = () => {
               muted
               loop
               playsInline
-              preload={armed ? "auto" : "none"}
+              preload={armed && wanted.includes(cut) ? "auto" : "none"}
               disablePictureInPicture
               disableRemotePlayback
               controlsList="nodownload nofullscreen noremoteplayback noplaybackrate"
               x-webkit-airplay="deny"
-              poster={`/videos/${cut}/poster-${filmVersion}.png`}
+              poster={`/videos/${cut}/poster-${filmVersion}.webp`}
               aria-hidden={cut !== shown}
               aria-label={
                 cut === shown
@@ -300,7 +307,7 @@ const Reel = () => {
               }}
               className="pointer-events-none absolute inset-0 h-full w-full object-cover select-none"
             >
-              {armed && (
+              {armed && wanted.includes(cut) && (
                 <>
                   {/* The codec, not just the container. Asked only about
                       "video/webm" a browser answers on the container alone,
