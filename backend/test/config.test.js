@@ -1,4 +1,4 @@
-// The unconfigured case, which needs its own process: api/contact.js reads the
+// The unconfigured case, which needs its own process: backend/contact.js reads the
 // credentials once at module load, so it cannot be un-set after importing.
 import { test } from "node:test";
 import assert from "node:assert/strict";
@@ -6,7 +6,7 @@ import assert from "node:assert/strict";
 delete process.env.RESEND_API_KEY;
 process.env.CONTACT_TO = "inbox@example.com";
 
-const { default: handler } = await import("../api/contact.js");
+const { default: handler } = await import("../contact.js");
 
 test("reports which variable is missing, and never its value", async () => {
   const captured = { status: 0, payload: null };

@@ -9,7 +9,7 @@ process.env.CONTACT_TO = "inbox@example.com";
 process.env.KV_REST_API_URL = "https://redis.test";
 process.env.KV_REST_API_TOKEN = "token";
 
-const { default: handler } = await import("../api/contact.js");
+const { default: handler } = await import("../contact.js");
 
 const counters = new Map();
 let redisDown = false;

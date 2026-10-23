@@ -14,7 +14,7 @@ import { pathToFileURL } from "node:url";
 // Install immutable filenames only after every cut is encoded. Publishing the
 // version last keeps the player from requesting a half-written render.
 export async function installFilms(stagedThemes = ["light", "dark"]) {
-  const site = resolve("../wencetongol");
+  const site = resolve("../frontend");
   const versionFile = `${site}/src/lib/reel-version.js`;
   const current = await readFile(versionFile, "utf8").catch(() => "");
   const currentVersion = current.match(/REEL_VERSION = "([^"]+)"/)?.[1];

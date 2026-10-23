@@ -10,11 +10,6 @@ jobs:
     name: lint, test, build
     runs-on: ubuntu-latest
 
-    # The app lives one level down; the repo root holds only docs.
-    defaults:
-      run:
-        working-directory: wencetongol
-
     steps:
       - uses: actions/checkout@v4
 
@@ -22,13 +17,17 @@ jobs:
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: wencetongol/package-lock.json
+          cache-dependency-path: |
+            package-lock.json
+            frontend/package-lock.json
 
-      # ci, not install: build from the lockfile so a run cannot drift.
+      # ci, not install: build from the lockfiles so a run cannot drift. The
+      # root holds the backend's lint tooling; the frontend has its own.
       - run: npm ci
+      - run: npm ci --prefix frontend
 
+      # Both halves: the root scripts lint and test the backend, then hand
+      # over to the frontend's own.
       - run: npm run lint
-
       - run: npm test
-
       - run: npm run build

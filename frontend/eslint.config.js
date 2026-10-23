@@ -32,8 +32,9 @@ export default defineConfig([
     },
   },
   {
-    // Serverless functions and their tests run on Node, not in the browser.
-    files: ['api/**/*.js', 'test/**/*.js'],
+    // Tests and build config run on Node, not in the browser. The serverless
+    // functions moved to backend/ and are linted from the repo root.
+    files: ['test/**/*.js', '*.config.js'],
     languageOptions: { globals: globals.node },
   },
 ])

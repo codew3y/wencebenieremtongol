@@ -1,4 +1,4 @@
-// Colour tokens taken from wencetongol.vercel.app (src/index.css, :root and .dark).
+// Colour tokens taken from wencetongol.vercel.app (frontend/src/index.css, :root and .dark).
 // Both cuts use the site’s neutral surfaces and electric-blue accent.
 // The dark canvas matches the hero panel. Every text pair is checked in
 // scripts/contrast.mjs (WCAG AA, 4.5:1 minimum).

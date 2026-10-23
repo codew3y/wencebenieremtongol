@@ -9,7 +9,7 @@ import assert from "node:assert/strict";
 process.env.KV_REST_API_URL = "https://redis.test";
 process.env.KV_REST_API_TOKEN = "token";
 
-const { default: handler } = await import("../api/pokes.js");
+const { default: handler } = await import("../pokes.js");
 
 const store = new Map();
 let redisDown = false;

@@ -1,4 +1,4 @@
-// Contract tests for api/contact.js, run with Node's built-in test runner.
+// Contract tests for backend/contact.js, run with Node's built-in test runner.
 // Resend is stubbed, so these assert what the endpoint refuses and what it puts
 // on the wire -- never that mail was delivered.
 //
@@ -15,7 +15,7 @@ delete process.env.KV_REST_API_TOKEN;
 delete process.env.UPSTASH_REDIS_REST_URL;
 delete process.env.UPSTASH_REDIS_REST_TOKEN;
 
-const { default: handler } = await import("../api/contact.js");
+const { default: handler } = await import("../contact.js");
 
 let lastRequest = null;
 let resendStatus = 200;
