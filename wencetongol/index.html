@@ -152,22 +152,37 @@
 
           var cut = dark ? "dark" : "light";
           var base = "/videos/" + cut + "/";
-          var add = function (href, as, priority) {
+          // The srcset and sizes must match the <img> in the reel exactly.
+          // A preload that disagrees with the element it is for does not warm
+          // it -- the browser fetches the preloaded file, then fetches the one
+          // the element actually wants, and the hint costs bytes instead of
+          // saving them.
+          var preloadImage = function (href, srcset, sizes) {
             var link = document.createElement("link");
             link.rel = "preload";
-            link.as = as;
+            link.as = "image";
             link.href = href;
-            if (priority) link.fetchPriority = priority;
+            link.setAttribute("imagesrcset", srcset);
+            link.setAttribute("imagesizes", sizes);
+            link.fetchPriority = "high";
             document.head.appendChild(link);
           };
           // The still is what the visitor actually sees first, and at ~90KB it
           // lands long before the film does.
-          add(base + "poster-%REEL_VERSION%.jpg", "image", "high");
-          // as="video" is honoured by some browsers and ignored by others, so
-          // this is a head start where it works rather than something the reel
-          // depends on -- the element requests the film itself on mount either
-          // way, and a browser that ignores this is no worse off than before.
-          add(base + "film-%REEL_VERSION%.mp4", "video");
+          //
+          // Only the still. The film was preloaded here too, with as="video",
+          // which Chromium does not implement: it ignored the hint and warned
+          // about it on every single load. There is nothing to replace it
+          // with either -- the reel now mounts underneath the loader and the
+          // <video> asks for the film itself within about 200ms, which is
+          // what a working preload would have bought.
+          preloadImage(
+            base + "poster-%REEL_VERSION%.webp",
+            base + "poster-%REEL_VERSION%-sm.webp 640w, " +
+              base + "poster-%REEL_VERSION%-md.webp 960w, " +
+              base + "poster-%REEL_VERSION%.webp 1280w",
+            "(min-width: 1024px) 610px, 90vw",
+          );
         } catch (e) {}
       })();
     </script>

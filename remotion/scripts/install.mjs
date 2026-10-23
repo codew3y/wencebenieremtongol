@@ -8,6 +8,7 @@ import {
   writeFile,
 } from "node:fs/promises";
 import { resolve } from "node:path";
+import sharp from "sharp";
 import { pathToFileURL } from "node:url";
 
 // Install immutable filenames only after every cut is encoded. Publishing the
@@ -48,10 +49,29 @@ export async function installFilms(stagedThemes = ["light", "dark"]) {
       if (sources[theme][file] !== destination)
         await copyFile(sources[theme][file], destination);
     }
+    // The reel draws its opening frame from a WebP sized to the card rather
+    // than the 1920x1080 JPEG, which was 90KB for a box 362px wide on a phone.
+    // The widths match the srcset in Reel.jsx and the preload in index.html --
+    // all three have to agree or the browser fetches a file the element will
+    // not use. The JPEG stays for the social card and as the source here.
+    const posterJpeg = `${dir}/poster-${version}.jpg`;
+    for (const [width, suffix] of [
+      [640, "-sm"],
+      [960, "-md"],
+      [1280, ""],
+    ]) {
+      const name = `poster-${version}${suffix}.webp`;
+      keep.add(name);
+      await sharp(posterJpeg)
+        .resize({ width })
+        .webp({ quality: 80, effort: 6 })
+        .toFile(`${dir}/${name}`);
+    }
+
     for (const name of await readdir(dir)) {
       if (
         !keep.has(name) &&
-        /^(ads\.(mp4|webm)|poster\.(png|jpg)|film-[a-f0-9]{12}\.(mp4|webm)|poster-[a-f0-9]{12}\.(png|webp|jpg))$/.test(
+        /^(ads\.(mp4|webm)|poster\.(png|jpg)|film-[a-f0-9]{12}\.(mp4|webm)|poster-[a-f0-9]{12}(-sm|-md)?\.(png|webp|jpg))$/.test(
           name,
         )
       )

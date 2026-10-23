@@ -272,9 +272,26 @@ const Reel = () => {
       className="card-edge relative select-none overflow-hidden rounded-[var(--r-container)] border border-line bg-canvas-2"
     >
       <div className="relative isolate aspect-video w-full">
-        {/* The requested theme appears immediately while a new cut seeks. */}
+        {/* The requested theme appears immediately while a new cut seeks.
+            This is the reel's opening frame and, on a phone, the page's
+            largest element -- so it is the one asset worth being fussy about.
+            It was a 1920x1080 JPEG, 90KB, drawn into a box 362px wide: WebP at
+            the two widths it is actually displayed at costs 26KB and 11KB
+            instead. `sizes` has to describe the card, not the viewport, or the
+            browser fetches the larger file for a phone and the saving is
+            spent. */}
         <img
-          src={`/videos/${theme}/poster-${filmVersion}.jpg`}
+          src={`/videos/${theme}/poster-${filmVersion}.webp`}
+          srcSet={
+            `/videos/${theme}/poster-${filmVersion}-sm.webp 640w, ` +
+            `/videos/${theme}/poster-${filmVersion}-md.webp 960w, ` +
+            `/videos/${theme}/poster-${filmVersion}.webp 1280w`
+          }
+          // Measured, not guessed: the card is 362px wide on a 412px phone,
+          // 718 on a tablet and 606 beside the rail on a desktop. Describing
+          // it as 100vw overstated it enough that a phone at 2x pulled the
+          // 1280 file when 640 would have covered it.
+          sizes="(min-width: 1024px) 610px, 90vw"
           alt="Wence Tongol, full-stack developer. Portfolio motion film."
           aria-hidden={!reduce && readyTheme === theme}
           draggable={false}
@@ -282,6 +299,11 @@ const Reel = () => {
           height={1080}
           className="pointer-events-none absolute inset-0 block h-full w-full select-none"
         />
+        {/* Deliberately no `poster` attribute on these. The <img> above is the
+            opening frame and a cut stays transparent until it can play, so a
+            poster here draws nothing -- yet the browser fetched one per cut
+            regardless, the hidden theme's included. That was 85KB spent on an
+            image no visitor ever saw. */}
         {!reduce &&
           CUTS.map((cut) => (
             <video
@@ -302,7 +324,6 @@ const Reel = () => {
               disableRemotePlayback
               controlsList="nodownload nofullscreen noremoteplayback noplaybackrate"
               x-webkit-airplay="deny"
-              poster={`/videos/${cut}/poster-${filmVersion}.jpg`}
               aria-hidden={cut !== shown}
               aria-label={
                 cut === shown
