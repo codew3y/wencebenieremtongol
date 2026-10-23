@@ -146,16 +146,30 @@ function App() {
 
         <AnimatePresence>{!ready && <Loader />}</AnimatePresence>
 
-        {ready && (
-          <motion.div
-            // No fade when the intro was skipped. The page mounts at once in
-            // that case, and a hidden tab gets no frames to run a fade with --
-            // so the content would sit at opacity 0 and the page would look
-            // blank, which is worse than the loader it replaced.
-            initial={openedHidden ? false : { opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.4, ease: EASE_IN_OUT }}
-          >
+        {/* Mounted from the start, underneath the loader, rather than only
+            once the intro finishes. The hero holds the film, and gating it
+            on `ready` meant the <video> did not exist until the loader had
+            waited for fonts and then held a further 1.2s -- so the film only
+            began fetching as the curtain lifted, and the visitor watched it
+            buffer. It now loads and starts playing behind the loader and is
+            already running when the intro clears, which is the point of the
+            intro.
+
+            Opacity rather than a mount: a video inside an opacity-0 subtree
+            still loads, decodes and plays, where display:none or visibility
+            hidden would stop it dead. `inert` keeps the covered content away
+            from the keyboard and screen readers while it is hidden. */}
+        <motion.div
+          // No fade when the intro was skipped. The page mounts at once in
+          // that case, and a hidden tab gets no frames to run a fade with --
+          // so the content would sit at opacity 0 and the page would look
+          // blank, which is worse than the loader it replaced.
+          initial={openedHidden ? false : { opacity: 0 }}
+          animate={{ opacity: ready ? 1 : 0 }}
+          transition={{ duration: 0.4, ease: EASE_IN_OUT }}
+          inert={!ready}
+          aria-hidden={!ready || undefined}
+        >
             <ErrorBoundary name="chrome">
               <a
                 href="#home"
@@ -198,8 +212,7 @@ function App() {
             <LazySection id="footer" height="min-h-[20vh]">
               <Footer />
             </LazySection>
-          </motion.div>
-        )}
+        </motion.div>
       </div>
     </MotionConfig>
   );

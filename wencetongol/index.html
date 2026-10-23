@@ -125,7 +125,19 @@
       })();
     </script>
 
-    <!-- Applies the stored/system theme before first paint so there is no flash. -->
+    <!-- Applies the stored/system theme before first paint so there is no flash,
+         and starts the hero film's first bytes arriving in the same breath.
+
+         The film used to be requested only after the bundle had downloaded and
+         parsed, React had mounted and an IntersectionObserver had reported the
+         reel on screen -- so the opening frame could not appear until well over
+         a second in, however fast the connection. Both fetches are started here
+         instead, alongside the bundle rather than behind it.
+
+         Which cut is preloaded has to be decided here too: the two films are
+         2.4MB each, so preloading both to show one would cost more than the
+         delay it saves. The theme is known by this line, so only the cut that
+         will actually be shown is asked for. -->
     <script>
       (function () {
         try {
@@ -137,6 +149,25 @@
               : window.matchMedia("(prefers-color-scheme: dark)").matches;
           document.documentElement.classList.toggle("dark", dark);
           document.documentElement.style.colorScheme = dark ? "dark" : "light";
+
+          var cut = dark ? "dark" : "light";
+          var base = "/videos/" + cut + "/";
+          var add = function (href, as, priority) {
+            var link = document.createElement("link");
+            link.rel = "preload";
+            link.as = as;
+            link.href = href;
+            if (priority) link.fetchPriority = priority;
+            document.head.appendChild(link);
+          };
+          // The still is what the visitor actually sees first, and at ~90KB it
+          // lands long before the film does.
+          add(base + "poster-%REEL_VERSION%.jpg", "image", "high");
+          // as="video" is honoured by some browsers and ignored by others, so
+          // this is a head start where it works rather than something the reel
+          // depends on -- the element requests the film itself on mount either
+          // way, and a browser that ignores this is no worse off than before.
+          add(base + "film-%REEL_VERSION%.mp4", "video");
         } catch (e) {}
       })();
     </script>

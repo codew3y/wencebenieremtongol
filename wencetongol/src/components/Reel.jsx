@@ -21,12 +21,15 @@ const Reel = () => {
   const [shown, setShown] = useState(readTheme);
   const [readyTheme, setReadyTheme] = useState(null);
   const [reduce, setReduce] = useState(reducedMotion);
-  const [armed, setArmed] = useState(
-    () => typeof IntersectionObserver === "undefined",
-  );
-  const [visible, setVisible] = useState(
-    () => typeof IntersectionObserver === "undefined",
-  );
+  // The reel is in the hero, so on arrival it is both on screen and wanted.
+  // These began as false and were corrected by an IntersectionObserver once it
+  // reported the reel visible -- which is a callback after mount and layout,
+  // and in the meantime the effect below read `visible` as false and *paused*
+  // the film, while `armed` held back its bytes. The opening frame therefore
+  // could not appear until the bundle had parsed and the observer had run. The
+  // observer now only ever corrects these downward, when the visitor scrolls
+  // the reel away.
+  const [visible, setVisible] = useState(true);
   const [hidden, setHidden] = useState(() => document.hidden);
   // What the visitor asked for.
   const [playing, setPlaying] = useState(true);
@@ -146,26 +149,16 @@ const Reel = () => {
     const node = holder.current;
     if (!node) return undefined;
     if (typeof IntersectionObserver === "undefined") return undefined;
-    const nearby = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) setArmed(true);
-      },
-      { rootMargin: "200px" },
-    );
     const onscreen = new IntersectionObserver(
       ([entry]) => setVisible(entry.isIntersecting),
       { threshold: 0.1 },
     );
-    nearby.observe(node);
     onscreen.observe(node);
-    return () => {
-      nearby.disconnect();
-      onscreen.disconnect();
-    };
+    return () => onscreen.disconnect();
   }, []);
 
   useEffect(() => {
-    if (!armed || reduce) return undefined;
+    if (reduce) return undefined;
     const incoming = videos.current[theme];
     const outgoing = videos.current[shownRef.current];
     if (!incoming) return undefined;
@@ -215,7 +208,7 @@ const Reel = () => {
       cancelled = true;
       cleanup.forEach((remove) => remove());
     };
-  }, [theme, armed, reduce, filmVersion]);
+  }, [theme, reduce, filmVersion]);
 
   // Autoplay is refused on plenty of devices: iOS in Low Power Mode, Safari's
   // per-site setting, any tab the visitor has not interacted with. The
@@ -249,10 +242,28 @@ const Reel = () => {
       inactive?.pause();
       return undefined;
     }
-    active.play().catch(() => {});
+    // Asking once was not enough, and this is why the film arrived paused.
+    // The opening request is made while the element still has no data, and
+    // the theme effect's load() -- which is what fetches the film in the
+    // first place -- aborts it: "The play() request was interrupted by a call
+    // to pause()". Nothing then asked again, so a fully buffered film sat on
+    // its poster until the first-interaction listener caught a click.
+    //
+    // So it is asked again on each event that means "there is now something
+    // to play". Calls once it is already running are free: paused is checked
+    // first, and a resolved play() on a playing element is a no-op anyway.
+    const tryPlay = () => {
+      if (active.paused) active.play().catch(() => {});
+    };
+    tryPlay();
+    const cues = ["loadeddata", "canplay", "canplaythrough"];
+    for (const cue of cues) active.addEventListener(cue, tryPlay);
     const stop = setTimeout(() => inactive?.pause(), FADE_MS);
-    return () => clearTimeout(stop);
-  }, [shown, readyTheme, reduce, playing, visible, hidden, armed, filmVersion]);
+    return () => {
+      clearTimeout(stop);
+      for (const cue of cues) active.removeEventListener(cue, tryPlay);
+    };
+  }, [shown, readyTheme, reduce, playing, visible, hidden, filmVersion]);
 
   return (
     <div
@@ -286,7 +297,7 @@ const Reel = () => {
               muted
               loop
               playsInline
-              preload={armed && wanted.includes(cut) ? "auto" : "none"}
+              preload={wanted.includes(cut) ? "auto" : "none"}
               disablePictureInPicture
               disableRemotePlayback
               controlsList="nodownload nofullscreen noremoteplayback noplaybackrate"
@@ -307,7 +318,7 @@ const Reel = () => {
               }}
               className="pointer-events-none absolute inset-0 h-full w-full object-cover select-none"
             >
-              {armed && wanted.includes(cut) && (
+              {wanted.includes(cut) && (
                 <>
                   {/* The codec, not just the container. Asked only about
                       "video/webm" a browser answers on the container alone,
