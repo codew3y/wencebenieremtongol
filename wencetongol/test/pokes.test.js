@@ -71,13 +71,18 @@ test("POST increments, and every caller sees the same number", async () => {
 });
 
 test("a flood from one address is capped without losing the count", async () => {
+  // The ceiling is 1,200 a minute: high enough that a visitor hammering the
+  // button is always counted, low enough that a script is not. The test has to
+  // actually clear it, so it sends 1,201.
   const ip = "203.0.113.50";
   let last = null;
-  for (let i = 0; i < 70; i += 1) last = await call("POST", ip);
+  for (let i = 0; i < 1201; i += 1) last = await call("POST", ip);
 
   assert.equal(last.status, 429);
-  // Still reports the real tally rather than an error or a zero.
+  // Still reports the real tally rather than an error or a zero, and says why
+  // so the client can tell "that one did not count" from "the counter broke".
   assert.equal(last.body.configured, true);
+  assert.equal(last.body.limited, true);
   assert.equal(typeof last.body.count, "number");
 });
 
@@ -93,4 +98,15 @@ test("an unreachable store reports unconfigured rather than a wrong number", asy
 test("anything but GET or POST is refused", async () => {
   const result = await call("DELETE");
   assert.equal(result.status, 405);
+});
+
+test("a fast human burst is never refused", async () => {
+  // Thirty clicks in a few seconds is a plausible spam session by hand, and it
+  // was the exact case that used to stop the count.
+  const ip = "203.0.113.77";
+  for (let i = 0; i < 30; i += 1) {
+    const r = await call("POST", ip);
+    assert.equal(r.status, 200, `click ${i + 1} was refused`);
+    assert.equal(r.body.limited, undefined);
+  }
 });

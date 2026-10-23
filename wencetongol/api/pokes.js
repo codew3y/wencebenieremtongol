@@ -10,9 +10,29 @@
 // than failing, and the client falls back to counting locally. That keeps the
 // button working on a deploy with no Redis behind it; it just is not shared.
 
-const REDIS_URL = process.env.KV_REST_API_URL ?? process.env.UPSTASH_REDIS_REST_URL;
-const REDIS_TOKEN =
-  process.env.KV_REST_API_TOKEN ?? process.env.UPSTASH_REDIS_REST_TOKEN;
+// Found by shape rather than by one hard-coded name. Vercel's Upstash
+// integration names these differently depending on how the store was
+// connected -- KV_REST_API_URL, UPSTASH_REDIS_REST_URL, or whatever a custom
+// environment-variable prefix produces -- and a store that is connected but
+// named unexpectedly looks exactly like no store at all, which is a bad hour
+// to spend. Anything ending in the right suffix is accepted, with the
+// documented names preferred when several are present.
+const findEnv = (suffixes, preferred) => {
+  for (const name of preferred) if (process.env[name]) return process.env[name];
+  for (const [name, value] of Object.entries(process.env)) {
+    if (value && suffixes.some((suffix) => name.endsWith(suffix))) return value;
+  }
+  return undefined;
+};
+
+const REDIS_URL = findEnv(
+  ["_REST_API_URL", "_REDIS_REST_URL", "_KV_REST_API_URL"],
+  ["KV_REST_API_URL", "UPSTASH_REDIS_REST_URL"],
+);
+const REDIS_TOKEN = findEnv(
+  ["_REST_API_TOKEN", "_REDIS_REST_TOKEN", "_KV_REST_API_TOKEN"],
+  ["KV_REST_API_TOKEN", "UPSTASH_REDIS_REST_TOKEN"],
+);
 
 // Keyed by month, matching the label. A count from September is not this
 // month's, so it starts again rather than quietly becoming an all-time total.
@@ -20,11 +40,17 @@ const REDIS_TOKEN =
 // it go, so the store does not grow a row per month forever.
 const KEY_TTL_SECONDS = 70 * 24 * 60 * 60;
 
-// A poke is one click. This only has to stop a loop hammering the endpoint, so
-// the window is short and the ceiling is generous -- a visitor playing with the
-// button is the point, not abuse.
+// A poke is one click, and somebody hammering the button is the feature, not
+// abuse -- so the ceiling is set where a hand cannot reach it. 60 a minute was
+// about one a second, which a determined visitor passes in seconds and then
+// watches the number stop, which reads as broken.
+//
+// 1,200 a minute is twenty a second sustained for a full minute. A person with
+// a mouse will not get there; a script will, and that is the only thing this
+// is still here to catch, since every write costs a command against the store's
+// quota.
 const WINDOW_SECONDS = 60;
-const MAX_PER_WINDOW = 60;
+const MAX_PER_WINDOW = 1200;
 
 const monthKey = () => `pokes:${new Date().toISOString().slice(0, 7)}`;
 
@@ -86,8 +112,10 @@ export default async function handler(req, res) {
     }
 
     if (await overRateLimit(req)) {
+      // Still answer with the live total so the rail keeps showing the real
+      // number rather than freezing on whatever it had.
       const count = await redis(`get/${key}`);
-      return res.status(429).json({ configured: true, count });
+      return res.status(429).json({ configured: true, count, limited: true });
     }
 
     const count = await redis(`incr/${key}`);
